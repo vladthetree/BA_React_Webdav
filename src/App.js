@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import PrivateRoute from "./components/utils/pageUtils/PrivateRoute.jsx";
+
+import { ListDir } from "./components/utils/listDir.jsx";
+import Login from "../src/routes/login.jsx";
+import VideoPage from "./routes/videoPage.jsx";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route element={<PrivateRoute />}>
+            <Route
+              path="/videos"
+              element={<VideoPage listDir={ListDir()} />}
+              exact
+            />
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
