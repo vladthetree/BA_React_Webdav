@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
+import React from 'react';
 
 const PrivateRoute = ({ children, ...rest }) => {
   console.log("Private Route Trigger");

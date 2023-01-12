@@ -4,6 +4,8 @@ import {
   addToIndexDbStore,
   getDeviceFromStore
 } from "../db/storageObjectMethodes";
+import React from 'react';
+
 import { command } from "./utils/commands.js";
 
 const OBJECT_STORE_USER_DATA = "userData";

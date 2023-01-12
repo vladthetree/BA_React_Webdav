@@ -1,4 +1,4 @@
-import { openIndexDB } from "./openIndexDB";
+import { openIndexDB } from "./openIndexDB.jsx";
 
 async function addToIndexDbStore(
   database,
@@ -72,8 +72,6 @@ async function getConvertedBlobVideos() {
   let storageValue = await getAllFromObjectStorage("db", "videos");
 
   storageValue.forEach(video => {
-    console.log("getConvertedBlobVideos");
-    console.log(video)
     let url = URL.createObjectURL(
       new Blob([video.fileContext], {
         type: "video/mp4"
@@ -84,8 +82,6 @@ async function getConvertedBlobVideos() {
       url: url
     });
   });
-  console.log("getConvertedBlobVideos result")
-  console.log(result)
   return result;
 }
 

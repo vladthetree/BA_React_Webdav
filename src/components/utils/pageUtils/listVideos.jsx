@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, memo } from "react";
-import { getConvertedBlobVideos } from "../db/storageObjectMethodes";
+import { getConvertedBlobVideos } from "../db/storageObjectMethodes.jsx";
 import { useWindowSize } from "react-use";
+import React from 'react';
 import "../../style/videostyle.css";
 
 const INTERVAL_VIDEOCHECK = 1000;
@@ -14,12 +15,8 @@ export const ListVideos = memo(function ListVideos() {
   const fontSize = height / 25;
 
   useEffect(() => {
-    console.log("VIDEOS")
-    console.log(videos)
     intervalVideoRef.current = setInterval(async () => {
       let storedFiles = await getConvertedBlobVideos();
-      console.log("INSIDE listVideos")
-      console.log(storedFiles)
       let newVideos = await newVideoCheck(storedFiles, videos);
       for (const video of newVideos) {
         if (!addedVideosRef.current.has(video.name)) {
@@ -54,7 +51,6 @@ export const ListVideos = memo(function ListVideos() {
               height: height / 1.2
             }}
           >
-            Your browser does not support the video element.
           </video>
           <p
             style={{

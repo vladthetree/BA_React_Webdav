@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React, { useState, useContext } from "react";
+import React from 'react';
+
 import PrivateRoute from "./components/utils/pageUtils/PrivateRoute.jsx";
 
 import { ListDir } from "./components/utils/listDir.jsx";

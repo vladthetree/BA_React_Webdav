@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { addToIndexDbStore } from "../components/utils/db/storageObjectMethodes";
+import { addToIndexDbStore } from "../components/utils/db/storageObjectMethodes.jsx";
 import "../components/style/login.css";
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";

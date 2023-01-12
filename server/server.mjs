@@ -2,6 +2,7 @@ import express from "express";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
+import React from 'react';
 import { createClient } from "webdav";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
@@ -12,7 +13,9 @@ app.use(express.json());
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //https workaround
 
 
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use(express.static(path.join(__dirname, "..", "dist")));
+
+
 
 const filter = (pathname, req) => {
   return pathname.startsWith("http://localhost:8080/proxy/listContent") || pathname.startsWith("http://localhost:8080/proxy/getFileContent");
@@ -20,7 +23,7 @@ const filter = (pathname, req) => {
 //https://localhost:8443/remote.php/dav/files/test/
 //proxy greift nicht
 const options = {
-  target: "http://cloud.thws.de/remote.php/",
+  target: "http://localhost:8080/remote.php/",
   changeOrigin: true,
   //secure: false,
   rejectUnauthorized: false
@@ -29,6 +32,7 @@ const options = {
 
 const proxy = createProxyMiddleware(filter, options);
 app.use(proxy);
+
 
 app.post("/proxy/listContent", async (req, res) => {
   try {

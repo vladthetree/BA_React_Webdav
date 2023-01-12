@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import { client } from "./webdav/client";
 import {
   addToIndexDbStore,
   removeAlreadyStoredFiles
 } from "./db/storageObjectMethodes.jsx";
 import {Buffer} from "buffer"
+import { createClient } from "webdav";
 
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
@@ -28,10 +28,8 @@ export function ListDir() {
         );
         if (mp4Files.length > 0) {
           console.log("#--New Files available--#");
-          console.log("Result of Server");
           await getFileContent(mp4Files);
 
-          //downloadNewFiles(mp4Files);
         } else {
           console.log(`#--No new Files to Upload--#`);
         }
@@ -48,22 +46,32 @@ async function filterMp4Files(content) {
 }
 
 const listContent = async () => {
-  try {
-    const response = await fetch("/proxy/listContent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-        targetUrl: targetUrl
-      })
-    });
-    const content = await response.json();
-    return content;
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const client = createClient(targetUrl, { username:username, password:password });
+  const content = await client.getDirectoryContents("/");
+  console.log("CONTENT");
+  console.log(content);
+  return new Response(JSON.stringify(content), { headers: { 'Content-Type': 'application/json' } });
+}
+
+
+
+//const listContent = async () => {
+//  try {
+//    const response = await fetch("/proxy/listContent", {
+//      method: "POST",
+//      headers: { "Content-Type": "application/json" },
+//      body: JSON.stringify({
+//        username: username,
+//        password: password,
+//        targetUrl: targetUrl
+//      })
+//    });
+//    const content = await response.json();
+//    return content;
+//  } catch (error) {
+//    console.error(error);
+//  }
+//};
 
 const getFileContent = async newMp4FilesArray => {
   try {
@@ -81,8 +89,6 @@ const getFileContent = async newMp4FilesArray => {
     console.log("\n\n\n#-- new Videos resieved --#");
     console.log("#-- start download into IndexDB --#\n\n\n");
     content.forEach(newFile => {
-      console.log("PRE CONVERT BUFFER")
-      console.log(newFile.buffer);
       let buffer = Buffer.from(newFile.buffer);
 
         addToIndexDbStore(

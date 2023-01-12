@@ -1,10 +1,10 @@
-import { ListVideos } from "../components/utils/pageUtils/listVideos";
+import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
 import { useState, useEffect } from "react";
-import Layout from "../components/layout/layout";
-import { topLeftElements } from "../components/utils/pageUtils/NavbarElements/topLeftElements";
-import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes";
+import React from 'react';
+import Layout from "../components/layout/layout.jsx";
+import { topLeftElements } from "../components/utils/pageUtils/NavbarElements/topLeftElements.jsx";
+import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes.jsx";
 
-const someName = "Angemeldet : SomeName";
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 

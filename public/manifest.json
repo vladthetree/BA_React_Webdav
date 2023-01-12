@@ -2,7 +2,11 @@
   "name": "Feuerfalke_2",
   "short_name": "Feuerfalke_2",
   "description": "Created for Ba",
+  "start_url": "/",
+  "display": "standalone",
   "theme_color": "#ffffff",
+  "background_color": "#fff",
+  "scope": "./",
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { addToIndexDbStore } from "../../../db/storageObjectMethodes";
+import { addToIndexDbStore } from "../../../db/storageObjectMethodes.jsx";
+import React from 'react';
 
 const filters = [
   {
