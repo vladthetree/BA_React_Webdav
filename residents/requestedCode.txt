@@ -1,0 +1,60 @@
+Hier wird fetch vom serviceWorker übernommen und an den
+webdav-server weitergeleitet ( in meinem Fall den thws webdav server):
+
+self.addEventListener("fetch", (event) => {
+  console.log("ORIGINAL HEADER")
+  console.log( event.request.headers);
+  console.log(" SERVICE WORKER FETCH")
+  console.log(event)
+  const request = event.request;
+  if (
+    request.url.startsWith(
+      targetUrl
+    )
+  ) {
+    console.log(" REQUEST TO TARGET URL : INSIDE IF")
+    event.respondWith(
+      fetch(request.url, {
+
+        mode: "no-cors",
+        headers: request.headers
+       // headers: {
+       //   Authorization: "Basic " + btoa(`${username}:${password}`)
+       // }
+      }).then(response => {
+        console.log("FETCH RESPONSE")
+        console.log(response);
+        return response;
+      })
+    );
+  } else {
+    event.respondWith(fetch(request));
+  }
+});
+
+
+Dabei ist der fetch response, weil ich die Anfrage ohne "mode: cors" weiterleite:
+
+Response {type: 'opaque', url: '', redirected: false, status: 0, ok: false, …}
+body: (...)
+bodyUsed:false
+headers:
+Headers {}
+ok:false
+redirected:false
+status:0
+statusText:""
+type:"opaque"
+url:""
+[[Prototype]]:Response
+
+Ist die Anfrage mit cors bekomme ich die Rückmeldung :
+
+Access to fetch at 'https://cloud.thws.de/remote.php/dav/files/k49617/'
+from origin 'http://localhost:8080' has been blocked by
+CORS policy: Response to preflight request doesn't pass access control
+check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch
+the resource with CORS disabled.
+
+

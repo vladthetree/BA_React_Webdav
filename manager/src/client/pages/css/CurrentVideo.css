@@ -1,0 +1,9 @@
+.video-box {
+    margin: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(223, 183, 104);
+  }
+
+  
