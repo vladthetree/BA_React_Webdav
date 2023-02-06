@@ -1,4 +1,5 @@
 import "../../../../css/utilsStyle.css"
+import React from "react";
 
 export const Popup = ({ open, onClose, children }) => {
     const handleClose = () => {

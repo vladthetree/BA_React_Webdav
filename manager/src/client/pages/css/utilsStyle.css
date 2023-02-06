@@ -5,11 +5,12 @@
 }
 .dropdown-button{
   place-self: center;
-  background-color: blue;
+  background-color: rgb(12, 140, 35);
+  
   color: white;
   padding: 10px 20px;
-  border-radius: px;
-  font-size: 14px;
+  border-radius: 15px;
+  font-size: 15px;
 }
 .dropdown-selected{
   display: flex;
@@ -52,8 +53,9 @@
   .popup-close-button{
     position: absolute;
     top: 20px;
+
     right: 20px;
-    border-radius: 3px;
+    border-radius: 2px;
   }
 
   .popup-listValues{
