@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start ",
     "build": "react-scripts build",
     "webpack-build": " npx webpack",
     "serve": "node server/server.mjs",

@@ -45,7 +45,7 @@ export const ListVideos = memo(function ListVideos() {
             src={video.url}
             controls
             type="video/mp4"
-            className={`videostyle`}
+            className={"videostyle"}
             style={{
               width: width / 1.2,
               height: height / 1.2

@@ -6,25 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="manifest" href="./manifest.json" />
-
   <title>BA_PWA</title>
 </head>
 
 <body>
   <div id="root"></div>
   <script src="dist/bundle.js"></script>
-  
-  <script>
-    const standalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (standalone === true) {
-      console.log("INDEX CHECK");
-      console.log(navigator.standalone)
-      const mainScript = document.createElement("script");
-      mainScript.src = "downloaded/electron-main.mjs";
-      document.head.appendChild(mainScript);
-    }
-  </script>
-
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker

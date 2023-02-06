@@ -11,7 +11,6 @@ const app = express();
 app.use(express.json());
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //https workaround
 
-
 app.use(express.static(path.join(__dirname, "..", "dist")));
 
 
@@ -24,12 +23,12 @@ const filter = (pathname, req) => {
 const options = {
   target: "http://localhost:8080/remote.php/",
   changeOrigin: true,
-  //secure: false,
+  secure: false,
   rejectUnauthorized: false
 
 };
 
-const proxy = createProxyMiddleware(filter, options);
+const proxy = createProxyMiddleware(filter,options);
 app.use(proxy);
 
 

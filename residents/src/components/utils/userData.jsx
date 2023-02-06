@@ -1,6 +1,6 @@
 export function userData() {
   const value = ("; " + document.cookie)
-    .split(`; userData=`)
+    .split("; userData=")
     .pop()
     .split(";")[0];
   let userData = undefined;
