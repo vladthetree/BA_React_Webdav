@@ -5,7 +5,7 @@ import "../components/style/login.css";
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 
-const Login = () => {
+const Login = ({onClose}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [webdavAdress, setWebdavAdress] = useState("");
@@ -24,8 +24,7 @@ const Login = () => {
       "adress01",
       customer
     );
-    document.cookie = "isLoggedIn=true;expires=Fri, 31 Dec 9999 23:59:59 GMT";
-    navigate("videos");
+    onClose();
   }
 
 if(webdavAdress){

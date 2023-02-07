@@ -3,26 +3,20 @@ import {
 	removeAlreadyStoredFiles,
 } from "./db/storageObjectMethodes.jsx";
 import { Buffer } from "buffer";
+import React,{useRef} from "react";
 
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
 
 export const ListDir = async (userdata) => {
-	console.log(userdata)
-	console.log("OPEN LISTDIR");
-	console.log(" IM ONLINE");
-	const content = await listContent({ userdata });
-	console.log(" LIST CONTENT ");
-	console.log(content);
 
+	const content = await listContent({ userdata });
 	const mp4Files = await filterMp4Files(content);
 	await removeAlreadyStoredFiles(
 		DATABASE_VIDEOS,
 		mp4Files,
 		OBJECT_STORE_VIDEOS,
 	);
-	console.log("MP4 FILES ");
-	console.log(mp4Files);
 	if (mp4Files.length > 0) {
 		console.log("#--New Files available--#");
 		await getFileContent(userdata, mp4Files);
@@ -37,7 +31,6 @@ async function filterMp4Files(content) {
 }
 
 const listContent = async ({ userdata }) => {
-	console.log("LIST CONTENT");
 	try {
 		const response = await fetch("/proxy/listContent", {
 			method: "POST",
@@ -49,7 +42,6 @@ const listContent = async ({ userdata }) => {
 			}),
 		});
 		const content = await response.json();
-		console.log(" LIST CONTENT RESULT : ");
 		return content;
 	} catch (error) {
 		console.error(error);
@@ -57,9 +49,6 @@ const listContent = async ({ userdata }) => {
 };
 
 const getFileContent = async (userdata, newMp4FilesArray) => {
-	console.log(userdata);
-	console.log("AND NEW FILES ");
-	console.log(newMp4FilesArray);
 	try {
 		const response = await fetch("/proxy/getFileContent", {
 			method: "POST",

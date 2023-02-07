@@ -2,16 +2,8 @@ import { openIndexDB } from "./openIndexDB.jsx";
 
 async function addToIndexDbStore(database, ObjectStorage, mode, filename, fileContext) {
 	const db = await openIndexDB(database, ObjectStorage);
-	console.log("#####################################")
-	console.log(database)
-	console.log(ObjectStorage)
-	console.log(mode)
-	console.log(filename)
-	console.log(fileContext)
-	
 	let transaction = db.transaction(ObjectStorage, mode);
 	console.log(`#-- ADDING TO OBJECTSTORAGE ${ObjectStorage} THE FILE ${filename} --#`);
-	
 	let objStore;
 	if (!db.objectStoreNames.contains(ObjectStorage)) {
 	  objStore = db.createObjectStore(ObjectStorage, { keyPath: "name" });
@@ -30,9 +22,6 @@ async function addToIndexDbStore(database, ObjectStorage, mode, filename, fileCo
   
 
 async function getAllFromObjectStorage(database, ObjectStore) {
-	console.log("GET ALL ");
-	console.log(database);
-	console.log(ObjectStore);
 	const db = await openIndexDB(database, ObjectStore);
 	return new Promise((resolve, reject) => {
 		if (!db.objectStoreNames.contains(ObjectStore)) {
@@ -74,8 +63,6 @@ async function getConvertedBlobVideos() {
 	let result = [];
 	let storageValue = await getAllFromObjectStorage("db", "videos");
 	if (storageValue) {
-		console.log("CONVERTED BLOBS ");
-		console.log(storageValue);
 		storageValue.forEach((video) => {
 			let url = URL.createObjectURL(
 				new Blob([video.fileContext], {
@@ -94,15 +81,12 @@ async function getConvertedBlobVideos() {
 }
 
 async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
-	console.log("INSIDE GET OBJECTSTORAGE INDEX 2")
 	const db = await openIndexDB(database, OBJECT_STORE);
 	return new Promise((resolve, reject) => {
 		try {
 			if (db.objectStoreNames.contains(OBJECT_STORE)) {
 				const tx = db.transaction(OBJECT_STORE, "readonly");
 				const objSt = tx.objectStore(OBJECT_STORE);
-				console.log("SAMPLE ");
-				console.log(objSt)
 				const request = objSt.get(INDEX);
 				request.onsuccess = function () {
 					const customer = request.result;

@@ -8,7 +8,6 @@ const INTERVAL_VIDEOCHECK = 1000;
 const DATABASE_VIDEOS = "db";
 
 export const ListVideos = memo(function ListVideos() {
-  console.log("TRIGGER LISTVIDEOS")
   const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();
@@ -33,6 +32,15 @@ export const ListVideos = memo(function ListVideos() {
     return storagaArray.filter(item => !videoArray.includes(item.name));
   }
 
+  const handleClickVideo = (e) =>{
+    const video = e.currentTarget;
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }
+
   return (
     <div
       style={{
@@ -41,16 +49,18 @@ export const ListVideos = memo(function ListVideos() {
       }}
     >
       {videos.map(video =>
-        <div key={video.name} style={{ flex: 2, padding: "15px 20px" }}>
+        <div key={video.name} style={{ marginTop:"10px" }}>
           <video
             src={video.url}
-            controls
+           
             type="video/mp4"
             className={"videostyle"}
             style={{
               width: width / 1.2,
               height: height / 1.2
             }}
+            onClick={handleClickVideo}
+            
           >
           </video>
           <p

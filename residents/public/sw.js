@@ -1,18 +1,3 @@
-const express = require('express');
-const app = express();
-
-
-const username = "k49617";
-const password = "50Wasserstein!";
-const targetUrl = "https://cloud.thws.de/remote.php/dav/files/k49617/";
-
-app.get('/', (req, res) => {
-  res.send('Hello from the virtual server');
-});
-
-app.listen(3000, () => {
-  console.log('Virtual server running on port 3000');
-});
 
 
 // self.addEventListener("fetch", (event) => {
