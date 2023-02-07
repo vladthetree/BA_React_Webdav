@@ -1,0 +1,14 @@
+TODO:
+  Manger:
+    - Fileupload
+    - Settings
+    - Management of the Videos
+  Resident:
+    - Request differet nextcloudserver
+    - Bluetooth?
+      {Deamon usw..} 
+    - Abfrage von mehreren Domänen
+  Export:
+    - Wie soll das ganze exportiert werden?
+    - Wie genau soll es getestet werden
+    

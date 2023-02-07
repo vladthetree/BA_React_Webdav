@@ -1,8 +1,10 @@
-export async function openIndexDB(databaseb, ObjectStorage) {
+export async function openIndexDB(database, ObjectStorage) {
+  console.log("OPEN INDEX DB ")
+  console.log(database)
+  console.log(ObjectStorage)
   return new Promise((resolve, reject) => {
     try {
-      let request = indexedDB.open(databaseb);
-
+      let request = indexedDB.open(database);
       request.onupgradeneeded = function(event) {
         const db = event.target.result;
         if (!db.objectStoreNames.contains(ObjectStorage)) {
@@ -25,4 +27,5 @@ export async function openIndexDB(databaseb, ObjectStorage) {
       reject(error);
     }
   });
+  
 }

@@ -16,12 +16,17 @@ body {
   display: block;
 }
 
+.navbar_right_wrapper:hover .navbar_right{
+  display: block;
+}
+.navbar_right {
+  display: none;
+  grid-column: 1;
+}
+
 .navbar_middle {
   text-align: center;
   color: white;
   grid-column: 2;
 }
 
-.navbar_right {
-  grid-column: 3;
-}

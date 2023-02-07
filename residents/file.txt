@@ -1,1 +1,0 @@
-docker run -it --name ubuntu-container -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority -v /dev/snd:/dev/snd -v /dev/dri:/dev/dri --privileged -v /etc/localtime:/etc/localtime:ro arm64v8/ubuntu:latest bash -c "apt-get update && apt-get install -y xfce4 xfce4-goodies && startxfce4"

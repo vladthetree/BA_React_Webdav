@@ -12,6 +12,8 @@ const Login = () => {
   const [nextClouduserName, setnextClouduserName] = useState("");
   const [nextCloudPassword, setnextCloudPassword] = useState("");
   const navigate = useNavigate();
+  const resident = "resident_";
+  let adress = null;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -19,19 +21,23 @@ const Login = () => {
       OBJECT_STORE_USERDATA,
       OBJECT_STORE_USERDATA_OBJECTSTORAGE,
       "readwrite",
-      "customer01",
+      "adress01",
       customer
     );
     document.cookie = "isLoggedIn=true;expires=Fri, 31 Dec 9999 23:59:59 GMT";
     navigate("videos");
   }
 
+if(webdavAdress){
+adress = `${webdavAdress}${resident}${username}`
+}
+
   const customer = {
-    username,
-    password,
-    webdavAdress,
-    nextClouduserName,
-    nextCloudPassword
+    username :username,
+    password :password,
+    webdavAdress:adress,
+    nextCloudUserName:nextClouduserName,
+    nextCloudPassword:nextCloudPassword
   };
 
   return (

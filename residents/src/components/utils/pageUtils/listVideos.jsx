@@ -8,6 +8,7 @@ const INTERVAL_VIDEOCHECK = 1000;
 const DATABASE_VIDEOS = "db";
 
 export const ListVideos = memo(function ListVideos() {
+  console.log("TRIGGER LISTVIDEOS")
   const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();

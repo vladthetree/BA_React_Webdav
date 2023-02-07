@@ -4,7 +4,7 @@ export function userData() {
     .pop()
     .split(";")[0];
   let userData = undefined;
-  if (userData != undefined) {
+  if (userData !== undefined) {
     userData = JSON.parse(value);
     return userData;
   }

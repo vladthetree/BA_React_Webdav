@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "server/*.mjs"
+  ],
+  "exec": "node server/server.mjs",
+  "ignore": [
+    "node_modules/"
+  ],
+  "verbose": true
+}

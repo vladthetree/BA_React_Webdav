@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import {
 	addToIndexDbStore,
 	removeAlreadyStoredFiles,
@@ -7,79 +6,46 @@ import { Buffer } from "buffer";
 
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
-const INTERVAL_WEBDAVCHECK = 2000;
-const username = "test";
-const password = "12345";
-const targetUrl = "https://localhost:8443/remote.php/dav/files/test/";
 
-export function ListDir() {
-	const intervalRef = useRef();
-	useEffect(() => {
-		intervalRef.current = setInterval(async () => {
-			if (navigator.onLine) {
-				console.log(" IM ONLINE");
+export const ListDir = async (userdata) => {
+	console.log(userdata)
+	console.log("OPEN LISTDIR");
+	console.log(" IM ONLINE");
+	const content = await listContent({ userdata });
+	console.log(" LIST CONTENT ");
+	console.log(content);
 
-				const content = await listContent();
+	const mp4Files = await filterMp4Files(content);
+	await removeAlreadyStoredFiles(
+		DATABASE_VIDEOS,
+		mp4Files,
+		OBJECT_STORE_VIDEOS,
+	);
+	console.log("MP4 FILES ");
+	console.log(mp4Files);
+	if (mp4Files.length > 0) {
+		console.log("#--New Files available--#");
+		await getFileContent(userdata, mp4Files);
+	} else {
+		console.log("#--No new Files to Upload--#");
+	}
 
-				const mp4Files = await filterMp4Files(content);
-				await removeAlreadyStoredFiles(
-					DATABASE_VIDEOS,
-					mp4Files,
-					OBJECT_STORE_VIDEOS,
-				);
-				if (mp4Files.length > 0) {
-					console.log("#--New Files available--#");
-					await getFileContent(mp4Files);
-				} else {
-					console.log("#--No new Files to Upload--#");
-				}
-			} else {
-				console.log(" IM OFFLINE");
-			}
-		}, INTERVAL_WEBDAVCHECK);
-		return () => clearTimeout(intervalRef.current);
-	}, []);
-}
+};
 
 async function filterMp4Files(content) {
 	return content.filter((item) => item.basename.includes(".mp4"));
 }
 
-//const listContent = async () => {
-//  console.log("INSIDE LISTCONTENT");
-//  const client = createClient(targetUrl
-//  //  , {
-//  //  username: username,
-//  //  password: password
-//  //}
-//  );
-//  console.log("CLIENT CREATED");
-//  const content = await client.getDirectoryContents("/");
-//  console.log("Content")
-//  console.log(content)
-//};
-
-//const listContent = async () => {
-//  const event = new CustomEvent("listContentEvent", {
-//    detail: {
-//      username: username,
-//      password: password,
-//      targetUrl: targetUrl
-//    }
-//  });
-//  window.dispatchEvent(event);
-//}
-
-const listContent = async () => {
+const listContent = async ({ userdata }) => {
 	console.log("LIST CONTENT");
 	try {
 		const response = await fetch("/proxy/listContent", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				username: username,
-				password: password,
-				targetUrl: targetUrl,
+				username: userdata.nextCloudUserName,
+				password: userdata.nextCloudPassword,
+				targetUrl: userdata.webdavAdress,
 			}),
 		});
 		const content = await response.json();
@@ -90,21 +56,25 @@ const listContent = async () => {
 	}
 };
 
-const getFileContent = async (newMp4FilesArray) => {
+const getFileContent = async (userdata, newMp4FilesArray) => {
+	console.log(userdata);
+	console.log("AND NEW FILES ");
+	console.log(newMp4FilesArray);
 	try {
 		const response = await fetch("/proxy/getFileContent", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				username: username,
-				password: password,
-				targetUrl: targetUrl,
+				username: userdata.nextCloudUserName,
+				password: userdata.nextCloudPassword,
+				targetUrl: userdata.webdavAdress,
 				newFiles: newMp4FilesArray,
 			}),
 		});
 		const content = await response.json();
 		console.log("\n\n\n#-- new Videos resieved --#");
 		console.log("#-- start download into IndexDB --#\n\n\n");
+		console.log(content);
 		content.forEach((newFile) => {
 			let buffer = Buffer.from(newFile.buffer);
 
