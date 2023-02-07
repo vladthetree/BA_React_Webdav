@@ -4,36 +4,22 @@ import CurrentVideo from "./layout/current_Video.jsx";
 import Administration from "./layout/administration.jsx";
 import VideoSlide from "./layout/videoSlide.jsx";
 import { Buffer } from "buffer";
+import { useWindowSize } from "react-use";
+import DropdownList from "../../client/pages/layout/utils/components/dropdownList.jsx";
 
 const username = "test";
 const password = "12345";
 const targetUrl = "https://localhost:8443/remote.php/dav/files/test/";
 
 const Interface = () => {
-	const uper_leftRef = useRef({ size: { width: 0, height: 0 } });
-	const uper_rightRef = useRef({ size: { width: 0, height: 0 } });
-	const bottomRef = useRef({ size: { width: 0, height: 0 } });
-
 	const [residents, setResidents] = useState(null);
 	const [selectedResident, setSelectedResident] = useState(null);
 	const [selectedResidentVideos, setSelectedResidentVideos] = useState(null);
+	const { width, height } = useWindowSize();
 
 	const updateSelectedResident = (newValue) => {
 		setSelectedResident(newValue);
 	};
-
-	useEffect(() => {
-		function handleResize() {
-			uper_leftRef.current.size = uper_leftRef.current.getBoundingClientRect();
-			uper_rightRef.current.size =
-				uper_rightRef.current.getBoundingClientRect();
-			bottomRef.current.size = bottomRef.current.getBoundingClientRect();
-		}
-		window.addEventListener("resize", handleResize);
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		};
-	}, [uper_leftRef, uper_rightRef, bottomRef]);
 
 	useEffect(() => {
 		listResidents();
@@ -59,7 +45,7 @@ const Interface = () => {
 	};
 
 	useEffect(() => {
-		if (selectedResident) {
+		if (selectedResident && selectedResident !== "check pls") {
 			getResidentVideos();
 		}
 	}, [selectedResident]);
@@ -78,6 +64,7 @@ const Interface = () => {
 				}),
 			});
 			const content = await response.json();
+
 			content.forEach((item) => {
 				let buffer = Buffer.from(item.buffer.data);
 				const blob = new Blob([buffer], { type: "video/mp4" });
@@ -89,29 +76,80 @@ const Interface = () => {
 			console.error(error);
 		}
 	};
-	console.log("SelectedResidentVideos");
+
+	const [selectedIndex, setSelectedIndex] = useState(null);
+
+	const list = ["item1", "item2", "item3", "item4", "item5"];
 	console.log(selectedResidentVideos);
-
 	return (
-		<div
-			style={{
-				width: "100vw",
-				height: "100vh",
-				display: "grid",
-				gridTemplateRows: "1fr 1fr",
-			}}
-		>
-			<div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr" }}>
-				<Administration
-					selectedResident={selectedResident}
-					updateSelectedResident={updateSelectedResident}
-					residents={residents}
-					ref={uper_leftRef}
-				/>
-				<CurrentVideo ref={uper_rightRef} />
+		<div style={{ display: "flex", height: "100%", width: "100%" }}>
+			<div style={{ flexDirection: "row", width: "10%" }}>
+				<div style={{ backgroundColor: "yello", width: "100%", height: "10%" }}>
+					Logo
+				</div>
+				<div
+					style={{
+						backgroundColor: "red",
+						width: "100%",
+						height: "90%",
+						overflowY: "scroll",
+					}}
+				>
+					{list.map((item, index) => (
+						<div
+							key={index}
+							style={{ cursor: "pointer", paddingBottom: 10 }}
+							onClick={() => {
+								console.log("CLICKED ON " + index);
+								setSelectedIndex(index);
+							}}
+						>
+							{item}
+						</div>
+					))}
+				</div>
 			</div>
-
-			<VideoSlide ref={bottomRef} videos={selectedResidentVideos} />
+			<div style={{ flexDirection: "row", width: "100%" }}>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						backgroundColor: "blue",
+						width: "100%",
+						height: "10%",
+					}}
+				>
+					<div
+						style={{
+							backgroundColor: "blue",
+							width: "25%",
+							height: "100%",
+							zIndex: "999",
+						}}
+					>
+						<DropdownList
+							residents={residents}
+							updateSelectedResident={updateSelectedResident}
+						/>
+					</div>
+					<div
+						style={{ backgroundColor: "green", width: "25%", height: "100%" }}
+					>
+						B
+					</div>
+					<div
+						style={{ backgroundColor: "yellow", width: "25%", height: "100%" }}
+					>
+						C
+					</div>
+					<div
+						style={{ backgroundColor: "red", width: "25%", height: "100%" }}
+					></div>
+				</div>
+				<div style={{ backgroundColor: "green", width: "100%", height: "90%" }}>
+					<VideoSlide videos={selectedResidentVideos} />
+				</div>
+			</div>
 		</div>
 	);
 };
