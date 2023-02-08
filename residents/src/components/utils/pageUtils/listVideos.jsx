@@ -3,8 +3,7 @@ import { getConvertedBlobVideos } from "../db/storageObjectMethodes.jsx";
 import { useWindowSize } from "react-use";
 import React from "react";
 import "../../style/videostyle.css";
-import SwipeRight from "../../icons/react-svg/SwipeRight.jsx";
-import SwipeLeft from "../../icons/react-svg/SwipeLeft.jsx";
+import Swipe from "../../icons/react-svg/Swipe.jsx";
 
 const INTERVAL_VIDEOCHECK = 1000;
 const DATABASE_VIDEOS = "db";
@@ -13,6 +12,10 @@ export const ListVideos = memo(function ListVideos() {
   const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();
+
+  const [isLeft, setIsLeft] = useState(false);
+
+
   const intervalVideoRef = useRef();
   const fontSize = height / 25;
 
@@ -43,6 +46,8 @@ export const ListVideos = memo(function ListVideos() {
     }
   };
 
+
+
   return (
     <div
       style={{
@@ -68,19 +73,7 @@ export const ListVideos = memo(function ListVideos() {
               display: "flex",
             }}
           >
-            {index !== 0 && (
-              <div className="videoSwipe">
-                <SwipeLeft
-                  style={{
-                    height: height * 0.5,
-                    width: width * 0.5,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-              </div>
-            )}
+    
 
             <div className="leftPart">
               <div className="videoPartContainer">
@@ -101,7 +94,7 @@ export const ListVideos = memo(function ListVideos() {
 
             {index !== videos.length - 1 && (
               <div className="videoSwipe">
-                <SwipeRight
+                <Swipe
                   style={{
                     height: height * 0.5,
                     width: width * 0.5,
