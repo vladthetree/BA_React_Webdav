@@ -15,7 +15,20 @@ const Interface = () => {
 	const [residents, setResidents] = useState(null);
 	const [selectedResident, setSelectedResident] = useState(null);
 	const [selectedResidentVideos, setSelectedResidentVideos] = useState(null);
-	const { width, height } = useWindowSize();
+	const [selectedVideos, setSelectedVideos] = useState([]);
+	const { width, height } = useWindowSize([]);
+
+	const handleSelectVideos = (videoname) => {
+		if (!selectedVideos.includes(videoname)) {
+			setSelectedVideos([...selectedVideos, videoname]);
+		  }
+		console.log("SELECTED VIDEOS ");
+		console.log(selectedVideos)
+	  };
+
+
+	  
+	  
 
 	const updateSelectedResident = (newValue) => {
 		setSelectedResident(newValue);
@@ -144,10 +157,10 @@ const Interface = () => {
 					</div>
 					<div
 						style={{ backgroundColor: "red", width: "25%", height: "100%" }}
-					></div>
+					> </div>
 				</div>
 				<div style={{ backgroundColor: "green", width: "100%", height: "90%" }}>
-					<VideoSlide videos={selectedResidentVideos} />
+					<VideoSlide videos={selectedResidentVideos} selectedVideo={selectedVideos} handleSelectedVideos={handleSelectVideos}/>
 				</div>
 			</div>
 		</div>

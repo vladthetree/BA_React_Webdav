@@ -1,1 +1,15 @@
+.squareTest {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300;
+    height: 300;
+    z-index: 2;
+    background-color: blue;
+}
 
+.videoContainer{
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
