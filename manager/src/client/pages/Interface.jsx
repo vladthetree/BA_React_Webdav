@@ -18,13 +18,21 @@ const Interface = () => {
 	const [selectedVideos, setSelectedVideos] = useState([]);
 	const { width, height } = useWindowSize([]);
 
-	const handleSelectVideos = (videoname) => {
-		if (!selectedVideos.includes(videoname)) {
-			setSelectedVideos([...selectedVideos, videoname]);
-		  }
-		console.log("SELECTED VIDEOS ");
-		console.log(selectedVideos)
-	  };
+const handleSelectVideos = (videoNames) => {
+  setSelectedVideos((prevSelectedVideos) => {
+    let updatedSelectedVideos = [];
+    if (prevSelectedVideos) {
+      if (!prevSelectedVideos.includes(videoNames)) {
+        updatedSelectedVideos = [...prevSelectedVideos, videoNames];
+      } else {
+        updatedSelectedVideos = prevSelectedVideos.filter((selectedVideo) => selectedVideo !== videoNames);
+      }
+    } else {
+      updatedSelectedVideos = [videoNames];
+    }
+    return updatedSelectedVideos;
+  });
+};
 
 
 	  
