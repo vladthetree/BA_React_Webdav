@@ -1,20 +1,37 @@
-.videostyle {
-    position: relative;
-    object-fit: cover;
-    border-radius: 25px;
-    border: 5px solid rgb(255, 255, 255);
+.videoPartContainer {
+  width: 100%;
+  height: 90%;
+  background-color: yellow;
+  align-items: center;
+  justify-content: center;
 
 }
 
-.videoTimebar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.videostyle {
+  position: relative;
+  object-fit: cover;
+}
+
+.videoNameContainer {
+  width: 100%;
+  height: 10%;
+  object-fit: contain;
+  background-color: green;
+
+}
+
+.videoSwipe {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.leftPart {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
