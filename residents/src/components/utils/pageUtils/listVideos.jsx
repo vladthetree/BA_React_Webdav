@@ -15,7 +15,6 @@ export const ListVideos = memo(function ListVideos() {
 
   const [isLeft, setIsLeft] = useState(false);
 
-
   const intervalVideoRef = useRef();
   const fontSize = height / 25;
 
@@ -46,8 +45,6 @@ export const ListVideos = memo(function ListVideos() {
     }
   };
 
-
-
   return (
     <div
       style={{
@@ -64,25 +61,22 @@ export const ListVideos = memo(function ListVideos() {
             position: "relative",
           }}
         >
-          {console.log(video.length)}
           <div
             style={{
-         
               width: width / 1.2,
               height: height / 1.2,
               display: "flex",
             }}
           >
-    
-
             <div className="leftPart">
               <div className="videoPartContainer">
                 <video
                   src={video.url}
                   type="video/mp4"
                   style={{
+            
                     width: "100%",
-                    height: height / 1.2,
+                    height: "100%",
                   }}
                   onClick={handleClickVideo}
                 />
@@ -91,7 +85,6 @@ export const ListVideos = memo(function ListVideos() {
                 {video.name.substring(0, video.name.length - 4)}
               </div>
             </div>
-
             {index !== videos.length - 1 && (
               <div className="videoSwipe">
                 <Swipe

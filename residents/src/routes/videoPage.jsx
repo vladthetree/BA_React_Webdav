@@ -57,6 +57,7 @@ const VideoPage = () => {
 
 	return (
 		<div>
+		
 			<Layout
 				navbar_left={topLeftElements}
 				navbar_middle={userdata ? `Angemeldet : ${userdata.username}` : ""}
