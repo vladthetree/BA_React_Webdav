@@ -1,75 +1,59 @@
-
-/* Container */
-
 .settings-container {
     display: flex;
+    background-color: rgb(250, 246, 242);
     flex-direction: column;
     height: 100%;
     width: 100%;
+    border-radius: 15px;
 }
-
 .settings-upper-row {
     display: flex;
-    height: 10%;
-    align-items: center;
-    justify-content: center;
+    position: relative;
+    border-bottom: 5px;
+    border-style:solid;
+    
 }
-
-.settings-beginning-side {
-    display: flex;
-    width: 20%;
-    align-items: center;
-    justify-content: center;
-}
-
-.settings-mid-side {
-    display: flex;
-    width: 75%;
-    align-items: center;
-    justify-content: center;
-}
-
 .settings-button {
-    display: flex;
+    position: absolute;
     width: 5%;
-    height: 90%;
-    font-size: 25px;
-    background-color: lightblue;
-    align-items: center;
-    justify-content: center;
+    right: 0;
+    top: 0;
 }
 
 .settings-options {
-
+    margin: 0.5%;
     overflow-y: scroll;
-    background-color: grey;
-    height: 95%;
+    height: 100%;
     width: 100%;
 }
 
 .settings-list {
+    display: flex;
     height: 15%;
-    display: flex;
-    margin-bottom:5%
+
+    margin: 10px;
+   
 }
 
-.settings-list-itemStatus{
-    display: flex;
-    width: 15%;
-    align-items: center;
-    justify-content: center;
-}
-.settings-list-statusindikator{
-    width: 100%;
-    height: 100%;
-    background-color: green;
+.settings-beginning-side {
+    width: 20%;
+    margin: 5px;
+    text-align:start;
+    overflow-wrap: break-word;
+    
 }
 
-/* Fonts */
-.settings-top-font {
-    font-size: 30px;
+.settings-mid-side {
+    width: 70%;
+    margin: 5px;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+.settings-end-side {
+    width: 10%;
+    text-align: center;
 }
 
 .settings-list-font {
-    font-size: 23px;
+    font-size: 20px;
 }

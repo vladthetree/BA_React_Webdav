@@ -7,6 +7,7 @@ import { getObjectStorageIndex } from "../components/utils/db/storageObjectMetho
 import { hasObjectStorageDatabase } from "../components/utils/db/storageObjectMethodes.jsx";
 import { ListDir } from "../components/utils/ListDir.jsx";
 import ModalLogin from "../components/utils/pageUtils/modal/login/ModalLogin.jsx";
+import ModalSettings from "../components/utils/pageUtils/modal/settings/ModalSettings.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
@@ -64,7 +65,7 @@ const VideoPage = () => {
 			<Layout
 				navbar_left={topLeftElements}
 				navbar_middle={userdata ? `Angemeldet : ${userdata.username}` : ""}
-				navbar_right={topRightElements}
+				navbar_right={<ModalSettings userdata={userdata} />}
 			>
 				{dbExist && <ListVideos videosSeen={videosSeen} errorRef={errorRef}/>}
 			</Layout>

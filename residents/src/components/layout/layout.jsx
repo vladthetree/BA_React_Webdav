@@ -28,9 +28,7 @@ const Layout = ({ navbar_left, navbar_middle, navbar_right, children }) => {
 					</div>
 					<div className="navbar_left_wrapper">
 						<div className="navbar_left">
-							{navbar_right.map((element) => (
-								<div style={{ height: "100%" }}>{element}</div>
-							))}
+							{navbar_right}
 						</div>
 					</div>
 				</nav>

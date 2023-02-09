@@ -1,30 +1,38 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Settings from "./settings.jsx";
 
-const ModalSettings = (userData) => {
-	const [showModal, setShowModal] = useState(false);
+const ModalSettings = (props) => {
+  const [showModal, setShowModal] = useState(false);
+  const { userdata = {} } = props;
+  const userDataArray = [];
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-      };
-    
-      const handleOpenModal = () => {
-        setShowModal(true);
-      };
-	
+  Object.entries(userdata).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) {
+      userDataArray.push({ name: key, value, status: true });
+    }
+  });
 
-      return (
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+
+  return (
+    <div>
+      <button onClick={handleOpenModal}>Open Settings</button>
+      {showModal && (
         <div>
-          <button onClick={handleOpenModal}>Open Settings</button>
-          {showModal && (
-            <div>
-              <div>
-                <Settings onClose={handleCloseModal}/>
-              </div>
-            </div>
-          )}
+          <div>
+            <Settings onClose={handleCloseModal} userdataArray={userDataArray} />
+          </div>
         </div>
-      );
-    };
-    
-    export default ModalSettings;
+      )}
+    </div>
+  );
+};
+
+export default ModalSettings;
