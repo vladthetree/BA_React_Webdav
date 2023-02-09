@@ -19,6 +19,23 @@ async function addToIndexDbStore(database, ObjectStorage, mode, filename, fileCo
 	db.close();
 	return Promise.resolve();
   }
+
+  async function deleteFromIndexDbStore(database, ObjectStorage, filename) {
+	try {
+		const db = await openIndexDB(database, ObjectStorage);
+		let transaction = db.transaction(ObjectStorage, "readwrite");
+		console.log(`#-- DELETING FROM OBJECTSTORAGE ${ObjectStorage} THE FILE ${filename} --#`);
+		let objStore = transaction.objectStore(ObjectStorage);
+
+		objStore.delete(filename);
+		
+		db.close();
+		return Promise.resolve();
+	} catch (error) {
+		console.log(`Index ${filename} does not exist.`);
+		return Promise.resolve(`Index ${filename} does not exist.`);
+	}
+}
   
 
 async function getAllFromObjectStorage(database, ObjectStore) {
@@ -114,10 +131,13 @@ async function hasObjectStorageDatabase(database, OBJECT_STORE) {
 	});
 }
 
+
+
 export {
 	getObjectStorageIndex,
 	addToIndexDbStore,
 	removeAlreadyStoredFiles,
 	getConvertedBlobVideos,
 	hasObjectStorageDatabase,
+	deleteFromIndexDbStore
 };

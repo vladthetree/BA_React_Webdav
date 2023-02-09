@@ -19,8 +19,7 @@ const filter = (pathname, req) => {
     pathname.startsWith("http://localhost:8080/proxy/getFileContent")
   );
 };
-//https://localhost:8443/remote.php/dav/files/test/
-//proxy greift nicht
+
 const options = {
   target: "http://localhost:8080/remote.php/",
   changeOrigin: true,
@@ -45,7 +44,7 @@ app.post("/proxy/listContent", async (req, res) => {
     res.json(contentNames);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error retrieving directory contents" });
+    res.status(500).json({ error: "Error : Credentials" });
   }
 });
 
@@ -60,23 +59,25 @@ app.post("/proxy/getFileContent", async (req, res) => {
       password: password,
     });
 
-    console.log(" NEW FILES ")
-    console.log(newFiles)
-    const promises = newFiles.map((file, index) => client.getFileContents(file.filename).then(arrayBuffer => {
-      result.push({name:file.filename,buffer:arrayBuffer});
-    }))
+    console.log(" NEW FILES ");
+    console.log(newFiles);
+    const promises = newFiles.map((file, index) =>
+      client.getFileContents(file.filename).then((arrayBuffer) => {
+        result.push({ name: file.filename, buffer: arrayBuffer });
+      })
+    );
     await Promise.all(promises);
   } catch (error) {
     console.log(error);
     res.send(error);
   }
 
-  console.log("DOWNLOAD RESULT")
-  console.log(result)
-  res.send(result)
+  console.log("DOWNLOAD RESULT");
+  console.log(result);
+
+  res.send(result);
 });
 
 app.listen(8080, () => {
   console.log("Server is listening on port 8080");
 });
-

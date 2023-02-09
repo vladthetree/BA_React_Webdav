@@ -3,20 +3,16 @@ import { getConvertedBlobVideos } from "../db/storageObjectMethodes.jsx";
 import { useWindowSize } from "react-use";
 import React from "react";
 import "../../style/videostyle.css";
-import Swipe from "../../icons/react-svg/Swipe.jsx";
+import Swipe from "../../svgs/Swipe.jsx";
+import { addToIndexDbStore } from "../db/storageObjectMethodes.jsx";
 
 const INTERVAL_VIDEOCHECK = 1000;
-const DATABASE_VIDEOS = "db";
 
-export const ListVideos = memo(function ListVideos() {
+export const ListVideos = memo(function ListVideos({ videosSeen }) {
   const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();
-
-  const [isLeft, setIsLeft] = useState(false);
-
   const intervalVideoRef = useRef();
-  const fontSize = height / 25;
 
   useEffect(() => {
     intervalVideoRef.current = setInterval(async () => {
@@ -36,7 +32,9 @@ export const ListVideos = memo(function ListVideos() {
     return storagaArray.filter((item) => !videoArray.includes(item.name));
   }
 
-  const handleClickVideo = (e) => {
+  const handleClickVideo = (e, videoName) => {
+  
+
     const video = e.currentTarget;
     if (video.paused) {
       video.play();
@@ -73,12 +71,9 @@ export const ListVideos = memo(function ListVideos() {
                 <video
                   src={video.url}
                   type="video/mp4"
-                  style={{
-            
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  onClick={handleClickVideo}
+                  className="video"
+                  
+                  onClick={(e) => handleClickVideo(e, video.name)}
                 />
               </div>
               <div className="videoNameContainer">

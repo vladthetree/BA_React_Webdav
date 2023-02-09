@@ -1,0 +1,75 @@
+
+/* Container */
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.settings-upper-row {
+    display: flex;
+    height: 10%;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-beginning-side {
+    display: flex;
+    width: 20%;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-mid-side {
+    display: flex;
+    width: 75%;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-button {
+    display: flex;
+    width: 5%;
+    height: 90%;
+    font-size: 25px;
+    background-color: lightblue;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-options {
+
+    overflow-y: scroll;
+    background-color: grey;
+    height: 95%;
+    width: 100%;
+}
+
+.settings-list {
+    height: 15%;
+    display: flex;
+    margin-bottom:5%
+}
+
+.settings-list-itemStatus{
+    display: flex;
+    width: 15%;
+    align-items: center;
+    justify-content: center;
+}
+.settings-list-statusindikator{
+    width: 100%;
+    height: 100%;
+    background-color: green;
+}
+
+/* Fonts */
+.settings-top-font {
+    font-size: 30px;
+}
+
+.settings-list-font {
+    font-size: 23px;
+}

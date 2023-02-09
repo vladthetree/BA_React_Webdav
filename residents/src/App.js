@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
-import Login from "../src/routes/login.jsx";
 import VideoPage from "./routes/videoPage.jsx";
 
 function App() {

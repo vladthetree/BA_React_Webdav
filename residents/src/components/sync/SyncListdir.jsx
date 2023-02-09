@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListDir } from "../utils/ListDir.jsx";
+import { getObjectStorageIndex } from "../utils/db/storageObjectMethodes.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";

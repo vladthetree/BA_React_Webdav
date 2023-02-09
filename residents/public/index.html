@@ -8,9 +8,23 @@
   <link rel="manifest" href="./manifest.json" />
   <title>BA_PWA</title>
 </head>
-
 <body>
   <div id="root"></div>
+  <button id="presentationButton">Open in Presentation Mode</button>
+  <script>
+    const presentationButton = document.getElementById("presentationButton");
+    presentationButton.addEventListener("click", startPresentation);
+  
+    async function startPresentation() {
+      try {
+        const presentationRequest = new PresentationRequest("./presentation.html");
+        const presentationConnection = await presentationRequest.start();
+        // Add any additional code to handle the presentation connection
+      } catch (error) {
+        // Handle the error
+      }
+    }
+  </script>
   <script src="./bundle.js"></script>
 
 </body>

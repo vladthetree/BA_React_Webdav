@@ -1,12 +1,12 @@
 import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "../components/layout/layout.jsx";
 import { topLeftElements } from "../components/utils/pageUtils/NavbarElements/topLeftElements.jsx";
 import { topRightElements } from "../components/utils/pageUtils/NavbarElements/topRightElements.jsx";
 import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes.jsx";
 import { hasObjectStorageDatabase } from "../components/utils/db/storageObjectMethodes.jsx";
 import { ListDir } from "../components/utils/ListDir.jsx";
-import Modal from "../components/utils/modalLogin.jsx";
+import ModalLogin from "../components/utils/pageUtils/modal/login/ModalLogin.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
@@ -14,6 +14,9 @@ const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 const VideoPage = () => {
 	const [userdata, setUserData] = useState();
 	const [dbExist, setDbExist] = useState(false);
+	const videosSeen = useRef([]);
+	const errorRef = useRef();
+	
 
 	useEffect(() => {
 		const getData = async () => {
@@ -63,9 +66,10 @@ const VideoPage = () => {
 				navbar_middle={userdata ? `Angemeldet : ${userdata.username}` : ""}
 				navbar_right={topRightElements}
 			>
-				{dbExist && <ListVideos />}
+				{dbExist && <ListVideos videosSeen={videosSeen} errorRef={errorRef}/>}
 			</Layout>
-			<Modal userdata={userdata} />
+			<ModalLogin userdata={userdata} />
+
 		</div>
 	);
 };

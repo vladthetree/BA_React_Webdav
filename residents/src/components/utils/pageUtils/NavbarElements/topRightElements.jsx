@@ -1,4 +1,4 @@
-import Settings from './navParts/Settings.jsx';
 import React from 'react';
+import ModalSettings from '../modal/settings/ModalSettings.jsx';
 
-export const topRightElements = [<Settings />];
+export const topRightElements = [<ModalSettings />];

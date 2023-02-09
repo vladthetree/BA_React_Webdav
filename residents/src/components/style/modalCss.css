@@ -1,4 +1,5 @@
 .outer-container {
+  z-index: 999;
   position: absolute;
   top: 0;
   left: 0;
@@ -67,4 +68,17 @@ padding-top: 20px;
   font-size: 24px;
   border-radius: 15px;
   padding: 10px;
+}
+
+.innerContainer-Settings {
+  border-style: solid;
+  border-color: black;
+  border-width: 10px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  height: 390px;
+  width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
