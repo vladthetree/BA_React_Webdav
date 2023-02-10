@@ -41,7 +41,7 @@ adress = `${webdavAdress}${resident}${username}`
 
   return (
     <div className="outer-container ">
-      <div className="innerContainer">
+      <div className="innerContainer innerContainer-LoginColor">
         <form className="login-form">
           <label htmlFor="name">Username:</label>
           <input

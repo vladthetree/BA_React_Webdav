@@ -7,7 +7,7 @@ import { Buffer } from "buffer";
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
 
-export const ListDir = async (userdata, errorRef) => {
+export const ListDir = async (userdata, errorRef, setNewVideos) => {
   const mp4FilesNames = await listContent(userdata, errorRef);
   await removeAlreadyStoredFiles(
     DATABASE_VIDEOS,
@@ -17,7 +17,8 @@ export const ListDir = async (userdata, errorRef) => {
   if (mp4FilesNames.length > 0) {
     console.log("#--New Files available--#");
     console.log("#-- New Files : --#");
-    await getFileContent(userdata, mp4FilesNames);
+   
+    await getFileContent(userdata, mp4FilesNames, setNewVideos);
   } else {
     console.log("#--No new Files to Upload--#");
   }
@@ -42,7 +43,7 @@ const listContent = async (userdata, errorRef) => {
   }
 };
 
-const getFileContent = async (userdata, newMp4FilesArray) => {
+const getFileContent = async (userdata, newMp4FilesArray ,setNewVideos) => {
   try {
     const response = await fetch("/proxy/getFileContent", {
       method: "POST",
@@ -57,7 +58,7 @@ const getFileContent = async (userdata, newMp4FilesArray) => {
     const content = await response.json();
     console.log("\n\n\n#-- new Videos resieved --#");
     console.log("#-- start download into IndexDB --#\n\n\n");
-    console.log(content);
+    setNewVideos(content.length)
     content.forEach((newFile) => {
       let buffer = Buffer.from(newFile.buffer);
 

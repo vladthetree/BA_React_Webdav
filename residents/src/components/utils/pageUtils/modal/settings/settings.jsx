@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "../../../../style/settings.css";
-import {deleteDBFromIndexDB} from "../../../db/storageObjectMethodes.jsx"
+import { deleteDBFromIndexDB } from "../../../db/storageObjectMethodes.jsx";
 
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
 const DATABASE_USERDATA = "userData";
 const OBJECT_STORE_CUSTOMER = "customer";
 
-const Settings = ({ onClose, userdataArray }) => {
+const Settings = ({ onClose, newVideos, setNewVideos }) => {
   const [displayedArray, setDisplayedArray] = useState([]);
-
-  // useEffect(() => {
-  //   if (userdataArray && userdataArray.length > 0) {
-  //     setDisplayedArray([...userdataArray]);
-  //   }
-  // }, [userdataArray]);
-
   const deleteAllVideos = async () => {
     await deleteDBFromIndexDB(DATABASE_VIDEOS);
+    await deleteDBFromIndexDB(undefined)
     setTimeout(() => {
       location.reload();
-    }, 1000);
+    }, 100);
   };
   const deleteAll = async () => {
     await Promise.all([
@@ -29,17 +23,24 @@ const Settings = ({ onClose, userdataArray }) => {
     ]);
     setTimeout(() => {
       location.reload();
-    }, 1000);
+    }, 200);
   };
   const reloadPage = async () => {
     setTimeout(() => {
       location.reload();
-    }, 500);
+    }, 50);
   };
+  const markAsSeen = async () => {
+    setNewVideos(0);
+    setTimeout(() => {
+      location.reload();
+    }, 50);
+  };
+
   const primeMethodes = [
     {
-      name: "DeleteDB",
-      value: "This will delete the whole database",
+      name: "Delete Videos",
+      value: "Delete All Videos from DB.",
       status: deleteAllVideos,
     },
     {
@@ -52,15 +53,18 @@ const Settings = ({ onClose, userdataArray }) => {
       value: "Resets the page",
       status: reloadPage,
     },
+    {
+      name: "Mark as Seen",
+      value: newVideos === 0 ? "No new Videos to watch" : `They are ${newVideos} new Videos to watch!`,
+      status: newVideos === 0 ? "" : markAsSeen,
+  }
   ];
-
 
   useEffect(() => {
     setDisplayedArray(primeMethodes);
   }, []);
-  
 
-console.log(displayedArray)
+  console.log(displayedArray);
 
   return (
     <div className="outer-container">
@@ -88,6 +92,7 @@ console.log(displayedArray)
                 </div>
                 <div className="settings-end-side">
                   <button
+                    className="settings-list-button "
                     onClick={() => {
                       if (typeof item.status === "function") {
                         item.status();

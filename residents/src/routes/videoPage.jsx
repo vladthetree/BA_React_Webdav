@@ -15,6 +15,7 @@ const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 const VideoPage = () => {
 	const [userdata, setUserData] = useState();
 	const [dbExist, setDbExist] = useState(false);
+	const [newVideos, setNewVideos] = useState(0);
 	const videosSeen = useRef([]);
 	const errorRef = useRef();
 	
@@ -53,7 +54,7 @@ const VideoPage = () => {
 	useEffect(() => {
 		if (userdata) {
 			const downloadVideos = setInterval(() => {
-				ListDir(userdata);
+				ListDir(userdata,errorRef, setNewVideos);
 			}, 5000);
 			return () => clearInterval(downloadVideos);
 		}
@@ -65,7 +66,7 @@ const VideoPage = () => {
 			<Layout
 				navbar_left={topLeftElements}
 				navbar_middle={userdata ? `Angemeldet : ${userdata.username}` : ""}
-				navbar_right={<ModalSettings userdata={userdata} />}
+				navbar_right={<ModalSettings newVideos={newVideos} setNewVideos={setNewVideos}/>}
 			>
 				{dbExist && <ListVideos videosSeen={videosSeen} errorRef={errorRef}/>}
 			</Layout>

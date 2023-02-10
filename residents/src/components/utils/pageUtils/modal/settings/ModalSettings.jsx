@@ -3,15 +3,6 @@ import Settings from "./settings.jsx";
 
 const ModalSettings = (props) => {
   const [showModal, setShowModal] = useState(false);
-  const { userdata = {} } = props;
-  const userDataArray = [];
-
-  Object.entries(userdata).forEach(([key, value]) => {
-    if (value !== null && value !== undefined) {
-      userDataArray.push({ name: key, value, status: true });
-    }
-  });
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -27,7 +18,7 @@ const ModalSettings = (props) => {
       {showModal && (
         <div>
           <div>
-            <Settings onClose={handleCloseModal} userdataArray={userDataArray} />
+            <Settings onClose={handleCloseModal} newVideos={props.newVideos} setNewVideos={props.setNewVideos}/>
           </div>
         </div>
       )}
