@@ -7,6 +7,24 @@ const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 
 const SyncListdir = () => {
 	const [userdata, setUserData] = useState();
+	const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+	useEffect(() => {
+	  const handleOnline = () => {
+		setIsOnline(true);
+	  };
+	  const handleOffline = () => {
+		setIsOnline(false);
+	  };
+  
+	  window.addEventListener("online", handleOnline);
+	  window.addEventListener("offline", handleOffline);
+  
+	  return () => {
+		window.removeEventListener("online", handleOnline);
+		window.removeEventListener("offline", handleOffline);
+	  };
+	}, []);
 	useEffect(() => {
 		const getData = async () => {
 			const resivedUserData = await getObjectStorageIndex(
@@ -29,13 +47,13 @@ const SyncListdir = () => {
 	}, [userdata]);
 
     useEffect(() => {
-		if (userdata) {
+		if (userdata && isOnline) {
 			const downloadVideos = setInterval(() => {
 				ListDir(userdata);
 			}, 5000);
 			return () => clearInterval(downloadVideos);
 		}
-	}, [userdata]);
+	}, [userdata, isOnline]);
     
 };
 

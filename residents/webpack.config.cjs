@@ -50,11 +50,12 @@ module.exports = {
 				{ from: "public/robots.txt", to: "robots.txt" },
 				{ from: "public/favicon.ico", to: "favicon.ico" },
 				{ from: "public/style", to: "style" },
+
 			],
 		}),
-		new WorkboxWebpackPlugin.GenerateSW({
-			clientsClaim: true,
-			skipWaiting: true,
-		}),
+		new WorkboxWebpackPlugin.InjectManifest({
+			swSrc: "./src/ba-service-worker.js",
+			swDest: "ba-service-worker.js",
+		  }),
 	],
 };
