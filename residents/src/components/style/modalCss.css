@@ -18,7 +18,7 @@
 }
 
 .innerContainer {
-  
+
   border-radius: 15px;
   height: 390px;
   width: 250px;
@@ -26,7 +26,8 @@
   align-items: center;
   justify-content: center;
 }
-.innerContainer-LoginColor{
+
+.innerContainer-LoginColor {
   background-color: #ffffff73;
 }
 
@@ -59,7 +60,7 @@
 
 .button-container {
   width: 100%;
-padding-top: 20px;
+  padding-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,3 +74,20 @@ padding-top: 20px;
   padding: 10px;
 }
 
+.errorMessage {
+  color: black;
+  display: flex;
+  translate: -50%;
+  height: 100px;
+  width: 200px;
+  justify-content: center;
+  align-items: center;
+  border-width: 5px;
+  border-style: solid;
+  border-radius: 15px;
+  border-color: red;
+  font-size: 15px;
+  background-color: lightyellow;
+  text-align: start;
+  overflow-wrap: break-word;
+}

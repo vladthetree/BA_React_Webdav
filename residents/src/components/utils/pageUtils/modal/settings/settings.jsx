@@ -9,9 +9,10 @@ const OBJECT_STORE_CUSTOMER = "customer";
 
 const Settings = ({ onClose, newVideos, setNewVideos }) => {
   const [displayedArray, setDisplayedArray] = useState([]);
+  const [isFullScreen, setIsFullScreen] = useState(document.fullscreenElement)
   const deleteAllVideos = async () => {
     await deleteDBFromIndexDB(DATABASE_VIDEOS);
-    await deleteDBFromIndexDB(undefined)
+    await deleteDBFromIndexDB(undefined);
     setTimeout(() => {
       location.reload();
     }, 100);
@@ -36,6 +37,34 @@ const Settings = ({ onClose, newVideos, setNewVideos }) => {
       location.reload();
     }, 50);
   };
+  const fullScreen = async () => {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+const presentationMode = async() => {
+  try {
+    const presentationRequest = new PresentationRequest("http://localhost:8080/");
+    const presentationConnection = await presentationRequest.start();
+    presentationConnection.addEventListener("connect", event => {
+      // Send a message to the presentation display to enter presentation mode
+      presentationConnection.send("enterPresentationMode");
+    });
+  } catch (error) {
+    // Handle the error
+  }
+}
 
   const primeMethodes = [
     {
@@ -55,9 +84,24 @@ const Settings = ({ onClose, newVideos, setNewVideos }) => {
     },
     {
       name: "Mark as Seen",
-      value: newVideos === 0 ? "No new Videos to watch" : `They are ${newVideos} new Videos to watch!`,
+      value:
+        newVideos === 0
+          ? "No new Videos to watch"
+          : `They are ${newVideos} new Videos to watch!`,
       status: newVideos === 0 ? "" : markAsSeen,
-  }
+    },
+    {
+      name: document.fullscreenElement ? "Close Fullscreen" : "Fullscreen",
+      value: document.fullscreenElement
+        ? "Close Fullscreen"
+        : "Enables Fullscreen",
+      status: fullScreen,
+    },
+    {
+      name:"Prasentation Mode",
+      value:"This will open the application in Presentation mode",
+      status: presentationMode,
+    }
   ];
 
   useEffect(() => {

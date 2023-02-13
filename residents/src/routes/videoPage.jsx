@@ -2,7 +2,6 @@ import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "../components/layout/layout.jsx";
 import { topLeftElements } from "../components/utils/pageUtils/NavbarElements/topLeftElements.jsx";
-import { topRightElements } from "../components/utils/pageUtils/NavbarElements/topRightElements.jsx";
 import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes.jsx";
 import { hasObjectStorageDatabase } from "../components/utils/db/storageObjectMethodes.jsx";
 import { ListDir } from "../components/utils/ListDir.jsx";
