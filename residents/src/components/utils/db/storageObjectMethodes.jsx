@@ -9,6 +9,7 @@ async function addToIndexDbStore(
   fileContext
 ) {
   const db = await openIndexDB(database, ObjectStorage);
+  console.log(` addToIndexDbStore database : ${database} and Objectstorage ${ObjectStorage}`)
   let transaction = db.transaction(ObjectStorage, mode);
   console.log(
     `#-- ADDING TO OBJECTSTORAGE ${ObjectStorage} THE FILE ${filename} --#`
@@ -30,6 +31,10 @@ async function addToIndexDbStore(
 }
 
 async function getAllFromObjectStorage(database, ObjectStore) {
+  console.log(` getAllFromObjectStorage database : ${database} and Objectstorage ${ObjectStore}`)
+
+  console.log("Object Store")
+  console.log(ObjectStore)
   const db = await openIndexDB(database, ObjectStore);
   return new Promise((resolve, reject) => {
     if (!db.objectStoreNames.contains(ObjectStore)) {
@@ -52,6 +57,8 @@ async function getAllFromObjectStorage(database, ObjectStore) {
 }
 
 async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
+  console.log(` removeAlreadyStoredFiles database : ${database} and Objectstorage ${ObjectStorage}`)
+
   let storageValue = await getAllFromObjectStorage(database, ObjectStorage);
 
   if (storageValue) {
@@ -89,6 +96,8 @@ async function getConvertedBlobVideos() {
 }
 
 async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
+  console.log(` getObjectStorageIndex database : ${database} and Objectstorage ${OBJECT_STORE}`)
+
   const db = await openIndexDB(database, OBJECT_STORE);
   return new Promise((resolve, reject) => {
     try {
@@ -111,7 +120,9 @@ async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
 }
 
 async function hasObjectStorageDatabase(database, OBJECT_STORE) {
-  const db = await openIndexDB(database);
+  console.log(` hasObjectStorageDatabase database : ${database} and Objectstorage ${OBJECT_STORE}`)
+
+  const db = await openIndexDB(database,OBJECT_STORE);
   return new Promise((resolve) => {
     if (!db.objectStoreNames.contains(OBJECT_STORE)) {
       resolve(false);
@@ -121,6 +132,8 @@ async function hasObjectStorageDatabase(database, OBJECT_STORE) {
   });
 }
 async function deleteDBFromIndexDB(database) {
+  console.log(` deleteDBFromIndexDB database : ${database} `)
+
   return new Promise((resolve, reject) => {
     const request = indexedDB.deleteDatabase(database);
     request.onsuccess = function () {

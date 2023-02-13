@@ -44,7 +44,10 @@ const VideoPage = () => {
         OBJECT_STORE_USERDATA_OBJECTSTORAGE,
         "adress01"
       );
+      console.log("SAMPLE ")
+      console.log(resivedUserData)
       if (resivedUserData) {
+        console.log("GOT DATA ")
         const result = resivedUserData.fileContext;
         setUserData(result);
       }

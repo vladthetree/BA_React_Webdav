@@ -1,4 +1,6 @@
 export async function openIndexDB(database, ObjectStorage) {
+  console.log("INSIDE openIndexDB")
+  console.log(`database : ${database} and ObjectStorage ${ObjectStorage}`)
   return new Promise((resolve, reject) => {
     try {
       let request = indexedDB.open(database);

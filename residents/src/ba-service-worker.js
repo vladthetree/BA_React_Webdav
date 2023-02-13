@@ -4,12 +4,3 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-
-const networkFirst = new StaleWhileRevalidate({
-    cacheName: 'listContent-cache',
-});
-
-workbox.routing.registerRoute(
-  /http:\/\/localhost:8080\/proxy\/listContent/,
-  networkFirst
-);

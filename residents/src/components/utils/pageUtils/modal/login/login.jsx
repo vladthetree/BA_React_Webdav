@@ -5,7 +5,7 @@ import "../../../../style/modalCss.css"
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 
-const Login = ({onClose}) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [webdavAdress, setWebdavAdress] = useState("");
@@ -24,7 +24,6 @@ const Login = ({onClose}) => {
       "adress01",
       customer
     );
-    onClose();
   }
 
 if(webdavAdress){
