@@ -18,7 +18,7 @@ const ModalSettings = (props) => {
       {showModal && (
         <div>
           <div>
-            <Settings onClose={handleCloseModal} newVideos={props.newVideos} setNewVideos={props.setNewVideos}/>
+            <Settings onClose={handleCloseModal} setNewVideos={props.setNewVideos}/>
           </div>
         </div>
       )}

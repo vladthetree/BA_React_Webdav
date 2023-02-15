@@ -76,7 +76,7 @@ export const ListVideos = memo(function ListVideos({ videosSeen }) {
                   onClick={(e) => handleClickVideo(e, video.name)}
                 />
               </div>
-              <div className="videoNameContainer">
+              <div className="videoNameContainer" style={{fontSize:height/19}}>
                 {video.name.substring(0, video.name.length - 4)}
               </div>
             </div>

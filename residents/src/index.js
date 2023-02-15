@@ -20,11 +20,11 @@ if ("serviceWorker" in navigator) {
           console.log("New service worker found.");
           const newWorker = registration.installing;
           newWorker.addEventListener("install", (event) => {
-            newWorker.skipWaiting();
           });
+          newWorker.skipWaiting();
           newWorker.addEventListener("statechange", () => {
             if (newWorker.state === "activated") {
-              console.log("New service worker activated.");
+              console.log("New service sworker  activated.");
             }
           });
         });
