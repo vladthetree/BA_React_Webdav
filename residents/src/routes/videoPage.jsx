@@ -14,19 +14,20 @@ const VideoPage = () => {
 	const [dbExist, setDbExist] = useState(false);
 	const [newVideos, setNewVideos] = useState(0);
 	const [userdata, setUserData] = useState();
-	const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+	//const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+	const [isOnline, setIsOnline] = useState(false);
 
 	const videosSeen = useRef([]);
 	const errorRef = useRef();
 
 	const handleNewVideos = (isDefaultOn) => {
-		console.log("INSIDE HANDLE NEW VIDEOS");
-		console.log(newVideos);
+		// console.log("INSIDE HANDLE NEW VIDEOS");
+		// console.log(newVideos);
 		if (isDefaultOn) {
-			console.log("IS DEFAULT ON TRIGGER");
+			// console.log("IS DEFAULT ON TRIGGER");
 			return newVideos;
 		} else {
-			console.log("IS DEFAULT OFF TRIGGER");
+			// console.log("IS DEFAULT OFF TRIGGER");
 			setNewVideos(0);
 			return newVideos;
 		}

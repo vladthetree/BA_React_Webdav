@@ -19,9 +19,6 @@ const Layout = ({
 
 	let newVideos = handleNewVideos(showModal);
 
-	console.log("NEW VIDEOS ");
-	console.log(newVideos);
-
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setShowModal(true);
@@ -33,7 +30,6 @@ const Layout = ({
 	const handleCloseModal = () => {
 		setShowModal(false);
 	};
-	console.log(`SHOW MODAL IN LAYOUT ${showModal}`);
 	return !userdata ? (
 		<ModalLogin />
 	) : (

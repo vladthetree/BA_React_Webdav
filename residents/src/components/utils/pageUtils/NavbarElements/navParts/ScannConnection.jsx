@@ -1,77 +1,120 @@
 import { useEffect, useState } from "react";
 import { addToIndexDbStore } from "../../../db/storageObjectMethodes.jsx";
-import React from 'react';
-import { writeValueBLEmessage } from "../../../bluetooth/utils/writeBLEmessage.js";
+import React from "react";
+// import { writeValueBLEmessage } from "../../../bluetooth/utils/writeBLEmessage.js";
+import { writeMessage } from "../../../bluetooth/utils/writeBLEmessage.js";
 import { command } from "../../../bluetooth/utils/commands.js";
+import { getObjectStorageIndex } from "../../../db/storageObjectMethodes.jsx";
+
 const filters = [
-  {
-    name: "Bangle.js 6afc"
-  }
+	{
+		name: "Bangle.js 6afc",
+	},
 ];
-const OBJECT_STORE_USERDATA = "userData";
-const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
-const NORDIC_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-const NORDIC_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-const NORDIC_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-let device;
+
+var NORDIC_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+var NORDIC_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+var NORDIC_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 let rx;
 let tx;
-let connectionLost = false;
-let counter = 0;
+
+var bluetoothDevice;
 
 export function ScannConnection() {
-  const [BLEserver, setBLEserver] = useState([]);
-  const [Device, setDevice] = useState([]);
-  const handleClick = async () => {
-    console.log("Searching for device...");
-    try {
-      device = await navigator.bluetooth.requestDevice({
-        filters: filters,
-        optionalServices: [NORDIC_SERVICE]
-      });
-      console.log("Connected to device:", device);
-      addToIndexDbStore(
-        OBJECT_STORE_USERDATA,
-        OBJECT_STORE_USERDATA_OBJECTSTORAGE,
-        "readwrite",
-        "device",
-        {
-          name: device.name,
-          id: device.id
-        }
-      );
-      device.addEventListener("gattserverdisconnected", reconnectToDevice);
-      const BluetoothRemoteGATTServer = await device.gatt.connect();
-      const service = await BluetoothRemoteGATTServer.getPrimaryService(
-        NORDIC_SERVICE
-      );
-      tx = await service.getCharacteristic(NORDIC_TX);
-      rx = await service.getCharacteristic(NORDIC_RX);
 
-      await writeValueBLEmessage(command.connected,tx)
+	const handleClick2 = async () => {
+		bluetoothDevice = null;
+		try {
+			console.log("Requesting any Bluetooth Device...");
+			bluetoothDevice = await navigator.bluetooth.requestDevice({
+				filters: filters,
+				pairing: true,
+			});
+			bluetoothDevice.addEventListener(
+				"gattserverdisconnected",
+				onDisconnected,
+			);
+			connect();
+		} catch (error) {
+			console.log("Argh! " + error);
+		}
+	};
 
-    } catch (error) {
-      console.log("ERROR " + error);
-    }
-  };
+	async function exponentialBackoff(max, delay, toTry, success, fail) {
+		try {
+			const result = await toTry();
+			success(result);
+		} catch (error) {
+			if (max === 0) {
+				return fail();
+			}
+			time("Retrying in " + delay + "s... (" + max + " tries left)");
+			setTimeout(function () {
+				exponentialBackoff(--max, delay * 2, toTry, success, fail);
+			}, delay * 1000);
+		}
+	}
 
-  async function reconnectToDevice() {
-    console.log("Connection Lost");
+	function time(text) {
+		console.log("[" + new Date().toJSON().substr(11, 8) + "] " + text);
+	}
 
-    while (!device.gatt.conntected) {
-      try {
-        device.gatt.connect();
-      } catch (error) {
-        console.log("ERROR : " + error);
-      }
-    }
-  }
+	function onDisconnected() {
+		console.log("> Bluetooth Device disconnected");
+		connect();
+	}
 
-  return (
-    <div>
-      <button id="search-button" onClick={handleClick}>
-        ScannConnection{" "}
-      </button>{" "}
-    </div>
-  );
+	async function connect() {
+		exponentialBackoff(
+			3 /* max retries */,
+			2 /* seconds delay */,
+			async function toTry() {
+				time("Connecting to Bluetooth Device... ");
+				const server = await bluetoothDevice.gatt.connect();
+        console.log(" GOT SERVER")
+        console.log(server)
+        const service = await server.getPrimaryService(NORDIC_SERVICE);
+
+				tx = await service.getCharacteristic(NORDIC_TX);
+				rx = await service.getCharacteristic(NORDIC_RX)
+        await rx.startNotifications();
+        tx.addEventListener('connetedButtonClick', connetedButtonClick);
+
+       
+			},
+			function success() {
+				console.log("> Bluetooth Device connected. Try disconnect it now.");
+			},
+			function fail() {
+				time("Failed to reconnect.");
+			},
+		);
+	}
+
+	const connetedButtonClick = async () => {
+		if (!tx) {
+			console.log("Error: Not connected to Bluetooth device");
+			return;
+		}
+		try {
+      await writeMessage(command.connected, tx);
+			console.log("Sent 'Connected' message");
+		} catch (error) {
+			console.log("Error writing value: " + error);
+		}
+	};
+
+	return (
+		<div>
+			{/* <button id="search-button" onClick={handleClick1}>
+				ScannConnection
+			</button> */}
+			<button id="search-button" onClick={handleClick2}>
+				ScannConnection2
+			</button>
+			<button id="search-button" onClick={connetedButtonClick}>
+				Connect
+			</button>
+		</div>
+	);
 }
