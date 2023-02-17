@@ -1,38 +1,36 @@
 import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Layout from "../components/layout/layout.jsx";
-import { topLeftElements } from "../components/utils/pageUtils/NavbarElements/topLeftElements.jsx";
 import { hasObjectStorageDatabase } from "../components/utils/db/storageObjectMethodes.jsx";
 import { ListDir } from "../components/utils/ListDir.jsx";
 import ModalSettings from "../components/utils/pageUtils/modal/settings/ModalSettings.jsx";
 import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes.jsx";
+import { ScannConnection } from "../components/utils/pageUtils/NavbarElements/navParts/ScannConnection.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
 
 const VideoPage = () => {
 	const [dbExist, setDbExist] = useState(false);
-	const [newVideos, setNewVideos] = useState(0);
+	const [newVideos, setNewVideos] = useState([]);
 	const [userdata, setUserData] = useState();
-	//const [isOnline, setIsOnline] = useState(window.navigator.onLine);
-	const [isOnline, setIsOnline] = useState(false);
-
+	const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+	const [bleConn, setBleConn] = useState(false);
+	let videoAmount = newVideos.length;
 	const videosSeen = useRef([]);
 	const errorRef = useRef();
 
 	const handleNewVideos = (isDefaultOn) => {
-		// console.log("INSIDE HANDLE NEW VIDEOS");
-		// console.log(newVideos);
-		if (isDefaultOn) {
-			// console.log("IS DEFAULT ON TRIGGER");
-			return newVideos;
-		} else {
-			// console.log("IS DEFAULT OFF TRIGGER");
-			setNewVideos(0);
-			return newVideos;
+		if (!isDefaultOn) {
+			setNewVideos([]);
 		}
 	};
-
+	const handleDisplayBle = (smt) => {
+		console.log(smt);
+		if (smt) {
+			setBleConn(true);
+		}
+	};
 	useEffect(() => {
 		const getData = async () => {
 			const resivedUserData = await getObjectStorageIndex(
@@ -105,12 +103,22 @@ const VideoPage = () => {
 					style={{
 						height: "10px",
 						width: "10px",
+						backgroundColor: bleConn ? "green" : "red",
+						display: "inline-block",
+						marginRight: "5px",
+					}}
+				/>
+				<div
+					style={{
+						height: "10px",
+						width: "10px",
 						backgroundColor: isOnline ? "green" : "red",
 						borderRadius: "50%",
 						display: "inline-block",
 						marginRight: "5px",
 					}}
 				/>
+
 				<div>Angemeldet : {userdata.username}</div>
 			</div>
 		);
@@ -121,11 +129,16 @@ const VideoPage = () => {
 			<Layout
 				userdata={userdata}
 				handleNewVideos={handleNewVideos}
-				navbar_left={topLeftElements}
-				navbar_middle={userdata ? displayName() : ""}
-				navbar_right={
-					<ModalSettings newVideos={newVideos} setNewVideos={setNewVideos} />
+				videoAmount={videoAmount}
+				navbar_left={
+					<ScannConnection
+						newVideosAmount={videoAmount}
+						bleStatus={bleConn}
+						displayBle={handleDisplayBle}
+					/>
 				}
+				navbar_middle={userdata ? displayName() : ""}
+				navbar_right={<ModalSettings />}
 			>
 				{dbExist && <ListVideos videosSeen={videosSeen} errorRef={errorRef} />}
 			</Layout>

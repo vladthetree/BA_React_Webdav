@@ -44,18 +44,18 @@ const Settings = ({ onClose }) => {
 
 	const primeMethodes = [
 		{
-			name: "Delete Videos",
-			value: "Delete All Videos from DB.",
+			name: "Delete all\nvideos.",
+			value: "Delets all videos in indexDB.",
 			status: deleteAllVideos,
 		},
 		{
-			name: "DeleteAll",
-			value: "Deletes videos and useraccount",
+			name: "Reset",
+			value: "!Resets the App.\nDeletes useraccount and all videos!",
 			status: deleteAll,
 		},
 		{
 			name: "Reload",
-			value: "Resets the page",
+			value: "Resets the page\nCoution! Dont use in Presentaion Mode.",
 			status: reloadPage,
 		},
 		{

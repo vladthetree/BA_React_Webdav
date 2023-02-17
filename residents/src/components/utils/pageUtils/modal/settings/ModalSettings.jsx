@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Settings from "./settings.jsx";
 
-const ModalSettings = (props) => {
+const ModalSettings = () => {
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => {
     setShowModal(false);
@@ -18,7 +18,7 @@ const ModalSettings = (props) => {
       {showModal && (
         <div>
           <div>
-            <Settings onClose={handleCloseModal} setNewVideos={props.setNewVideos}/>
+            <Settings onClose={handleCloseModal}/>
           </div>
         </div>
       )}

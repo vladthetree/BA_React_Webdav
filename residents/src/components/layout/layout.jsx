@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../style/layout.css";
 import { useWindowSize } from "react-use";
 import DefaultScreen from "../utils/pageUtils/modal/defaultScreenElement/DefaultScreen.jsx";
@@ -10,6 +10,7 @@ const Layout = ({
 	navbar_right,
 	children,
 	userdata,
+	videoAmount,
 	handleNewVideos,
 }) => {
 	const [showModal, setShowModal] = useState(true);
@@ -17,8 +18,14 @@ const Layout = ({
 	const navbarhight = height / 25;
 	const fontSize = height / 23;
 
-	let newVideos = handleNewVideos(showModal);
+	console.log("RENDERTEST LAYOUT");
 
+	useEffect(() => {
+		handleNewVideos(showModal);
+	}, [showModal]);
+
+	console.log("NEW VIDEOS ");
+	console.log(videoAmount);
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setShowModal(true);
@@ -42,11 +49,7 @@ const Layout = ({
 					}}
 				>
 					<div className="navbar_left_wrapper">
-						<div className="navbar_left">
-							{navbar_left.map((element) => (
-								<div style={{ height: "100%" }}>{element}</div>
-							))}
-						</div>
+						<div className="navbar_left">{navbar_left}</div>
 					</div>
 					<div className="navbar_middle" style={{ fontSize: `${fontSize}px` }}>
 						{navbar_middle}
@@ -60,7 +63,7 @@ const Layout = ({
 				{showModal ? (
 					<DefaultScreen
 						handleCloseModal={handleCloseModal}
-						newVideosAmount={newVideos}
+						newVideosAmount={videoAmount}
 					/>
 				) : (
 					<main className="layoutbody">{children}</main>
