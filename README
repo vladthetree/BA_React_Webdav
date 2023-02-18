@@ -1,15 +1,15 @@
 TODO:
-| | Manager |
+|                  | Manager          |
 |------------------|------------------|
-| Fileupload | ❌ |
-| Settings | ❌ |
-| Management Videos| ❌ |
+| Fileupload       | ❌               |
+| Settings         | ❌               |
+| Management Videos| ❌               |
 
-|                              | Resident           |
+|                              | Resident          |
 | ---------------------------- | ------------------ |
-| Programme hinzufügen         | ❌                 |
-| Bluetooth                    | :heavy_check_mark: |
+| Programme hinzufügen         | ❌                  |
+| Bluetooth                    | :green_check_mark: |
 | Abfrage von mehreren Domänen | ❌                 |
-| Presentationmode             | :green_circle:     |
+| Presentationmode             | :green_check_mark:  |
 
 Export: - Wie soll das ganze exportiert werden? - Wie genau soll es getestet werden
