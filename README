@@ -1,15 +1,15 @@
 TODO:
-  Manger:
-   "❌" - Fileupload
-    "❌"- Settings
-   "❌" - Management of the Videos
-  Resident:
- "❌"-Programme hinzufügen
-    ":green_circle:"- Bluetooth?
-      {Deamon usw..} 
-   "❌" - Abfrage von mehreren Domänen
-   ":green_circle:" - Presentationmode , needs check
-  Export:
-    - Wie soll das ganze exportiert werden?
-    - Wie genau soll es getestet werden
-    
+| | Manager |
+|------------------|------------------|
+| Fileupload | ❌ |
+| Settings | ❌ |
+| Management Videos| ❌ |
+
+|                              | Resident           |
+| ---------------------------- | ------------------ |
+| Programme hinzufügen         | ❌                 |
+| Bluetooth                    | :heavy_check_mark: |
+| Abfrage von mehreren Domänen | ❌                 |
+| Presentationmode             | :green_circle:     |
+
+Export: - Wie soll das ganze exportiert werden? - Wie genau soll es getestet werden
