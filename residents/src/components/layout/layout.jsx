@@ -18,7 +18,7 @@ const Layout = ({
 	const navbarhight = height / 25;
 	const fontSize = height / 23;
 
-	console.log("RENDERTEST LAYOUT");
+	console.log("RENDERTEST");
 
 	useEffect(() => {
 		handleNewVideos(showModal);

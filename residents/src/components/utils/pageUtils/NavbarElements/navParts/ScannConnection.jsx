@@ -1,40 +1,39 @@
-import React, { useEffect } from "react";
-// import { writeValueBLEmessage } from "../../../bluetooth/utils/writeBLEmessage.js";
+import React, { useEffect, useState, useRef } from "react";
 import { writeMessage } from "../../../bluetooth/utils/writeBLEmessage.js";
 
-const filters = [
-	{
-		name: "Bangle.js 6afc",
-	},
-];
+export function ScannConnection({
+	newVideosAmount,
+	currentBLEstatus,
+	handleDisplayBLEconnection,
+}) {
+	const [filters, setFilters] = useState([{ name: "Bangle.js 6afc" }]);
+	var NORDIC_SERVICE = useRef("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+	var NORDIC_TX = useRef("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+	var NORDIC_RX = useRef("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+	const server = useRef(null);
+	const service = useRef(null);
+	const rxRef = useRef(null);
+	const txRef = useRef(null);
+	const bluetoothDeviceRef = useRef(null);
+	const latestNewVideoMessageRef = useRef("");
+	const MAX_TRYS = 2;
+	const MAX_DELAY = 3;
+	let isConnected = false;
 
-var NORDIC_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-var NORDIC_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-var NORDIC_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-let rx;
-let tx;
-var bluetoothDevice;
+	let newVideoMessage = `newVideos(${newVideosAmount})\n;`;
 
-let message = "";
-
-export function ScannConnection({ newVideosAmount, bleStatus, displayBle }) {
-	console.log(newVideosAmount);
-	message = `newVideos(${newVideosAmount})\n;`;
-
-	console.log("NEW MESSAGE WOULD HAVE BEEN");
-	console.log(message);
 	const handleClick2 = async () => {
-		bluetoothDevice = null;
+		bluetoothDeviceRef.current = null;
 		try {
 			console.log("Requesting any Bluetooth Device...");
-			bluetoothDevice = await navigator.bluetooth.requestDevice({
+			bluetoothDeviceRef.current = await navigator.bluetooth.requestDevice({
 				filters: filters,
 			});
-			bluetoothDevice.addEventListener(
+			bluetoothDeviceRef.current.addEventListener(
 				"gattserverdisconnected",
 				onDisconnected,
 			);
-			await connectBLE(displayBle, bleStatus);
+			await connectBLE(handleDisplayBLEconnection);
 		} catch (error) {
 			console.log(error);
 		}
@@ -43,30 +42,37 @@ export function ScannConnection({ newVideosAmount, bleStatus, displayBle }) {
 	};
 
 	useEffect(() => {
-		if (message !== "") {
+		if (newVideoMessage !== "") {
 			const event = new CustomEvent("newVideo", {
-				detail: { videoAmount: newVideosAmount, bleStatus: bleStatus },
+				detail: { videoAmount: newVideosAmount, bleStatus: currentBLEstatus },
 			});
 			document.dispatchEvent(event);
 		}
-	}, [message]);
+	}, [newVideoMessage]);
 
-	async function connectBLE(handleBleStatus) {
+	async function connectBLE(handleDisplayBLEconnection) {
 		exponentialBackoff(
-			3 /* max retries */,
-			2 /* seconds delay */,
+			MAX_TRYS,
+			MAX_DELAY,
 			async function toTry() {
 				time("Connecting to Bluetooth Device... ");
-				const server = await bluetoothDevice.gatt.connect();
-				const service = await server.getPrimaryService(NORDIC_SERVICE);
-
-				tx = await service.getCharacteristic(NORDIC_TX);
-				rx = await service.getCharacteristic(NORDIC_RX);
-				rx.startNotifications();
+				server.current = await bluetoothDeviceRef.current.gatt.connect();
+				service.current = await server.current.getPrimaryService(
+					NORDIC_SERVICE.current,
+				);
+				txRef.current = await service.current.getCharacteristic(
+					NORDIC_TX.current,
+				);
+				rxRef.current = await service.current.getCharacteristic(
+					NORDIC_RX.current,
+				);
+				rxRef.current.startNotifications();
 			},
-			function success() {
-				handleBleStatus(true);
-				console.log("> Bluetooth Device connected. Try disconnect it now.");
+			async function success() {
+				await writeMessage("connected();\n", txRef.current);
+				console.log("Bluetooth Device is connected.");
+				isConnected = true;
+				handleDisplayBLEconnection(true);
 			},
 			function fail() {
 				time("Failed to reconnect.");
@@ -75,25 +81,19 @@ export function ScannConnection({ newVideosAmount, bleStatus, displayBle }) {
 	}
 
 	const handleNewVideo = async (event) => {
-		console.log("NEW VIDEO TRIGGER");
-		console.log(event);
 		let videoAmount = event.detail.videoAmount;
-		let blestatus = event.detail.bleStatus;
-		console.log("handleNewVideo is triggered");
-		if (blestatus) {
-			if (!tx) {
-				console.log("Error: Not connected to Bluetooth device");
-				return;
-			}
-			const message = `newVideos(${videoAmount});\n`;
+		const message = `newVideos(${videoAmount});\n`;
+		latestNewVideoMessageRef.current = message;
+		while (!isConnected) {
+			await new Promise((resolve) => setTimeout(resolve, 10000));
+		}
+
+		if (videoAmount > 0) {
 			try {
-				await writeMessage(message, tx);
+				await writeMessage(latestNewVideoMessageRef.current, txRef.current);
 			} catch (error) {
 				console.log(`Error writing value: ${error}`);
 			}
-		} else {
-			console.log(" SOME ERROR ");
-			console.log(bleStatus);
 		}
 	};
 
@@ -117,7 +117,8 @@ export function ScannConnection({ newVideosAmount, bleStatus, displayBle }) {
 	}
 
 	function onDisconnected() {
-		console.log("> Bluetooth Device disconnected");
+		console.log("Bluetooth Device disconnected");
+		isConnected = false;
 		connectBLE();
 	}
 

@@ -15,7 +15,7 @@ const VideoPage = () => {
 	const [newVideos, setNewVideos] = useState([]);
 	const [userdata, setUserData] = useState();
 	const [isOnline, setIsOnline] = useState(window.navigator.onLine);
-	const [bleConn, setBleConn] = useState(false);
+	const [displayBLEconnection, setdisplayBLEconnection] = useState(false);
 	let videoAmount = newVideos.length;
 	const videosSeen = useRef([]);
 	const errorRef = useRef();
@@ -25,10 +25,9 @@ const VideoPage = () => {
 			setNewVideos([]);
 		}
 	};
-	const handleDisplayBle = (smt) => {
-		console.log(smt);
-		if (smt) {
-			setBleConn(true);
+	const handleDisplayBLEconnection = (isDisplayed) => {
+		if (isDisplayed) {
+			setdisplayBLEconnection(true);
 		}
 	};
 	useEffect(() => {
@@ -103,7 +102,7 @@ const VideoPage = () => {
 					style={{
 						height: "10px",
 						width: "10px",
-						backgroundColor: bleConn ? "green" : "red",
+						backgroundColor: displayBLEconnection ? "green" : "red",
 						display: "inline-block",
 						marginRight: "5px",
 					}}
@@ -133,8 +132,8 @@ const VideoPage = () => {
 				navbar_left={
 					<ScannConnection
 						newVideosAmount={videoAmount}
-						bleStatus={bleConn}
-						displayBle={handleDisplayBle}
+						currentBLEstatus={displayBLEconnection}
+						handleDisplayBLEconnection={handleDisplayBLEconnection}
 					/>
 				}
 				navbar_middle={userdata ? displayName() : ""}
