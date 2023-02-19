@@ -1,0 +1,19 @@
+.blue-container {
+  width: width/2;
+  height: height/2;
+  background: blue;
+  min-width: 375px;
+  min-height: 220px;
+}
+
+.administration-container {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  min-width: 375px;
+  min-height: 220px;
+  padding: 10px;
+  border-color: white;
+  border-width: 10px;
+  border-radius: 15px;
+}
