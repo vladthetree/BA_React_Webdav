@@ -24,7 +24,7 @@ const Login = () => {
       setNotificationVisibility(true);
     }
     else if (
-      !webdavAdress.startsWith("https://") ||
+      !webdavAdress.startsWith("http://") ||
       !webdavAdress.includes("/remote.php/dav/files/")
     ) {
       setNotificationMessage(

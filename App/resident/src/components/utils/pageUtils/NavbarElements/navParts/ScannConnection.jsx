@@ -127,10 +127,51 @@ export function ScannConnection({
 		connectBLE();
 	}
 
+	const handleSendMessage = async () => {
+		try {
+			// Write the "sendMessage();" command to the TX characteristic to trigger the sendMessage function on the watch
+			await writeMessage("sendMessage();\n", txRef.current);
+
+			// Wait for the response from the watch by adding a listener to the RX characteristic
+			const handleResponse = (event) => {
+				console.log(`Received response: ${event.target.value}`);
+				const decoder = new TextDecoder();
+				const responseString = decoder.decode(event.target.value);
+				console.log("THE RESPOND IS : ");
+				console.log(responseString);
+
+
+				if (responseString === "HELLO") {
+					// Do something if the response is "HELLO"
+					console.log("Received HELLO from watch");
+				}
+
+				// Remove the listener once the response is received
+				event.target.removeEventListener(
+					"characteristicvaluechanged",
+					handleResponse,
+				);
+			};
+
+			txRef.current.addEventListener(
+				"characteristicvaluechanged",
+				handleResponse,
+			);
+			await rxRef.current.startNotifications();
+
+			console.log("Message sent.");
+		} catch (error) {
+			console.log(`Error writing value: ${error}`);
+		}
+	};
+
 	return (
 		<div>
 			<button id="search-button" onClick={handleClick2}>
 				ScannConnection2
+			</button>
+			<button id="send-message-button" onClick={handleSendMessage}>
+				Send Message
 			</button>
 		</div>
 	);

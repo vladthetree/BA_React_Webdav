@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.js";
 import SyncListdir from "./components/sync/SyncListdir.jsx";
 
+
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 root.render(

@@ -1,7 +1,7 @@
 import {
 	addToIndexDbStore,
 	removeAlreadyStoredFiles,
-} from "../db/storageObjectMethodes.jsx"
+} from "../db/storageObjectMethodes.jsx";
 import { Buffer } from "buffer";
 
 const DATABASE_VIDEOS = "db";
@@ -35,7 +35,6 @@ const listContent = async (userdata, errorRef) => {
 				targetUrl: userdata.webdavAdress,
 			}),
 		});
-
 		const availableContent = await response.json();
 		return availableContent;
 	} catch (error) {

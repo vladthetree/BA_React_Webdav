@@ -10,33 +10,29 @@ const Layout = ({
 	navbar_right,
 	children,
 	userdata,
+	isActive,
+	setIsActive,
 	videoAmount,
-	handleNewVideos,
+	showModal,
+	setShowModal
 }) => {
-	const [showModal, setShowModal] = useState(true);
+	
+
 	const { height } = useWindowSize();
 	const navbarhight = height / 25;
 	const fontSize = height / 23;
 
-	console.log("RENDERTEST");
-
-	useEffect(() => {
-		handleNewVideos(showModal);
-	}, [showModal]);
-
 	console.log("NEW VIDEOS ");
 	console.log(videoAmount);
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			setShowModal(true);
-		}, 10000);
 
-		return () => clearInterval(intervalId);
-	}, []);
 
 	const handleCloseModal = () => {
-		setShowModal(false);
-	};
+		setIsActive(true);
+	  };
+	  
+	  useEffect(() => {
+		console.log("isActive changed:", isActive);
+	  }, [isActive]);
 	return !userdata ? (
 		<ModalLogin />
 	) : (
@@ -60,7 +56,7 @@ const Layout = ({
 				</nav>
 			</header>
 			<div style={{ height: height - navbarhight }}>
-				{showModal ? (
+				{!isActive ? (
 					<DefaultScreen
 						handleCloseModal={handleCloseModal}
 						newVideosAmount={videoAmount}

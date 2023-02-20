@@ -6,10 +6,16 @@ import "../../style/videostyle.css";
 import Swipe from "../../svgs/Swipe.jsx";
 
 const INTERVAL_VIDEOCHECK = 1000;
+const COWNDOWN_ACTIVITYCHECK = 20000;
 
-export const ListVideos = memo(function ListVideos({ videosSeen }) {
+export const ListVideos = memo(function ListVideos({
+  videosSeen,
+  isActive,
+  setIsActive,
+}) {
   const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const { width, height } = useWindowSize();
   const intervalVideoRef = useRef();
 
@@ -32,15 +38,42 @@ export const ListVideos = memo(function ListVideos({ videosSeen }) {
   }
 
   const handleClickVideo = (e, videoName) => {
-  
-
     const video = e.currentTarget;
     if (video.paused) {
+      setIsVideoPlaying(true);
       video.play();
     } else {
       video.pause();
+	  setIsVideoPlaying(false);
     }
   };
+
+  useEffect(() => {
+    if (!isVideoPlaying) {
+		console.log("Start IDLE TIMER")
+      let idleTimeout = setTimeout(() => {
+        console.log("User is inactive.");
+        setIsActive(false);
+        window.removeEventListener("mousemove", resetTimeout);
+        window.removeEventListener("keydown", resetTimeout);
+        window.removeEventListener("touchstart", resetTimeout);
+      }, COWNDOWN_ACTIVITYCHECK);
+
+      function resetTimeout() {
+        clearTimeout(idleTimeout);
+        idleTimeout = setTimeout(() => {
+          setIsActive(false);
+          window.removeEventListener("mousemove", resetTimeout);
+          window.removeEventListener("keydown", resetTimeout);
+          window.removeEventListener("touchstart", resetTimeout);
+        }, COWNDOWN_ACTIVITYCHECK);
+      }
+
+      window.addEventListener("mousemove", resetTimeout);
+      window.addEventListener("keydown", resetTimeout);
+      window.addEventListener("touchstart", resetTimeout);
+    }
+  }, [isVideoPlaying]);
 
   return (
     <div
@@ -49,6 +82,7 @@ export const ListVideos = memo(function ListVideos({ videosSeen }) {
         overflowX: "scroll",
       }}
     >
+      ]
       {videos.map((video, index) => (
         <div
           key={video.name}
@@ -71,11 +105,13 @@ export const ListVideos = memo(function ListVideos({ videosSeen }) {
                   src={video.url}
                   type="video/mp4"
                   className="video"
-                  
                   onClick={(e) => handleClickVideo(e, video.name)}
                 />
               </div>
-              <div className="videoNameContainer" style={{fontSize:height/19}}>
+              <div
+                className="videoNameContainer"
+                style={{ fontSize: height / 19 }}
+              >
                 {video.name.substring(0, video.name.length - 4)}
               </div>
             </div>
