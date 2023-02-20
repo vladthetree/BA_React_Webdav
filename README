@@ -1,15 +1,15 @@
 TODO:
-|                  | Manager          |
-|------------------|------------------|
-| Fileupload       | ❌               |
-| Settings         | ❌               |
-| Management Videos| ❌               |
+|                  | Manager          
+|------------------|------------------
+| Fileupload       | ❌               
+| Settings         | ❌               
+| Management Videos| ❌               
 
-|                              | Resident           |
-| ---------------------------- | ------------------ |
-| Programme hinzufügen         | ❌                 |
-| Bluetooth                    | :white_check_mark: |
-| Abfrage von mehreren Domänen | ❌                 |
-| Presentationmode             | :white_check_mark: |
+|                              | Resident           
+| ---------------------------- | ------------------ 
+| Programme hinzufügen         | ❌                 
+| Bluetooth                    | :white_check_mark: 
+| Abfrage von mehreren Domänen | ❌                 
+| Presentationmode             | :white_check_mark: 
 
 Export: - Wie soll das ganze exportiert werden? - Wie genau soll es getestet werden

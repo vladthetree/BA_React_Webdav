@@ -1,10 +1,10 @@
 import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Layout from "../components/layout/layout.jsx";
-import { hasObjectStorageDatabase } from "../components/utils/db/storageObjectMethodes.jsx";
-import { ListDir } from "../components/utils/ListDir.jsx";
+import { hasObjectStorageDatabase } from "../components/db/storageObjectMethodes.jsx";
+import { getObjectStorageIndex } from "../components/db/storageObjectMethodes.jsx";
+import { NewFileControll } from "../components/utils/NewFileControll.jsx";
 import ModalSettings from "../components/utils/pageUtils/modal/settings/ModalSettings.jsx";
-import { getObjectStorageIndex } from "../components/utils/db/storageObjectMethodes.jsx";
 import { ScannConnection } from "../components/utils/pageUtils/NavbarElements/navParts/ScannConnection.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
@@ -19,7 +19,6 @@ const VideoPage = () => {
 	const videosSeen = useRef([]);
 	const errorRef = useRef();
 	let videoAmount = newVideos.length;
-
 
 	const handleDisplayBLEconnection = (isDisplayed) => {
 		if (isDisplayed) {
@@ -84,7 +83,7 @@ const VideoPage = () => {
 		if (userdata && isOnline) {
 			console.log("#-- User is online --#");
 			const downloadVideos = setInterval(() => {
-				ListDir(userdata, errorRef, setNewVideos);
+				NewFileControll(userdata, errorRef, setNewVideos);
 			}, 5000);
 			return () => clearInterval(downloadVideos);
 		} else {

@@ -6,10 +6,14 @@ export function ScannConnection({
 	currentBLEstatus,
 	handleDisplayBLEconnection,
 }) {
-	const [filters, setFilters] = useState([{ name: "Bangle.js" }]);
 	var NORDIC_SERVICE = useRef("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 	var NORDIC_TX = useRef("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
 	var NORDIC_RX = useRef("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+	const [filters, setFilters] = useState([
+		{ namePrefix: "Puck.js" },
+		{ namePrefix: "Bangle" },
+		{ services: [NORDIC_SERVICE.current] },
+	]);
 	const server = useRef(null);
 	const service = useRef(null);
 	const rxRef = useRef(null);
@@ -27,7 +31,8 @@ export function ScannConnection({
 		try {
 			console.log("Requesting any Bluetooth Device...");
 			bluetoothDeviceRef.current = await navigator.bluetooth.requestDevice({
-				acceptAllDevices : true,
+				filters: filters,
+				optionalServices: [NORDIC_SERVICE.current],
 			});
 			bluetoothDeviceRef.current.addEventListener(
 				"gattserverdisconnected",

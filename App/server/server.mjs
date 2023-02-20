@@ -54,7 +54,6 @@ server.use(proxy(8084));
 server.use(cors());
 
 server.post("/proxy/listContent", async (req, res) => {
-	console.log("GOT REQUEST IN LISTCONTENT")
 	try {
 		const { username, password, targetUrl } = req.body;
 		const client = createClient(targetUrl, {

@@ -1,13 +1,13 @@
 import {
 	addToIndexDbStore,
 	removeAlreadyStoredFiles,
-} from "./db/storageObjectMethodes.jsx";
+} from "../db/storageObjectMethodes.jsx"
 import { Buffer } from "buffer";
 
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
 
-export const ListDir = async (userdata, errorRef, setNewVideos) => {
+export const NewFileControll = async (userdata, errorRef, setNewVideos) => {
 	const mp4FilesNames = await listContent(userdata, errorRef);
 	await removeAlreadyStoredFiles(
 		DATABASE_VIDEOS,
@@ -35,8 +35,7 @@ const listContent = async (userdata, errorRef) => {
 				targetUrl: userdata.webdavAdress,
 			}),
 		});
-		console.log("LIST CONTENT")
-		console.log(response)
+
 		const availableContent = await response.json();
 		return availableContent;
 	} catch (error) {

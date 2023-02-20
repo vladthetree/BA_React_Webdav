@@ -1,5 +1,5 @@
-import {addToIndexDbStore } from "../../db/storageObjectMethodes"
-import { writeValueBLEmessage } from "./writeBLEmessage";
+import {addToIndexDbStore } from "../../db/storageObjectMethodes.jsx"
+import { writeValueBLEmessage } from "./writeBLEmessage.js";
 
 const OBJECT_STORE_USER_DATA = "userData";
 const NORDIC_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";

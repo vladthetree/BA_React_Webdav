@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef, memo } from "react";
-import { getConvertedBlobVideos } from "../db/storageObjectMethodes.jsx";
+import { getConvertedBlobVideos } from "../../db/storageObjectMethodes.jsx";
 import { useWindowSize } from "react-use";
 import React from "react";
 import "../../style/videostyle.css";
 import Swipe from "../../svgs/Swipe.jsx";
-import { addToIndexDbStore } from "../db/storageObjectMethodes.jsx";
 
 const INTERVAL_VIDEOCHECK = 1000;
 

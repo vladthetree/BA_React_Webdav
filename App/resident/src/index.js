@@ -1,13 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import App from "./App.js";
 import SyncListdir from "./components/sync/SyncListdir.jsx";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
+
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -21,7 +24,7 @@ if ("serviceWorker" in navigator) {
           const newWorker = registration.installing;
           newWorker.addEventListener("install", (event) => {
           });
-          newWorker.skipWaiting();
+      
           newWorker.addEventListener("statechange", () => {
             if (newWorker.state === "activated") {
               console.log("New service sworker  activated.");

@@ -35,7 +35,7 @@ const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
 					<div className="defaultScreen-MidContainer">
 						<div className="defaultScreen-ActionContainer">
 							<div className="defaultScreen-ActionContaner-inner">
-								<div className="defaultScreen-inner-left">NEUE VIDEOS</div>
+								<div className="defaultScreen-inner-left">NEUE test</div>
 								<div className="defaultScreen-inner-right">{newVideosAmount}</div>
 							</div>
 						</div>
