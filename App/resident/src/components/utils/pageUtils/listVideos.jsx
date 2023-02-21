@@ -6,7 +6,7 @@ import "../../style/videostyle.css";
 import Swipe from "../../svgs/Swipe.jsx";
 
 const INTERVAL_VIDEOCHECK = 1000;
-const COWNDOWN_ACTIVITYCHECK = 20000;
+const COWNDOWN_ACTIVITYCHECK = 3000;
 
 export const ListVideos = memo(function ListVideos({
   videosSeen,
@@ -44,35 +44,35 @@ export const ListVideos = memo(function ListVideos({
       video.play();
     } else {
       video.pause();
-	  setIsVideoPlaying(false);
+      setIsVideoPlaying(false);
     }
   };
 
   useEffect(() => {
-    if (!isVideoPlaying) {
-		console.log("Start IDLE TIMER")
-      let idleTimeout = setTimeout(() => {
-        console.log("User is inactive.");
-        setIsActive(false);
-        window.removeEventListener("mousemove", resetTimeout);
-        window.removeEventListener("keydown", resetTimeout);
-        window.removeEventListener("touchstart", resetTimeout);
-      }, COWNDOWN_ACTIVITYCHECK);
+    console.log("#--Start idle Timer--#");
 
-      function resetTimeout() {
-        clearTimeout(idleTimeout);
-        idleTimeout = setTimeout(() => {
-          setIsActive(false);
-          window.removeEventListener("mousemove", resetTimeout);
-          window.removeEventListener("keydown", resetTimeout);
-          window.removeEventListener("touchstart", resetTimeout);
-        }, COWNDOWN_ACTIVITYCHECK);
-      }
+    let idleTimeout = setTimeout(() => {
+      setIsActive(false);
+      window.removeEventListener("mousemove", resetTimeout);
+      window.removeEventListener("keydown", resetTimeout);
+      window.removeEventListener("touchstart", resetTimeout);
+    }, COWNDOWN_ACTIVITYCHECK);
 
-      window.addEventListener("mousemove", resetTimeout);
-      window.addEventListener("keydown", resetTimeout);
-      window.addEventListener("touchstart", resetTimeout);
+    function resetTimeout() {
+      clearTimeout(idleTimeout);
+      idleTimeout = !isVideoPlaying
+        ? setTimeout(() => {
+            setIsActive(false);
+            window.removeEventListener("mousemove", resetTimeout);
+            window.removeEventListener("keydown", resetTimeout);
+            window.removeEventListener("touchstart", resetTimeout);
+          }, COWNDOWN_ACTIVITYCHECK)
+        : console.log("#--Some Video is now playing, no Idle Timer Reset active.--#");
     }
+
+    window.addEventListener("mousemove", resetTimeout);
+    window.addEventListener("keydown", resetTimeout);
+    window.addEventListener("touchstart", resetTimeout);
   }, [isVideoPlaying]);
 
   return (
