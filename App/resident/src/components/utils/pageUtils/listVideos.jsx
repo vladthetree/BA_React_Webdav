@@ -9,13 +9,13 @@ const INTERVAL_VIDEOCHECK = 1000;
 const COWNDOWN_ACTIVITYCHECK = 3000;
 
 export const ListVideos = memo(function ListVideos({
-  videosSeen,
-  isActive,
   setIsActive,
+  handleClickVideo,
+  isVideoPlaying,
+  videos,
+  setVideos,
 }) {
-  const [videos, setVideos] = useState([]);
   const addedVideosRef = useRef(new Set());
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const { width, height } = useWindowSize();
   const intervalVideoRef = useRef();
 
@@ -37,17 +37,6 @@ export const ListVideos = memo(function ListVideos({
     return storagaArray.filter((item) => !videoArray.includes(item.name));
   }
 
-  const handleClickVideo = (e, videoName) => {
-    const video = e.currentTarget;
-    if (video.paused) {
-      setIsVideoPlaying(true);
-      video.play();
-    } else {
-      video.pause();
-      setIsVideoPlaying(false);
-    }
-  };
-
   useEffect(() => {
     console.log("#--Start idle Timer--#");
 
@@ -62,12 +51,14 @@ export const ListVideos = memo(function ListVideos({
       clearTimeout(idleTimeout);
       idleTimeout = !isVideoPlaying
         ? setTimeout(() => {
-          setIsActive(false);
-          window.removeEventListener("mousemove", resetTimeout);
-          window.removeEventListener("keydown", resetTimeout);
-          window.removeEventListener("touchstart", resetTimeout);
-        }, COWNDOWN_ACTIVITYCHECK)
-        : console.log("#--Some Video is now playing, no Idle Timer Reset active.--#");
+            setIsActive(false);
+            window.removeEventListener("mousemove", resetTimeout);
+            window.removeEventListener("keydown", resetTimeout);
+            window.removeEventListener("touchstart", resetTimeout);
+          }, COWNDOWN_ACTIVITYCHECK)
+        : console.log(
+            "#--Some Video is now playing, no Idle Timer Reset active.--#"
+          );
     }
 
     window.addEventListener("mousemove", resetTimeout);

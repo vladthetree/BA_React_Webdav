@@ -115,8 +115,6 @@ async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
 }
 
 async function hasObjectStorageDatabase(database, OBJECT_STORE) {
-  // console.log(` hasObjectStorageDatabase database : ${database} and Objectstorage ${OBJECT_STORE}`)
-
   const db = await openIndexDB(database, OBJECT_STORE);
   return new Promise((resolve) => {
     if (!db.objectStoreNames.contains(OBJECT_STORE)) {

@@ -86,6 +86,7 @@ const VideoPage = () => {
     if (dbExist === false) {
       const hasVideos = async () => {
         let exist = await hasObjectStorageDatabase("db", "videos");
+        console.log()
         setDbExist(exist);
       };
       hasVideos();
