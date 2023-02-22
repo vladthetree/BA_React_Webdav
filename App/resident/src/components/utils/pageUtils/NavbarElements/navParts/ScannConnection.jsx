@@ -6,6 +6,7 @@ export function ScannConnection({
 	currentBLEstatus,
 	handleDisplayBLEconnection,
 }) {
+
 	var NORDIC_SERVICE = useRef("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 	var NORDIC_TX = useRef("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
 	var NORDIC_RX = useRef("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
@@ -71,7 +72,10 @@ export function ScannConnection({
 				rxRef.current = await service.current.getCharacteristic(
 					NORDIC_RX.current,
 				);
+				txRef.current.addEventListener("characteristicvaluechanged", onRxChanged);
+
 				rxRef.current.startNotifications();
+
 			},
 			async function success() {
 				await writeMessage("connected();\n", txRef.current);
@@ -84,6 +88,18 @@ export function ScannConnection({
 			},
 		);
 	}
+
+	const onRxChanged = (event) => {
+		// Get the received data
+		const decoder = new TextDecoder();
+		const message = decoder.decode(event.target.value);
+		console.log("Received message: ", message);
+	  
+		// Stop listening for new data
+		rxRef.current.stopNotifications();
+		rxRef.current.removeEventListener("characteristicvaluechanged", onRxChanged);
+	  };
+	  
 
 	const handleNewVideo = async (event) => {
 		let videoAmount = event.detail.videoAmount;
@@ -128,42 +144,13 @@ export function ScannConnection({
 	}
 
 	const handleSendMessage = async () => {
-		try {
+	
 			// Write the "sendMessage();" command to the TX characteristic to trigger the sendMessage function on the watch
 			await writeMessage("sendMessage();\n", txRef.current);
 
-			// Wait for the response from the watch by adding a listener to the RX characteristic
-			const handleResponse = (event) => {
-				console.log(`Received response: ${event.target.value}`);
-				const decoder = new TextDecoder();
-				const responseString = decoder.decode(event.target.value);
-				console.log("THE RESPOND IS : ");
-				console.log(responseString);
-
-
-				if (responseString === "HELLO") {
-					// Do something if the response is "HELLO"
-					console.log("Received HELLO from watch");
-				}
-
-				// Remove the listener once the response is received
-				event.target.removeEventListener(
-					"characteristicvaluechanged",
-					handleResponse,
-				);
-			};
-
-			txRef.current.addEventListener(
-				"characteristicvaluechanged",
-				handleResponse,
-			);
-			await rxRef.current.startNotifications();
-
-			console.log("Message sent.");
-		} catch (error) {
-			console.log(`Error writing value: ${error}`);
-		}
 	};
+
+	
 
 	return (
 		<div>

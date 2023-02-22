@@ -12,6 +12,7 @@ const Settings = ({ onClose }) => {
 		await deleteDBFromIndexDB(DATABASE_VIDEOS);
 		await deleteDBFromIndexDB(undefined);
 	};
+	
 	const deleteAll = async () => {
 		await Promise.all([
 			deleteDBFromIndexDB(DATABASE_VIDEOS),
@@ -26,6 +27,7 @@ const Settings = ({ onClose }) => {
 			window.location.href = window.location.href;
 		}, 100);
 	};
+
 
 	const presentationMode = async () => {
 		try {

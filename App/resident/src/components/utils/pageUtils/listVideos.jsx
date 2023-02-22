@@ -62,11 +62,11 @@ export const ListVideos = memo(function ListVideos({
       clearTimeout(idleTimeout);
       idleTimeout = !isVideoPlaying
         ? setTimeout(() => {
-            setIsActive(false);
-            window.removeEventListener("mousemove", resetTimeout);
-            window.removeEventListener("keydown", resetTimeout);
-            window.removeEventListener("touchstart", resetTimeout);
-          }, COWNDOWN_ACTIVITYCHECK)
+          setIsActive(false);
+          window.removeEventListener("mousemove", resetTimeout);
+          window.removeEventListener("keydown", resetTimeout);
+          window.removeEventListener("touchstart", resetTimeout);
+        }, COWNDOWN_ACTIVITYCHECK)
         : console.log("#--Some Video is now playing, no Idle Timer Reset active.--#");
     }
 

@@ -4,15 +4,11 @@ async function addToIndexDbStore(
   ObjectStorage,
   mode,
   filename,
-  fileContext
+  fileContext,
+  lastmod
 ) {
-  console.log("TRIGGER ADD")
   const db = await openIndexDB(database, ObjectStorage);
-  // console.log(` addToIndexDbStore database : ${database} and Objectstorage ${ObjectStorage}`)
   let transaction = db.transaction(ObjectStorage, mode);
-  // console.log(
-  //   `#-- ADDING TO OBJECTSTORAGE ${ObjectStorage} THE FILE ${filename} --#`
-  // );
   let objStore;
   if (!db.objectStoreNames.contains(ObjectStorage)) {
     objStore = db.createObjectStore(ObjectStorage, { keyPath: "name" });
@@ -23,6 +19,7 @@ async function addToIndexDbStore(
   objStore.add({
     name: filename,
     fileContext,
+    lastmod,
   });
 
   db.close();
@@ -30,10 +27,6 @@ async function addToIndexDbStore(
 }
 
 async function getAllFromObjectStorage(database, ObjectStore) {
-  // console.log(` getAllFromObjectStorage database : ${database} and Objectstorage ${ObjectStore}`)
-
-  // console.log("Object Store")
-  // console.log(ObjectStore)
   const db = await openIndexDB(database, ObjectStore);
   return new Promise((resolve, reject) => {
     if (!db.objectStoreNames.contains(ObjectStore)) {
@@ -56,14 +49,14 @@ async function getAllFromObjectStorage(database, ObjectStore) {
 }
 
 async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
-  // console.log(` removeAlreadyStoredFiles database : ${database} and Objectstorage ${ObjectStorage}`)
-
   let storageValue = await getAllFromObjectStorage(database, ObjectStorage);
-
   if (storageValue) {
     storageValue.forEach(function (obj, objIndex) {
       File.forEach(function (mp4obj, mp4Index) {
-        if (storageValue[objIndex].name === File[mp4Index].filename) {
+        if (
+          (storageValue[objIndex].name && storageValue[objIndex].lastmod) ===
+          (File[mp4Index].filename && File[mp4Index].lastmod)
+        ) {
           File.splice(mp4Index, 1);
         }
       });
@@ -75,7 +68,10 @@ async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
 
 async function getConvertedBlobVideos() {
   let result = [];
-  let storageValue = await getAllFromObjectStorage("db", "videos");
+  let storageValue = await getAllFromObjectStorage("db", "videos").then(
+    (indexedDBResult) =>
+      indexedDBResult.filter((file) => file.name.includes("mp4"))
+  );
   if (storageValue) {
     storageValue.forEach((video) => {
       let url = URL.createObjectURL(
@@ -121,7 +117,7 @@ async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
 async function hasObjectStorageDatabase(database, OBJECT_STORE) {
   // console.log(` hasObjectStorageDatabase database : ${database} and Objectstorage ${OBJECT_STORE}`)
 
-  const db = await openIndexDB(database,OBJECT_STORE);
+  const db = await openIndexDB(database, OBJECT_STORE);
   return new Promise((resolve) => {
     if (!db.objectStoreNames.contains(OBJECT_STORE)) {
       resolve(false);

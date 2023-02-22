@@ -5,6 +5,9 @@ import path from "path";
 import { createClient } from "webdav";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import cors from "cors";
+import https from "https";
+import fs from "fs";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const server = express();
 
@@ -61,10 +64,16 @@ server.post("/proxy/listContent", async (req, res) => {
       password: password,
     });
     const content = await client.getDirectoryContents("/");
-    const contentNames = content
-      .filter((files) => files.filename.includes("mp4"))
-      .map((mp4Files) => ({ filename: mp4Files.filename.slice(1) }));
-    res.json(contentNames);
+    const filteredContent = content.reduce((result, file) => {
+      if (file.filename.includes("mp4") || file.filename.includes("json")) {
+        result.push({
+          filename: file.filename.slice(1),
+          lastmod: file.lastmod,
+        });
+      }
+      return result;
+    }, []);
+    res.json(filteredContent);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error : Credentials" });
@@ -75,18 +84,19 @@ server.post("/proxy/getFileContent", async (req, res) => {
   let result = [];
   try {
     const { username, password, targetUrl, newFiles } = req.body;
-    console.log("NEW FILES");
-    console.log(newFiles);
     const client = createClient(targetUrl, {
       username: username,
       password: password,
     });
-
-    console.log(" NEW FILES ");
+    console.log("NEW FILES");
     console.log(newFiles);
     const promises = newFiles.map((file, index) =>
       client.getFileContents(file.filename).then((arrayBuffer) => {
-        result.push({ name: file.filename, buffer: arrayBuffer });
+        result.push({
+          name: file.filename,
+          date: file.lastmod,
+          buffer: arrayBuffer,
+        });
       })
     );
     await Promise.all(promises);
@@ -105,14 +115,31 @@ const residentAppA = express();
 residentAppA.use(
   express.static(path.join(__dirname, "..", "dist", "resident"))
 );
+
 residentAppA.listen(PORT_RESIDENT_A, () => {
-  console.log(`RESIDENT_A is listening on port ${PORT_RESIDENT_A}`);
+  console.log(`RESIDENT_B is listening on port ${PORT_RESIDENT_A}`);
 });
+
+//#################################
+//SELF CERT SOLUTION
+//  const residentAppA = express();
+//  const options = {
+//    key: fs.readFileSync(__dirname + "/crt/residentA/key.pem"),
+//    cert: fs.readFileSync(__dirname + "/crt/residentA/cert.pem"),
+//  };
+//  residentAppA.use(
+//    express.static(path.join(__dirname, "..", "dist", "resident"))
+//  );
+//  https.createServer(options, residentAppA).listen(PORT_RESIDENT_A, () => {
+//    console.log(`RESIDENT_A is listening on port ${PORT_RESIDENT_A}`);
+//  });
+//#################################
 
 // const residentAppB = express();
 // residentAppB.use(
 //   express.static(path.join(__dirname, "..", "dist", "resident"))
 // );
+
 // residentAppB.listen(PORT_RESIDENT_B, () => {
 //   console.log(`RESIDENT_B is listening on port ${PORT_RESIDENT_B}`);
 // });
@@ -121,6 +148,7 @@ residentAppA.listen(PORT_RESIDENT_A, () => {
 // residentAppC.use(
 //   express.static(path.join(__dirname, "..", "dist", "resident"))
 // );
+
 // residentAppC.listen(PORT_RESIDENT_C, () => {
 //   console.log(`RESIDENT_C is listening on port ${PORT_RESIDENT_C}`);
 // });

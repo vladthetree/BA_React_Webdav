@@ -17,7 +17,6 @@ const VideoPage = () => {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
   const [displayBLEconnection, setdisplayBLEconnection] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [showModal, setShowModal] = useState(true);
   const videosSeen = useRef([]);
   const errorRef = useRef();
   let videoAmount = newVideos.length;
@@ -28,7 +27,7 @@ const VideoPage = () => {
     }
   };
 
-  const handleNewVideos = (isDefaultOn) => {
+  const handleNewVideos = () => {
     if (isActive) {
       setNewVideos([]);
     }
@@ -120,8 +119,8 @@ const VideoPage = () => {
             marginRight: "5px",
           }}
         />
-
-        <div>Angemeldet : {userdata.username}</div>
+        <div>Logged : {userdata.username} ------- </div>
+        <div>Today: {new Date().toLocaleDateString("de-DE")}</div>
       </div>
     );
   };
@@ -134,8 +133,7 @@ const VideoPage = () => {
         videoAmount={videoAmount}
         isActive={isActive}
         setIsActive={setIsActive}
-        showModal={showModal}
-        setShowModal={setShowModal}
+        setNewVideos={setNewVideos}
         navbar_left={
           <ScannConnection
             newVideosAmount={videoAmount}
