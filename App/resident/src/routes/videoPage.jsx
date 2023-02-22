@@ -5,7 +5,7 @@ import { hasObjectStorageDatabase } from "../components/db/storageObjectMethodes
 import { getObjectStorageIndex } from "../components/db/storageObjectMethodes.jsx";
 import { NewFileControll } from "../components/utils/NewFileControll.jsx";
 import ModalSettings from "../components/utils/pageUtils/modal/settings/ModalSettings.jsx";
-import { ScannConnection } from "../components/utils/pageUtils/NavbarElements/navParts/ScannConnection.jsx";
+import { ScannConnection } from "../components/utils/pageUtils/modal/BLE/ScannConnection.jsx";
 
 const OBJECT_STORE_USERDATA = "userData";
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
@@ -17,8 +17,8 @@ const VideoPage = () => {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine);
   const [displayBLEconnection, setdisplayBLEconnection] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const videosSeen = useRef([]);
-  const errorRef = useRef();
+  const [displayedVideos, setDisplayedVideos] = useState([]);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   let videoAmount = newVideos.length;
 
   const handleDisplayBLEconnection = (isDisplayed) => {
@@ -32,6 +32,18 @@ const VideoPage = () => {
       setNewVideos([]);
     }
   };
+
+  const handleClickVideo = (e) => {
+    const video = e.currentTarget;
+    if (video.paused) {
+      setIsVideoPlaying(true);
+      video.play();
+    } else {
+      video.pause();
+      setIsVideoPlaying(false);
+    }
+  };
+
   useEffect(() => {
     const getData = async () => {
       const resivedUserData = await getObjectStorageIndex(
@@ -84,7 +96,7 @@ const VideoPage = () => {
     if (userdata && isOnline) {
       console.log("#-- User is online --#");
       const downloadVideos = setInterval(() => {
-        NewFileControll(userdata, errorRef, setNewVideos);
+        NewFileControll(userdata, setNewVideos);
       }, 5000);
       return () => clearInterval(downloadVideos);
     } else {
@@ -146,10 +158,11 @@ const VideoPage = () => {
       >
         {dbExist && (
           <ListVideos
-            videosSeen={videosSeen}
-            errorRef={errorRef}
-            isActive={isActive}
             setIsActive={setIsActive}
+            handleClickVideo={handleClickVideo}
+            isVideoPlaying={isVideoPlaying}
+            videos={displayedVideos}
+            setVideos={setDisplayedVideos}
           />
         )}
       </Layout>

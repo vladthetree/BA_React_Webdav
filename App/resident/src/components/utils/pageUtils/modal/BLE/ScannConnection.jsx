@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { writeMessage } from "../../../bluetooth/utils/writeBLEmessage.js";
+import { writeMessage } from "./writeBLEmessage.js";
 
 export function ScannConnection({
 	newVideosAmount,
@@ -94,12 +94,12 @@ export function ScannConnection({
 		const decoder = new TextDecoder();
 		const message = decoder.decode(event.target.value);
 		console.log("Received message: ", message);
-	  
+
 		// Stop listening for new data
 		rxRef.current.stopNotifications();
 		rxRef.current.removeEventListener("characteristicvaluechanged", onRxChanged);
-	  };
-	  
+	};
+
 
 	const handleNewVideo = async (event) => {
 		let videoAmount = event.detail.videoAmount;
@@ -144,13 +144,13 @@ export function ScannConnection({
 	}
 
 	const handleSendMessage = async () => {
-	
-			// Write the "sendMessage();" command to the TX characteristic to trigger the sendMessage function on the watch
-			await writeMessage("sendMessage();\n", txRef.current);
+
+		// Write the "sendMessage();" command to the TX characteristic to trigger the sendMessage function on the watch
+		await writeMessage("sendMessage();\n", txRef.current);
 
 	};
 
-	
+
 
 	return (
 		<div>

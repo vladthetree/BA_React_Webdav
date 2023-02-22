@@ -7,8 +7,8 @@ import { Buffer } from "buffer";
 const DATABASE_VIDEOS = "db";
 const OBJECT_STORE_VIDEOS = "videos";
 
-export const NewFileControll = async (userdata, errorRef, setNewVideos) => {
-  const mp4FilesNames = await listContent(userdata, errorRef);
+export const NewFileControll = async (userdata, setNewVideos) => {
+  const mp4FilesNames = await listContent(userdata);
   await removeAlreadyStoredFiles(
     DATABASE_VIDEOS,
     mp4FilesNames,
@@ -24,7 +24,7 @@ export const NewFileControll = async (userdata, errorRef, setNewVideos) => {
   }
 };
 
-const listContent = async (userdata, errorRef) => {
+const listContent = async (userdata) => {
   try {
     const response = await fetch("http://localhost:8081/proxy/listContent", {
       method: "POST",
@@ -39,7 +39,6 @@ const listContent = async (userdata, errorRef) => {
     return availableContent;
   } catch (error) {
     console.error(error);
-    errorRef.current = error;
   }
 };
 
