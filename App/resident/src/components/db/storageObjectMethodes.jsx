@@ -1,30 +1,30 @@
-import { openIndexDB } from "./openIndexDB.jsx";
-async function addToIndexDbStore(
-  database,
-  ObjectStorage,
-  mode,
-  filename,
-  fileContext,
-  lastmod
-) {
-  const db = await openIndexDB(database, ObjectStorage);
-  let transaction = db.transaction(ObjectStorage, mode);
-  let objStore;
-  if (!db.objectStoreNames.contains(ObjectStorage)) {
-    objStore = db.createObjectStore(ObjectStorage, { keyPath: "name" });
-  } else {
-    objStore = transaction.objectStore(ObjectStorage);
-  }
-
-  objStore.add({
-    name: filename,
+  import { openIndexDB } from "./openIndexDB.jsx";
+  async function addToIndexDbStore(
+    database,
+    ObjectStorage,
+    mode,
+    filename,
     fileContext,
-    lastmod,
-  });
+    lastmod
+  ) {
+    const db = await openIndexDB(database, ObjectStorage);
+    let transaction = db.transaction(ObjectStorage, mode);
+    let objStore;
+    if (!db.objectStoreNames.contains(ObjectStorage)) {
+      objStore = db.createObjectStore(ObjectStorage, { keyPath: "name" });
+    } else {
+      objStore = transaction.objectStore(ObjectStorage);
+    }
 
-  db.close();
-  return Promise.resolve();
-}
+    objStore.put({
+      name: filename,
+      fileContext,
+      lastmod,
+    });
+
+    db.close();
+    return Promise.resolve();
+  }
 
 async function getAllFromObjectStorage(database, ObjectStore) {
   const db = await openIndexDB(database, ObjectStore);

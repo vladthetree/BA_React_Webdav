@@ -62,21 +62,34 @@ const getFileContent = async (userdata, newMp4FilesArray, setNewVideos) => {
     console.log("\n\n\n#-- new Videos resieved --#");
     console.log("#-- start download into IndexDB --#\n\n\n");
     setNewVideos(newVideoNameArray);
-    console.log(content);
-	
-    content.forEach((newFile) => {
-      let buffer = Buffer.from(newFile.buffer);
+    await Promise.all(content.map(async (newFile) => {
+      const buffer = Buffer.from(newFile.buffer);
+      if (newFile.name.endsWith(".json")) {
+        const decoder = new TextDecoder('utf-8');
+        const jsonString = decoder.decode(buffer);
+        const jsonObject = JSON.parse(jsonString);
+        await addToIndexDbStore(
+          DATABASE_VIDEOS,
+          OBJECT_STORE_VIDEOS,
+          "readwrite",
+          newFile.name,
+          jsonObject,
+          newFile.date
+        );
+      } else if (newFile.name.endsWith(".mp4")) {
+        await addToIndexDbStore(
+          DATABASE_VIDEOS,
+          OBJECT_STORE_VIDEOS,
+          "readwrite",
+          newFile.name,
+          buffer,
+          newFile.date
+        );
+      }
+    }));
 
-      addToIndexDbStore(
-        DATABASE_VIDEOS,
-        OBJECT_STORE_VIDEOS,
-        "readwrite",
-        newFile.name,
-        buffer,
-        newFile.date
-      );
-    });
     return content;
+
   } catch (error) {
     console.error(error);
   }
