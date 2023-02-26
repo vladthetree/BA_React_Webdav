@@ -1,11 +1,22 @@
 import { precacheAndRoute } from 'workbox-precaching';
-import { StaleWhileRevalidate } from 'workbox-strategies';
-//importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-import { createClient } from 'webdav';
+import SyncListdir from './components/sync/SyncListdir.jsx';
 
 console.log('----------------Service worker installed.----------------');
 
 precacheAndRoute(self.__WB_MANIFEST);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./fire-serviceworker.js')
+      .then(registration => {
+        console.log('Service worker registered successfully');
+      })
+      .catch(error => {
+        console.log('Service worker registration failed:', error);
+      });
+  });
+}
+
 
 self.addEventListener('install', event => {
   console.log('Service Worker installed');
@@ -18,29 +29,10 @@ self.addEventListener('activate', event => {
   console.log('Service Worker activated');
 });
 
-// self.addEventListener('fetch', event => {
-//   console.log('Fetch event:', event.request.url);
-
-//   event.respondWith(
-//     fetch(event.request)
-//       .then(response => {
-//         console.log('Fetch succeeded:', event.request.url);
-//         return response;
-//       })
-//       .catch(() => {
-//         console.log('Fetch failed, trying cache:', event.request.url);
-//         return caches.match(event.request);
-//       }),
-//   );
-// });
-
 self.addEventListener('sync', event => {
   console.log('Sync event:', event.tag);
 
   if (event.tag === 'my-background-sync') {
-    event.waitUntil(
-      // do some background synchronization
-      console.log('Performing background sync'),
-    );
+    event.waitUntil(SyncListdir, console.log('Performing background sync'));
   }
 });

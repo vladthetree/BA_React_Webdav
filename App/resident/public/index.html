@@ -10,47 +10,17 @@
   <body>
     <div id="root"></div>
     <script>
-      console.log('Index html wird ausgeführt');
+      console.log(window.location.href);
     </script>
-    <script>
-      if (typeof Worker !== 'undefined') {
-        console.log('Web-Worker werden unterstützt!');
-      } else {
-        console.log('Web-Worker werden nicht unterstützt.');
-      }
+    <script type="text/javascript">
 
-      if (typeof ServiceWorker !== 'undefined') {
-        console.log('Service-Worker werden unterstützt!');
-      } else {
-        console.log('Service-Worker werden nicht unterstützt.');
-      }
-      if (window.isSecureContext) {
-        console.log('sicher');
-      } else {
-        console.log('nicht SICHER');
-      }
-
-      if (typeof SharedWorker !== 'undefined') {
-        console.log('Shared-Worker werden unterstützt!');
-      } else {
-        console.log('Shared-Worker werden nicht unterstützt.');
-      }
-    </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker
-            .register('./fire-serviceworker.js')
-            .then(function (registration) {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(function (err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-      }
-    </script>
+      navigator.serviceWorker.register('./fire-serviceworker.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+           }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+      });
+      
+</script>
 
     <script src="./bundle.js"></script>
   </body>

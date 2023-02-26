@@ -24,28 +24,12 @@ const VideoPage = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [reminder, setReminder] = useState([]);
   const [memoryObject, setMemoryObject] = useState([]);
-
+  const isRequesting = useRef(false);
   const storedFilesRef = useRef([]);
 
   const handleMemorizeObject = someObject => {
     setMemoryObject(someObject);
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const reminder = await getObjectStorageIndex(
-        OBJECT_STORE_VIDEOS,
-        OBJECT_STORE_VIDEOS_OBJECTSTORAGE,
-        REMINDER,
-      );
-      if (reminder) {
-        setReminder(Object.keys(reminder.fileContext));
-      }
-    };
-    getData();
-  }, []);
-
-  let videoAmount = newVideos.length;
 
   const handleDisplayBLEconnection = isDisplayed => {
     if (isDisplayed) {
@@ -60,7 +44,6 @@ const VideoPage = () => {
   };
 
   const handleClickVideo = e => {
-    console.log(e);
     const video = e.currentTarget;
     if (video.paused) {
       setIsVideoPlaying(true);
@@ -108,12 +91,11 @@ const VideoPage = () => {
     };
   }, []);
 
-  // opt here
   useEffect(() => {
     if (dbExist === false) {
       const hasVideos = async () => {
         let exist = await hasObjectStorageDatabase('db', 'videos');
-        console.log();
+
         setDbExist(exist);
       };
       hasVideos();
@@ -121,10 +103,10 @@ const VideoPage = () => {
   }, [dbExist]);
 
   useEffect(() => {
-    if (userdata && isOnline) {
+    if (userdata && isOnline && !isRequesting.current) {
       console.log('#-- User is online --#');
       const downloadVideos = setInterval(() => {
-        NewFileControll(userdata, setNewVideos);
+        NewFileControll(userdata, newVideos, isRequesting);
       }, 5000);
       return () => clearInterval(downloadVideos);
     } else {
@@ -165,8 +147,7 @@ const VideoPage = () => {
             height: 0,
             borderTop: `${1.5}vw solid ${(function () {
               if ('serviceWorker' in navigator) {
-                
-              }else{
+              } else {
                 console.log(' SERVICEWORER IST NICHT IM NAVIGATOR');
               }
 
@@ -192,19 +173,21 @@ const VideoPage = () => {
     );
   };
 
+  console.log('displayedVideos', displayedVideos);
+  console.log('dbExist', dbExist);
   return (
     <div>
       <Layout
         userdata={userdata}
         handleNewVideos={handleNewVideos}
-        videoAmount={videoAmount}
+        newVideos={newVideos}
         isActive={isActive}
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
         memoryObject={memoryObject}
         navbar_left={
           <ScannConnection
-            newVideosAmount={videoAmount}
+            newVideos={newVideos}
             currentBLEstatus={displayBLEconnection}
             handleDisplayBLEconnection={handleDisplayBLEconnection}
           />
@@ -214,7 +197,6 @@ const VideoPage = () => {
       >
         {dbExist && (
           <ListVideos
-            reminder={reminder}
             setIsActive={setIsActive}
             handleClickVideo={handleClickVideo}
             isVideoPlaying={isVideoPlaying}

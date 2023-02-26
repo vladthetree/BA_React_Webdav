@@ -12,7 +12,7 @@ const Layout = ({
   userdata,
   isActive,
   setIsActive,
-  videoAmount,
+  newVideos,
   setNewVideos,
   memoryObject,
 }) => {
@@ -54,7 +54,7 @@ const Layout = ({
           <DefaultScreen
             memoryObject={memoryObject}
             handleCloseModal={handleCloseModal}
-            newVideosAmount={videoAmount}
+            newVideosAmount={newVideos.length}
           />
         ) : (
           <main className="layoutbody">{children}</main>

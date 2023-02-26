@@ -49,6 +49,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
+      inject: false,
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -57,7 +58,9 @@ module.exports = {
         { from: './resident/public/pwa-512x512.png', to: 'pwa-512x512.png' },
         { from: './resident/public/robots.txt', to: 'robots.txt' },
         { from: './resident/public/favicon.ico', to: 'favicon.ico' },
-        { from: './resident/public/style', to: 'style' },
+        { from: './resident/src/fire-serviceworker.js', to: 'fire-serviceworker.js' },
+
+        //  { from: './resident/public/style', to: 'style' },
       ],
     }),
     new WorkboxWebpackPlugin.InjectManifest({

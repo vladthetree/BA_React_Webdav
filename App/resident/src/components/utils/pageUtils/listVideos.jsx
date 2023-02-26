@@ -21,20 +21,16 @@ export const ListVideos = memo(function ListVideos({
   const { width, height } = useWindowSize();
   const intervalVideoRef = useRef();
   const allVideosRef = useRef([]);
-  console.log(reminder);
-  console.log('INSIDE listVideos.jsx');
-  console.log(allVideosRef);
   const matchingVideo = allVideosRef.current.find(video => reminder.includes(reminder[0]));
   if (matchingVideo) {
     handleMemorizeObject(matchingVideo);
   }
-
+  console.log('# ---------------------------- # ListVideos');
   useEffect(() => {
     intervalVideoRef.current = setInterval(async () => {
       let storedFiles = await getConvertedBlobVideos();
+
       let newVideos = await newVideoCheck(storedFiles, videos);
-      console.log('NEW VIDEOS');
-      console.log(newVideos);
       for (const video of newVideos) {
         if (!addedVideosRef.current.has(video.name)) {
           addedVideosRef.current.add(video.name);
@@ -49,7 +45,6 @@ export const ListVideos = memo(function ListVideos({
     const videoNames = videoArray.map(video => video.name);
     return storagaArray.filter(item => !videoNames.includes(item.name));
   }
-  
 
   useEffect(() => {
     let idleTimeout = setTimeout(() => {
@@ -83,7 +78,6 @@ export const ListVideos = memo(function ListVideos({
         overflowX: 'scroll',
       }}
     >
-      ]
       {videos.map((video, index) => (
         <div
           key={video.id}

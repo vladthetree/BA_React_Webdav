@@ -19,6 +19,7 @@ const PORT_RESIDENT_C = 8084;
 const PORT_ADMINISTRATION = 8091;
 const DEMO_IP = '192.168.43.100';
 const LOCALHOST = 'localhost';
+let busy = false;
 
 const filter = (pathname, req, port) => {
   return (
@@ -79,14 +80,12 @@ server.use((req, res, next) => {
 });
 
 server.post('/proxy/listContent', async (req, res) => {
-  console.log('TRIGGER CONSOLE LOG');
   try {
     const { username, password, targetUrl } = req.body;
     const client = createClient(targetUrl, {
       username: username,
       password: password,
     });
-    console.log(targetUrl);
     const content = await client.getDirectoryContents('/');
     const filteredContent = content.reduce((result, file) => {
       if (file.filename.includes('mp4') || file.filename.includes('json')) {
@@ -104,30 +103,89 @@ server.post('/proxy/listContent', async (req, res) => {
   }
 });
 
-server.post('/proxy/getFileContent', async (req, res) => {
-  let result = [];
-  try {
-    const { username, password, targetUrl, newFiles } = req.body;
-    const client = createClient(targetUrl, {
-      username: username,
-      password: password,
-    });
-    const promises = newFiles.map((file, index) =>
-      client.getFileContents(file.filename).then(arrayBuffer => {
-        result.push({
-          name: file.filename,
-          date: file.lastmod,
-          buffer: arrayBuffer,
+const serverSocketFileContent = new WebSocket.Server({ port: 8050 });
+
+serverSocketFileContent.on('connection', async function (clientSocket) {
+  clientSocket.on('message', async function (message) {
+    const messageObject = JSON.parse(message);
+    if (messageObject.type === 'isServerBusy') {
+      const responseMessage = {
+        type: 'serverBusy',
+        data: busy,
+      };
+      clientSocket.send(JSON.stringify(responseMessage));
+    } else if (messageObject.type === 'newData') {
+      const metaData = messageObject.data;
+      console.log('METADATA', metaData);
+      try {
+        busy = true;
+        const client = createClient(metaData.targetUrl, {
+          username: metaData.username,
+          password: metaData.password,
         });
-      }),
-    );
-    await Promise.all(promises);
-  } catch (error) {
-    console.log(error);
-    res.send(error);
-  }
-  res.send(result);
+
+        const fileData = [];
+
+        for (const file of metaData.newFiles) {
+          const stream = await client.createReadStream(file.filename);
+          const chunks = [];
+
+          stream.on('data', chunk => {
+            chunks.push(chunk);
+          });
+
+          stream.on('end', () => {
+            const buffer = Buffer.concat(chunks);
+            fileData.push({
+              name: file.filename,
+              date: file.lastmod,
+              buffer: buffer,
+            });
+            if (fileData.length === metaData.newFiles.length) {
+              busy = false;
+              const responseMessage = {
+                type: 'newDataResponse',
+                data: fileData,
+              };
+              clientSocket.send(JSON.stringify(responseMessage));
+            }
+          });
+
+          stream.on('error', error => {
+            console.log(`Error reading stream for file ${file.filename}: ${error}`);
+          });
+        }
+      } catch (error) {
+        console.log('Webdav-Client-Error', error);
+      }
+    }
+  });
 });
+
+// server.post('/proxy/getFileContent', async (req, res) => {
+//   let result = [];
+//   try {
+//     const { username, password, targetUrl, newFiles } = req.body;
+//     const client = createClient(targetUrl, {
+//       username: username,
+//       password: password,
+//     });
+//     const promises = newFiles.map((file, index) =>
+//       client.getFileContents(file.filename).then(arrayBuffer => {
+//         result.push({
+//           name: file.filename,
+//           date: file.lastmod,
+//           buffer: arrayBuffer,
+//         });
+//       }),
+//     );
+//     await Promise.all(promises);
+//   } catch (error) {
+//     console.log(error);
+//     res.send(error);
+//   }
+//   res.send(result);
+// });
 
 server.post('/server/getResidents', async (req, res) => {
   let result = [];

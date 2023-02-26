@@ -1,30 +1,23 @@
-  import { openIndexDB } from "./openIndexDB.jsx";
-  async function addToIndexDbStore(
-    database,
-    ObjectStorage,
-    mode,
-    filename,
-    fileContext,
-    lastmod
-  ) {
-    const db = await openIndexDB(database, ObjectStorage);
-    let transaction = db.transaction(ObjectStorage, mode);
-    let objStore;
-    if (!db.objectStoreNames.contains(ObjectStorage)) {
-      objStore = db.createObjectStore(ObjectStorage, { keyPath: "name" });
-    } else {
-      objStore = transaction.objectStore(ObjectStorage);
-    }
-
-    objStore.put({
-      name: filename,
-      fileContext,
-      lastmod,
-    });
-
-    db.close();
-    return Promise.resolve();
+import { openIndexDB } from './openIndexDB.jsx';
+async function addToIndexDbStore(database, ObjectStorage, mode, filename, fileContext, lastmod) {
+  const db = await openIndexDB(database, ObjectStorage);
+  let transaction = db.transaction(ObjectStorage, mode);
+  let objStore;
+  if (!db.objectStoreNames.contains(ObjectStorage)) {
+    objStore = db.createObjectStore(ObjectStorage, { keyPath: 'name' });
+  } else {
+    objStore = transaction.objectStore(ObjectStorage);
   }
+
+  objStore.put({
+    name: filename,
+    fileContext,
+    lastmod,
+  });
+
+  db.close();
+  return Promise.resolve();
+}
 
 async function getAllFromObjectStorage(database, ObjectStore) {
   const db = await openIndexDB(database, ObjectStore);
@@ -33,7 +26,7 @@ async function getAllFromObjectStorage(database, ObjectStore) {
       console.log(`${ObjectStore} does not exist`);
       resolve(false);
     } else {
-      const tx = db.transaction(ObjectStore, "readonly");
+      const tx = db.transaction(ObjectStore, 'readonly');
       const objSt = tx.objectStore(ObjectStore);
       const getAllrequest = objSt.getAll();
       getAllrequest.onsuccess = function () {
@@ -68,16 +61,15 @@ async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
 
 async function getConvertedBlobVideos() {
   let result = [];
-  let storageValue = await getAllFromObjectStorage("db", "videos").then(
-    (indexedDBResult) =>
-      indexedDBResult.filter((file) => file.name.includes("mp4"))
+  let storageValue = await getAllFromObjectStorage('db', 'videos').then(indexedDBResult =>
+    indexedDBResult.filter(file => file.name.includes('mp4')),
   );
   if (storageValue) {
-    storageValue.forEach((video) => {
+    storageValue.forEach(video => {
       let url = URL.createObjectURL(
         new Blob([video.fileContext], {
-          type: "video/mp4",
-        })
+          type: 'video/mp4',
+        }),
       );
       result.push({
         name: video.name,
@@ -91,12 +83,11 @@ async function getConvertedBlobVideos() {
 }
 
 async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
-
   const db = await openIndexDB(database, OBJECT_STORE);
   return new Promise((resolve, reject) => {
     try {
       if (db.objectStoreNames.contains(OBJECT_STORE)) {
-        const tx = db.transaction(OBJECT_STORE, "readonly");
+        const tx = db.transaction(OBJECT_STORE, 'readonly');
         const objSt = tx.objectStore(OBJECT_STORE);
         const request = objSt.get(INDEX);
         request.onsuccess = function () {
@@ -115,7 +106,7 @@ async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
 
 async function hasObjectStorageDatabase(database, OBJECT_STORE) {
   const db = await openIndexDB(database, OBJECT_STORE);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (!db.objectStoreNames.contains(OBJECT_STORE)) {
       resolve(false);
     } else {
@@ -124,12 +115,9 @@ async function hasObjectStorageDatabase(database, OBJECT_STORE) {
   });
 }
 async function deleteDBFromIndexDB(database) {
-  // console.log(` deleteDBFromIndexDB database : ${database} `)
-
   return new Promise((resolve, reject) => {
     const request = indexedDB.deleteDatabase(database);
     request.onsuccess = function () {
-      // console.log(`#-- Successfully deleted database "${database}" --#`);
       resolve();
     };
     request.onerror = function (error) {
