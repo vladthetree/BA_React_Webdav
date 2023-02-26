@@ -1,11 +1,6 @@
 .innerContainer-Settings {
-    border-style: solid;
-    border-color: black;
-    border-width: 10px;
-    background-color: black;
-    border-radius: 15px;
-    height: 390px;
-    width: 600px;
+    height: 50vw;
+    width: 67vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,15 +8,16 @@
 
 .settings-container {
     display: flex;
-    background-color: black;
+    background-color: lightsteelblue;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
+    height: 60%;
+    width: 80%;
     border-radius: 15px;
 }
 
 .settings-upper-row {
-    font-family: 'Ubuntu Mono', monospace;
+    font-family: "Ubuntu Mono", monospace;
+    font-size: max(1.3vw, 1.45vw);
     display: flex;
     background-color: white;
     position: relative;
@@ -29,7 +25,6 @@
     border-style: solid;
     border-color: silver;
     border-width: 5px;
-
 }
 
 .settings-button {
@@ -37,7 +32,6 @@
     position: absolute;
     width: 5%;
     right: 0;
-    top: 0;
     border: none;
     border-radius: 10px;
     background-color: silver;
@@ -50,8 +44,7 @@
 }
 
 .settings-options {
-
-    background-color: black;
+    background-color: rgb(1, 26, 72);
     overflow-y: scroll;
     height: 100%;
     width: 100%;
@@ -62,6 +55,7 @@
 }
 
 .settings-list {
+
     display: flex;
     height: 15%;
     background-color: white;
@@ -70,7 +64,6 @@
     border-style: solid;
     border-color: silver;
     border-width: 5px;
-
 }
 
 .settings-beginning-side {
@@ -78,7 +71,6 @@
     margin: 5px;
     text-align: start;
     overflow-wrap: break-word;
-
 }
 
 .settings-mid-side {
@@ -95,6 +87,7 @@
 }
 
 .settings-list-button {
+    font-size: max(1.3vw, 1.45vw);
     width: 100%;
     height: 100%;
     border: none;
@@ -107,8 +100,10 @@
 .settings-list-button:active {
     background-color: red;
 }
-
+.settings-top-font {
+    font-size: max(2.5vw, 1.45vw);
+}
 .settings-list-font {
-    font-size: 20px;
-    font-family: 'Ubuntu Mono', monospace;
+    font-size: max(1.3vw, 1.45vw);
+    font-family: "Ubuntu Mono", monospace;
 }

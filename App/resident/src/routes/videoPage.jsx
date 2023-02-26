@@ -1,14 +1,17 @@
-import { ListVideos } from "../components/utils/pageUtils/listVideos.jsx";
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Layout from "../components/layout/layout.jsx";
-import { hasObjectStorageDatabase } from "../components/db/storageObjectMethodes.jsx";
-import { getObjectStorageIndex } from "../components/db/storageObjectMethodes.jsx";
-import { NewFileControll } from "../components/utils/NewFileControll.jsx";
-import ModalSettings from "../components/utils/pageUtils/modal/settings/ModalSettings.jsx";
-import { ScannConnection } from "../components/utils/pageUtils/modal/BLE/ScannConnection.jsx";
+import { ListVideos } from '../components/utils/pageUtils/listVideos.jsx';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Layout from '../components/layout/layout.jsx';
+import { hasObjectStorageDatabase } from '../components/db/storageObjectMethodes.jsx';
+import { getObjectStorageIndex } from '../components/db/storageObjectMethodes.jsx';
+import { NewFileControll } from '../components/utils/NewFileControll.jsx';
+import ModalSettings from '../components/utils/pageUtils/modal/settings/ModalSettings.jsx';
+import { ScannConnection } from '../components/utils/pageUtils/modal/BLE/ScannConnection.jsx';
 
-const OBJECT_STORE_USERDATA = "userData";
-const OBJECT_STORE_USERDATA_OBJECTSTORAGE = "customer";
+const OBJECT_STORE_USERDATA = 'userData';
+const OBJECT_STORE_USERDATA_OBJECTSTORAGE = 'customer';
+const OBJECT_STORE_VIDEOS = 'db';
+const OBJECT_STORE_VIDEOS_OBJECTSTORAGE = 'videos';
+const REMINDER = 'Reminder.json';
 
 const VideoPage = () => {
   const [dbExist, setDbExist] = useState(false);
@@ -19,9 +22,32 @@ const VideoPage = () => {
   const [isActive, setIsActive] = useState(false);
   const [displayedVideos, setDisplayedVideos] = useState([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [reminder, setReminder] = useState([]);
+  const [memoryObject, setMemoryObject] = useState([]);
+
+  const storedFilesRef = useRef([]);
+
+  const handleMemorizeObject = someObject => {
+    setMemoryObject(someObject);
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const reminder = await getObjectStorageIndex(
+        OBJECT_STORE_VIDEOS,
+        OBJECT_STORE_VIDEOS_OBJECTSTORAGE,
+        REMINDER,
+      );
+      if (reminder) {
+        setReminder(Object.keys(reminder.fileContext));
+      }
+    };
+    getData();
+  }, []);
+
   let videoAmount = newVideos.length;
 
-  const handleDisplayBLEconnection = (isDisplayed) => {
+  const handleDisplayBLEconnection = isDisplayed => {
     if (isDisplayed) {
       setdisplayBLEconnection(true);
     }
@@ -33,7 +59,8 @@ const VideoPage = () => {
     }
   };
 
-  const handleClickVideo = (e) => {
+  const handleClickVideo = e => {
+    console.log(e);
     const video = e.currentTarget;
     if (video.paused) {
       setIsVideoPlaying(true);
@@ -49,7 +76,7 @@ const VideoPage = () => {
       const resivedUserData = await getObjectStorageIndex(
         OBJECT_STORE_USERDATA,
         OBJECT_STORE_USERDATA_OBJECTSTORAGE,
-        "adress01"
+        'adress01',
       );
       if (resivedUserData) {
         const result = resivedUserData.fileContext;
@@ -73,11 +100,11 @@ const VideoPage = () => {
     const handleOffline = () => {
       setIsOnline(false);
     };
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
@@ -85,8 +112,8 @@ const VideoPage = () => {
   useEffect(() => {
     if (dbExist === false) {
       const hasVideos = async () => {
-        let exist = await hasObjectStorageDatabase("db", "videos");
-        console.log()
+        let exist = await hasObjectStorageDatabase('db', 'videos');
+        console.log();
         setDbExist(exist);
       };
       hasVideos();
@@ -95,7 +122,7 @@ const VideoPage = () => {
 
   useEffect(() => {
     if (userdata && isOnline) {
-      console.log("#-- User is online --#");
+      console.log('#-- User is online --#');
       const downloadVideos = setInterval(() => {
         NewFileControll(userdata, setNewVideos);
       }, 5000);
@@ -108,32 +135,59 @@ const VideoPage = () => {
     return (
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <div
           style={{
-            height: "10px",
-            width: "10px",
-            backgroundColor: displayBLEconnection ? "green" : "red",
-            display: "inline-block",
-            marginRight: "5px",
+            height: `${1.5}vw`,
+            width: `${1.5}vw`,
+            backgroundColor: displayBLEconnection ? 'green' : 'red',
+            display: 'inline-block',
+            marginRight: '5px',
           }}
         />
         <div
           style={{
-            height: "10px",
-            width: "10px",
-            backgroundColor: isOnline ? "green" : "red",
-            borderRadius: "50%",
-            display: "inline-block",
-            marginRight: "5px",
+            height: `${1.5}vw`,
+            width: `${1.5}vw`,
+            backgroundColor: isOnline ? 'green' : 'red',
+            borderRadius: '50%',
+            display: 'inline-block',
+            marginRight: '5px',
           }}
         />
-        <div>Logged : {userdata.username} ------- </div>
-        <div>Today: {new Date().toLocaleDateString("de-DE")}</div>
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderTop: `${1.5}vw solid ${(function () {
+              if ('serviceWorker' in navigator) {
+                
+              }else{
+                console.log(' SERVICEWORER IST NICHT IM NAVIGATOR');
+              }
+
+              try {
+                return navigator.serviceWorker.controller ? 'green' : 'red';
+              } catch (e) {
+                console.error('Error in navigator code:', e);
+                return 'gray';
+              }
+            })()}`,
+            borderLeft: `${0.75}vw solid transparent`,
+            borderRight: `${0.75}vw solid transparent`,
+            display: 'inline-block',
+            marginRight: '5px',
+          }}
+        />
+        &nbsp; &nbsp;
+        <div>
+          Logged: &nbsp; {userdata.username}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
       </div>
     );
   };
@@ -147,6 +201,7 @@ const VideoPage = () => {
         isActive={isActive}
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
+        memoryObject={memoryObject}
         navbar_left={
           <ScannConnection
             newVideosAmount={videoAmount}
@@ -154,16 +209,19 @@ const VideoPage = () => {
             handleDisplayBLEconnection={handleDisplayBLEconnection}
           />
         }
-        navbar_middle={userdata ? displayName() : ""}
+        navbar_middle={userdata ? displayName() : ''}
         navbar_right={<ModalSettings />}
       >
         {dbExist && (
           <ListVideos
+            reminder={reminder}
             setIsActive={setIsActive}
             handleClickVideo={handleClickVideo}
             isVideoPlaying={isVideoPlaying}
             videos={displayedVideos}
             setVideos={setDisplayedVideos}
+            storedFilesRef={storedFilesRef}
+            handleMemorizeObject={handleMemorizeObject}
           />
         )}
       </Layout>

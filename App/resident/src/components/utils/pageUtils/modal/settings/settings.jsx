@@ -29,20 +29,20 @@ const Settings = ({ onClose }) => {
 	};
 
 
-	const presentationMode = async () => {
-		try {
-			const presentationRequest = new PresentationRequest(
-				"http://localhost:8080/",
-			);
-			const presentationConnection = await presentationRequest.start();
-			presentationConnection.addEventListener("connect", (event) => {
-				// Send a message to the presentation display to enter presentation mode
-				presentationConnection.send("enterPresentationMode");
-			});
-		} catch (error) {
-			// Handle the error
-		}
-	};
+	// const presentationMode = async () => {
+	// 	try {
+	// 		const presentationRequest = new PresentationRequest(
+	// 			"http://localhost:8080/",
+	// 		);
+	// 		const presentationConnection = await presentationRequest.start();
+	// 		presentationConnection.addEventListener("connect", (event) => {
+	// 			// Send a message to the presentation display to enter presentation mode
+	// 			presentationConnection.send("enterPresentationMode");
+	// 		});
+	// 	} catch (error) {
+	// 		// Handle the error
+	// 	}
+	// };
 
 	const primeMethodes = [
 		{
@@ -57,14 +57,14 @@ const Settings = ({ onClose }) => {
 		},
 		{
 			name: "Reload",
-			value: "Resets the page\nCoution! Dont use in Presentaion Mode.",
+			value: "Reloads the page.",
 			status: reloadPage,
 		},
-		{
-			name: "Prasentation Mode",
-			value: "This will open the application in Presentation mode",
-			status: presentationMode,
-		},
+		// {
+		// 	name: "Prasentation Mode",
+		// 	value: "This will open the application in Presentation mode",
+		// 	status: presentationMode,
+		// },
 	];
 
 	useEffect(() => {

@@ -6,6 +6,8 @@ export function ScannConnection({
 	currentBLEstatus,
 	handleDisplayBLEconnection,
 }) {
+	const [permissionGranted, setPermissionGranted] = useState(false);
+	const [isWebBluetoothSupported, setIsWebBluetoothSupported] = useState(true);
 
 	var NORDIC_SERVICE = useRef("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 	var NORDIC_TX = useRef("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
@@ -26,11 +28,21 @@ export function ScannConnection({
 	let isConnected = false;
 
 	let newVideoMessage = `newVideos(${newVideosAmount})\n;`;
-
 	const handleClick2 = async () => {
 		bluetoothDeviceRef.current = null;
 		try {
 			console.log("Requesting any Bluetooth Device...");
+			if (!navigator.bluetooth) {
+				setIsWebBluetoothSupported(false);
+				return;
+			}
+			if (!permissionGranted) {
+				await navigator.bluetooth.requestDevice({
+					filters: filters,
+					optionalServices: [NORDIC_SERVICE.current],
+				});
+				setPermissionGranted(true);
+			}
 			bluetoothDeviceRef.current = await navigator.bluetooth.requestDevice({
 				filters: filters,
 				optionalServices: [NORDIC_SERVICE.current],
@@ -78,6 +90,7 @@ export function ScannConnection({
 
 			},
 			async function success() {
+
 				await writeMessage("connected();\n", txRef.current);
 				console.log("Bluetooth Device is connected.");
 				isConnected = true;
@@ -144,8 +157,6 @@ export function ScannConnection({
 	}
 
 	const handleSendMessage = async () => {
-
-		// Write the "sendMessage();" command to the TX characteristic to trigger the sendMessage function on the watch
 		await writeMessage("sendMessage();\n", txRef.current);
 
 	};
@@ -156,9 +167,6 @@ export function ScannConnection({
 		<div>
 			<button id="search-button" onClick={handleClick2}>
 				ScannConnection2
-			</button>
-			<button id="send-message-button" onClick={handleSendMessage}>
-				Send Message
 			</button>
 		</div>
 	);

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
-import "../style/layout.css";
-import { useWindowSize } from "react-use";
-import DefaultScreen from "../utils/pageUtils/modal/defaultScreenElement/DefaultScreen.jsx";
-import ModalLogin from "../utils/pageUtils/modal/login/ModalLogin.jsx";
+import React, { useEffect, useState, useRef } from 'react';
+import '../style/layout.css';
+import { useWindowSize } from 'react-use';
+import DefaultScreen from '../utils/pageUtils/modal/defaultScreenElement/DefaultScreen.jsx';
+import ModalLogin from '../utils/pageUtils/modal/login/ModalLogin.jsx';
 
 const Layout = ({
   navbar_left,
@@ -14,6 +14,7 @@ const Layout = ({
   setIsActive,
   videoAmount,
   setNewVideos,
+  memoryObject,
 }) => {
   const { height } = useWindowSize();
   const navbarhight = height / 25;
@@ -23,9 +24,8 @@ const Layout = ({
     setIsActive(true);
     setNewVideos([]);
   };
-
   useEffect(() => {
-    console.log("isActive changed:", isActive);
+    console.log('isActive changed:', isActive);
   }, [isActive]);
   return !userdata ? (
     <ModalLogin />
@@ -52,6 +52,7 @@ const Layout = ({
       <div style={{ height: height - navbarhight }}>
         {!isActive ? (
           <DefaultScreen
+            memoryObject={memoryObject}
             handleCloseModal={handleCloseModal}
             newVideosAmount={videoAmount}
           />

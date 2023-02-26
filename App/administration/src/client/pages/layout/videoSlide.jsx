@@ -1,56 +1,33 @@
 import React, { forwardRef, useState, useEffect, useRef } from "react";
-import "../css/VideoSlide.css";
+import "../css/videoSlide.css"
 
-const VideoSlide = ({ videos, selectedVideo, handleSelectedVideos }) => {
-	console.log("INSIDE VIDEOSLIDE");
+import { Buffer } from "buffer";
+
+// const buffer = Buffer.from(newFile.buffer);
+//       if (newFile.name.endsWith(".json")) {
+//         const decoder = new TextDecoder('utf-8');
+//         const jsonString = decoder.decode(buffer);
+//         const jsonObject = JSON.parse(jsonString);
+
+const VideoSlide = ({ videos, selectedVideo, handleSelectedVideos, videoArrayRef }) => {
+
+
+
 
 	return (
-		<div style={{ backgroundColor: "green", width: "100%", height: "100%" }}>
-			<div
-				style={{
-					width: "100%",
-					height: "100%",
-					overflowX: "scroll",
-					scrollbarWidth: "auto",
-					display: "flex",
-					flexWrap: "wrap",
-				}}
-			>
-				{videos !== null ? (
-					<>
-						{videos.map((video, index) => (
-							<div
-								className="outerContainer"
-								key={index}
-								style={{
-									margin: 10,
-									marginBottom: 30,
-									width: "30%",
-									height: "30%",
-								}}
-							>
-								<div
-									style={{
-										position: "relative",
-									}}
-									onClick={() => {
-										console.log(`CLICKED ON ${video.name}`);
-										handleSelectedVideos(video.name);
-									}}
-								>
-									<video
-										src={video.url}
-										controls
-										type="video/mp4"
-										style={{ width: "100%", height: "100%" }}
-									/>
+		<div className="videoSlide-container">
+			{videoArrayRef ? (
+				<div className="videoSlide-inner-container">
+					{videos.map((video, index) => (
+						<div className="video-Container" key={index}>
+							<div className="video-uper">
+								{/* <div className="video-marker">
 									<div
+										onClick={handleSelectedVideos(video.name)}
 										style={{
 											position: "absolute",
 											top: 0,
 											right: 0,
-											width: 20,
-											height: 20,
 											width: "20px",
 											height: "20px",
 											backgroundColor:
@@ -60,30 +37,19 @@ const VideoSlide = ({ videos, selectedVideo, handleSelectedVideos }) => {
 														: "blue"
 													: "blue",
 										}}
-									/>
+									></div>
 								</div>
-								<div>{video.name.split("/")[2].slice(0, -4)}</div>
+								<div className="video-style">
+									<video src={video} controls type="video/mp4" />
+								</div> */}
 							</div>
-						))}
-						{[1, 2, 3].map((i) => (
-							<div
-								key={i}
-								style={{
-									margin: 10,
-									marginBottom: 30,
-									width: "30%",
-									height: "30%",
-									maxWidth: "100%",
-									maxHeight: "100%",
-									visibility: "hidden",
-								}}
-							/>
-						))}
-					</>
-				) : (
-					<div>No videos available.</div>
-				)}
-			</div>
+							<div className="video-bottom">{"SAMPLE"}</div>
+						</div>
+					))}
+				</div>
+			) : (
+				<div>No videos available.</div>
+			)}
 		</div>
 	);
 };

@@ -91,7 +91,6 @@ async function getConvertedBlobVideos() {
 }
 
 async function getObjectStorageIndex(database, OBJECT_STORE, INDEX) {
-  // console.log(` getObjectStorageIndex database : ${database} and Objectstorage ${OBJECT_STORE}`)
 
   const db = await openIndexDB(database, OBJECT_STORE);
   return new Promise((resolve, reject) => {

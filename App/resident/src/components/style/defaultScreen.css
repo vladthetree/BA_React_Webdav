@@ -1,11 +1,9 @@
 .defaultScreen-outerContainer {
-
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     width: 100%;
- 
 }
 
 .defaultScreen-innerContainer {
@@ -69,7 +67,7 @@
     border-radius: 15px;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 3vw;
     margin-right: 2.5%;
     margin-left: 1.5%;
 }
@@ -84,4 +82,14 @@
     justify-content: center;
     font-size: 30px;
     margin-right: 1.5%;
+    font-size: 5vw;
+}
+
+.defaultScreen-inner-right {
+    max-height: 500px;
+    /* set your preferred maximum height */
+}
+
+.scrollable-list {
+    overflow-y: auto;
 }

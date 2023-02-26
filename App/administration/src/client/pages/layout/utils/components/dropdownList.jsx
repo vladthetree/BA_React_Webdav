@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../../../css/dropdownListButton.css"
 
 function DropdownList({residents,updateSelectedResident}) {
   const [showList, setShowList] = useState(false);
@@ -15,12 +16,12 @@ function DropdownList({residents,updateSelectedResident}) {
   };
 
   return (
-    <div style={{display:"flex", alignItems:"center", justifyContent:"center",backgroundColor: "blue", width: "100%", height: "100%", position: "relative"}}>
-      <button style={{height:"50%", width:"50%"}} onClick={handleClick}>{choosen}</button>
+    <div className="dropdown-container">
+      <button className="dropdown-button-residents" onClick={handleClick}>{choosen}</button>
       {showList && (
-        <ul style={{ backgroundColor: "white", width: "15%", position: "absolute", top: 0, margin:"20px"}}>
+        <ul className="dropdown-list">
           {residents.map((item, index) => (
-            <li key={index} onClick={() => {
+            <li className="dropdown-list-item" key={index} onClick={() => {
               handleOptionClick(item),
               updateSelectedResident(item)
               setChoosen(item)

@@ -3,9 +3,14 @@ import "../../../../style/defaultScreen.css";
 import { useWindowSize } from "react-use";
 import Swipe from "../../../../svgs/Swipe.jsx";
 
-const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
+
+
+
+const DefaultScreen = ({ handleCloseModal, newVideosAmount, memoryObject }) => {
 	const { width, height } = useWindowSize();
 	const [startX, setStartX] = useState(null);
+
+
 
 	function handleTouchStart(e) {
 		setStartX(e.touches[0].clientX);
@@ -21,8 +26,22 @@ const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
 			handleCloseModal();
 		}
 	}
+	const handleReminderClick = () => {
+		const videoElement = document.createElement('video');
+		videoElement.src = memoryObject.url;
+		videoElement.controls = true;
+		videoElement.autoplay = true;
+		videoElement.style.position = 'fixed';
+		videoElement.style.top = '50%';
+		videoElement.style.left = '50%';
+		videoElement.style.transform = 'translate(-50%, -50%)';
+		videoElement.width = width * 0.6;
+		videoElement.height = height * 0.6;
+		document.body.appendChild(videoElement);
+	};
+
 	return (
-		<div
+		<div 
 			onTouchStart={handleTouchStart}
 			onTouchMove={handleTouchMove}
 			className="defaultScreen-outerContainer"
@@ -40,15 +59,17 @@ const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
 							</div>
 						</div>
 						<div className="defaultScreen-ActionContainer">
-							<div className="defaultScreen-ActionContaner-inner">
-								<div className="defaultScreen-inner-left">PLACEHOLDER</div>
-								<div className="defaultScreen-inner-right">PLACEHOLDER</div>
-							</div>
-						</div>
-						<div className="defaultScreen-ActionContainer">
-							<div className="defaultScreen-ActionContaner-inner">
-								<div className="defaultScreen-inner-left">PLACEHOLDER</div>
-								<div className="defaultScreen-inner-right">PLACEHOLDER</div>
+							<div className="defaultScreen-ActionContaner-inner" >
+								<div className="defaultScreen-inner-left">REMINDER</div>
+								<div className="defaultScreen-inner-right">
+									{memoryObject.name ? <div onClick={() => {
+										handleReminderClick()
+									}}>
+										MemoryObject
+									</div> : <div />
+									}
+
+								</div>
 							</div>
 						</div>
 					</div>

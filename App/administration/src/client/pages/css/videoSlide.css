@@ -1,15 +1,78 @@
-.squareTest {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 300;
-    height: 300;
-    z-index: 2;
-    background-color: blue;
-}
-
-.videoContainer{
+.videoSlide-container {
     height: 100%;
     width: 100%;
+
+}
+
+.videoSlide-inner-container {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: scroll;
+    height: 100%;
+    width: 100%;
+    align-content: flex-start
+}
+
+.videoSlide-inner-container::-webkit-scrollbar {
+    width: 25px;
+}
+
+.videoSlide-inner-container::-webkit-scrollbar-track {
+    background:black
+}
+
+.videoSlide-inner-container::-webkit-scrollbar-thumb {
+    background: #93e2ff;
+}
+
+.videoSlide-inner-container::-webkit-scrollbar-thumb:hover {
+    background: #797cdf;
+}
+
+.video-Container {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: white;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    margin: 1%;
+    height: 100%;
+    width: 100%;
+    min-width: calc(100vw *0.26);
+    min-height: calc(100vw * 0.26);
+    max-width: calc(100vw *0.26);
+    max-height: calc(100vw * 0.26);
     position: relative;
+}
+
+.video-uper {
+    height: 80%;
+    width: 100%;
+    background-color: bisque;
+}
+
+.video-bottom {
+    font-size: calc(100vh *0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
+    width: 100%;
+    color: aliceblue;
+    text-align: center;
+}
+
+.video-style {
+    overflow: hidden;
+    height: 100%;
+    height: 100%;
+
+}
+
+.video-style video {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }

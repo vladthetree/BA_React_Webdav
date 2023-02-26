@@ -1,34 +1,23 @@
 body {
-  background: rgb(0, 0, 0);
+    background: rgb(0, 0, 0);
 }
 
 .navbar {
-  display: grid;
-  grid-template-columns: 10% 80% 10%;
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
 }
 
 .navbar_left {
-  display: none;
-  grid-column: 1;
+    display: none;
+    grid-column: 1;
 }
 
 .navbar_left_wrapper:hover .navbar_left {
-  display: block;
-}
-
-.navbar_right_wrapper:hover .navbar_right {
-  display: block;
-}
-
-.navbar_right {
-  display: none;
-  grid-column: 1;
+    display: block;
 }
 
 .navbar_middle {
-  text-align: center;
-  color: white;
-  grid-column: 2;
+    text-align: center;
+    color: white;
+    grid-column: 2;
 }
-
-
