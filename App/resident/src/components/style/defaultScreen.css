@@ -30,8 +30,8 @@
 }
 
 .defaultScreen-MidContainer {
-    width: 76%;
-    height: 100%;
+    width: max(80vw, 90vw);
+    height: 50vmax;
     display: flex;
     flex-direction: column;
     justify-content: center;

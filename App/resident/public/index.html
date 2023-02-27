@@ -10,17 +10,29 @@
   <body>
     <div id="root"></div>
     <script>
-      console.log(window.location.href);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          navigator.serviceWorker.ready
+            .then(function (registration) {
+              console.log('Triggering sync event...');
+              return registration.sync.register('my-background-sync');
+            })
+            .catch(function (error) {
+              console.error('Sync event failed:', error);
+            });
+        }
+      });
     </script>
     <script type="text/javascript">
-
-      navigator.serviceWorker.register('./fire-serviceworker.js').then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-           }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-      });
-      
-</script>
+      navigator.serviceWorker.register('./fire-serviceworker.js').then(
+        function (registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        },
+        function (err) {
+          console.log('ServiceWorker registration failed: ', err);
+        },
+      );
+    </script>
 
     <script src="./bundle.js"></script>
   </body>

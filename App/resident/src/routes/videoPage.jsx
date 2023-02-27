@@ -69,6 +69,7 @@ const VideoPage = () => {
 
     if (!userdata) {
       const interval = setInterval(() => {
+        console.log('newVideos', newVideos);
         getData();
       }, 500);
       return () => clearInterval(interval);
@@ -112,6 +113,7 @@ const VideoPage = () => {
     } else {
     }
   }, [userdata, isOnline]);
+  console.log('newVideos', newVideos);
 
   const displayName = () => {
     return (
@@ -173,8 +175,6 @@ const VideoPage = () => {
     );
   };
 
-  console.log('displayedVideos', displayedVideos);
-  console.log('dbExist', dbExist);
   return (
     <div>
       <Layout

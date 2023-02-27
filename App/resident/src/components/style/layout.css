@@ -17,6 +17,7 @@ body {
 }
 
 .navbar_middle {
+    font-size: 2vw;
     text-align: center;
     color: white;
     grid-column: 2;
