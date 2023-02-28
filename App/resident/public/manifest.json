@@ -1,6 +1,6 @@
 {
-  "name": "Feuerfalke_2",
-  "short_name": "Feuerfalke_2",
+  "name": "Plauderkästchen",
+  "short_name": "Plauderkästchen",
   "description": "Created for Ba",
   "start_url": "/",
   "display": "standalone",
@@ -23,14 +23,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "permissions": [
-    "notifications",
-    "geolocation",
-    "camera",
-    "microphone",
-    "storage",
-    "clipboard-read",
-    "clipboard-write"
   ]
 }

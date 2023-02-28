@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { writeMessage } from './writeBLEmessage.js';
 
-export function ScannConnection({ newVideos, currentBLEstatus, handleDisplayBLEconnection }) {
+export function ScannConnection({ videoamount, currentBLEstatus, handleDisplayBLEconnection }) {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isWebBluetoothSupported, setIsWebBluetoothSupported] = useState(true);
 
@@ -23,7 +23,7 @@ export function ScannConnection({ newVideos, currentBLEstatus, handleDisplayBLEc
   const MAX_DELAY = 3;
   let isConnected = false;
 
-  let newVideoMessage = `newVideos(${newVideos.length})\n;`;
+  let newVideoMessage = `newVideos(${videoamount})\n;`;
   const handleClick2 = async () => {
     bluetoothDeviceRef.current = null;
     try {
@@ -55,7 +55,7 @@ export function ScannConnection({ newVideos, currentBLEstatus, handleDisplayBLEc
   useEffect(() => {
     if (newVideoMessage !== '') {
       const event = new CustomEvent('newVideo', {
-        detail: { videoAmount: newVideos.length, bleStatus: currentBLEstatus },
+        detail: { videoAmount: videoamount, bleStatus: currentBLEstatus },
       });
       document.dispatchEvent(event);
     }

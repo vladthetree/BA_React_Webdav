@@ -4,25 +4,30 @@ import { Buffer } from 'buffer';
 const DATABASE_VIDEOS = 'db';
 const OBJECT_STORE_VIDEOS = 'videos';
 
-const DEMO_IP = '192.168.2.164';
+const DEMO_IP = '192.168.43.100';
 const LOCALHOST = 'localhost';
 
-export const NewFileControll = async (userdata, newVideos, isRequesting) => {
+export const NewFileControll = async (userdata, setNewVideos, isRequesting) => {
   let mp4FilesNames = null;
   console.log(`##-- Is requesting? : ${isRequesting.current} --##`);
   if (isRequesting.current === false) {
     console.log('#-- No ongoing requests --#');
 
     mp4FilesNames = await listContent(userdata);
-    await removeAlreadyStoredFiles(DATABASE_VIDEOS, mp4FilesNames, OBJECT_STORE_VIDEOS);
-    if (mp4FilesNames.length > 0) {
-      console.log('#--New Files available--#');
-      console.log('#-- New Files : --#');
+    if (mp4FilesNames) {
+      await removeAlreadyStoredFiles(DATABASE_VIDEOS, mp4FilesNames, OBJECT_STORE_VIDEOS);
+      console.log('AFTER mp4 files');
+      console.log(mp4FilesNames);
+      if (mp4FilesNames.length > 0) {
+        console.log('#--New Files available--#');
+        console.log('#-- New Files : --#');
 
-      await getFileContent(userdata, mp4FilesNames, newVideos, isRequesting);
-    } else {
-      console.log('#--No new Files to Upload--#');
-      isRequesting = false;
+        await getFileContent(userdata, mp4FilesNames, isRequesting);
+        setNewVideos(mp4FilesNames);
+      } else {
+        console.log('#--No new Files to Upload--#');
+        isRequesting = false;
+      }
     }
   }
 };
@@ -39,14 +44,14 @@ const listContent = async userdata => {
       }),
     });
     const availableContent = await response.json();
-    return availableContent;
+    return availableContent.response === 'serverOff' ? null : availableContent;
   } catch (error) {
     console.error(error);
   }
 };
 
-const getFileContent = async (userdata, newMp4FilesArray, newVideos, isRequesting) => {
-  const socket = new WebSocket('ws://localhost:8050');
+const getFileContent = async (userdata, newMp4FilesArray, isRequesting) => {
+  const socket = new WebSocket(`ws://${LOCALHOST}:8050`);
   const isServerBusy = await new Promise(resolve => {
     const message = {
       type: 'isServerBusy',
@@ -65,16 +70,15 @@ const getFileContent = async (userdata, newMp4FilesArray, newVideos, isRequestin
       }
     });
   });
-  console.log(`SERVER BUSY : ${isServerBusy}`);
+  console.log(`## Server can work on next request : ${isServerBusy} ##`);
   if (isServerBusy) {
     await new Promise(resolve => setTimeout(resolve, 10000));
-    await getFileContent(userdata, newMp4FilesArray, newVideos, isRequesting);
+    await getFileContent(userdata, newMp4FilesArray, isRequesting);
     isRequesting.current = true;
     return;
   } else {
-    console.log('Server is not busy');
+    console.log('##--! Server is busy !--##');
     try {
-      console.log('THIS IS A TEST');
       const message = {
         type: 'newData',
         data: {
@@ -89,7 +93,6 @@ const getFileContent = async (userdata, newMp4FilesArray, newVideos, isRequestin
         const message = JSON.parse(event.data);
         if (message.type === 'newDataResponse') {
           const newContent = message.data[0];
-          newVideos.push(newContent.name);
           isRequesting.current = false;
           await new Promise(resolve => {
             const buffer = Buffer.from(newContent.buffer);

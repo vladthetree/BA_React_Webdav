@@ -2,9 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-
 module.exports = {
   mode: 'development',
   entry: './resident/src/index.js',
@@ -58,14 +55,8 @@ module.exports = {
         { from: './resident/public/pwa-512x512.png', to: 'pwa-512x512.png' },
         { from: './resident/public/robots.txt', to: 'robots.txt' },
         { from: './resident/public/favicon.ico', to: 'favicon.ico' },
-        { from: './resident/src/fire-serviceworker.js', to: 'fire-serviceworker.js' },
-
-        //  { from: './resident/public/style', to: 'style' },
+        { from: './resident/src/sw.js', to: 'sw.js' },
       ],
-    }),
-    new WorkboxWebpackPlugin.InjectManifest({
-      swSrc: '/resident/src/fire-serviceworker.js',
-      swDest: 'fire-serviceworker.js',
     }),
   ],
 };

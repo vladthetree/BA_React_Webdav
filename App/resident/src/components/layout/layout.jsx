@@ -12,8 +12,8 @@ const Layout = ({
   userdata,
   isActive,
   setIsActive,
-  newVideos,
   setNewVideos,
+  videoamount,
 }) => {
   const { height } = useWindowSize();
   const navbarhight = height / 25;
@@ -26,9 +26,6 @@ const Layout = ({
   useEffect(() => {
     console.log('isActive changed:', isActive);
   }, [isActive]);
-
-  console.log('SAMPLE ABC');
-  console.log(newVideos);
 
   return !userdata ? (
     <ModalLogin />
@@ -54,7 +51,7 @@ const Layout = ({
       </header>
       <div style={{ height: height - navbarhight }}>
         {!isActive ? (
-          <DefaultScreen handleCloseModal={handleCloseModal} newVideosAmount={newVideos.length} />
+          <DefaultScreen handleCloseModal={handleCloseModal} videoamount={videoamount} />
         ) : (
           <main className="layoutbody">{children}</main>
         )}

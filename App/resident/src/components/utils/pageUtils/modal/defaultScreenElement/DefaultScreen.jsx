@@ -3,12 +3,12 @@ import '../../../../style/defaultScreen.css';
 import { useWindowSize } from 'react-use';
 import Swipe from '../../../../svgs/Swipe.jsx';
 
-const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
+const DefaultScreen = ({ handleCloseModal, videoamount }) => {
   const { width, height } = useWindowSize();
   const [startX, setStartX] = useState(null);
 
   console.log('SAMPLE');
-  console.log(newVideosAmount);
+  console.log(videoamount);
 
   function handleTouchStart(e) {
     setStartX(e.touches[0].clientX);
@@ -40,7 +40,7 @@ const DefaultScreen = ({ handleCloseModal, newVideosAmount }) => {
             <div className="defaultScreen-ActionContainer">
               <div className="defaultScreen-ActionContaner-inner">
                 <div className="defaultScreen-inner-left">NEW VIDEOS</div>
-                <div className="defaultScreen-inner-right">{newVideosAmount}</div>
+                <div className="defaultScreen-inner-right">{videoamount}</div>
               </div>
             </div>
           </div>

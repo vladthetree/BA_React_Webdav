@@ -162,31 +162,6 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
   });
 });
 
-// server.post('/proxy/getFileContent', async (req, res) => {
-//   let result = [];
-//   try {
-//     const { username, password, targetUrl, newFiles } = req.body;
-//     const client = createClient(targetUrl, {
-//       username: username,
-//       password: password,
-//     });
-//     const promises = newFiles.map((file, index) =>
-//       client.getFileContents(file.filename).then(arrayBuffer => {
-//         result.push({
-//           name: file.filename,
-//           date: file.lastmod,
-//           buffer: arrayBuffer,
-//         });
-//       }),
-//     );
-//     await Promise.all(promises);
-//   } catch (error) {
-//     console.log(error);
-//     res.send(error);
-//   }
-//   res.send(result);
-// });
-
 server.post('/server/getResidents', async (req, res) => {
   let result = [];
   try {

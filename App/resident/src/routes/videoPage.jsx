@@ -22,10 +22,12 @@ const VideoPage = () => {
   const [isActive, setIsActive] = useState(false);
   const [displayedVideos, setDisplayedVideos] = useState([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [reminder, setReminder] = useState([]);
   const [memoryObject, setMemoryObject] = useState([]);
   const isRequesting = useRef(false);
   const storedFilesRef = useRef([]);
+
+  console.log('DISPLAYED VIDEOS ARE : ');
+  console.log(newVideos);
 
   const handleMemorizeObject = someObject => {
     setMemoryObject(someObject);
@@ -69,7 +71,6 @@ const VideoPage = () => {
 
     if (!userdata) {
       const interval = setInterval(() => {
-        console.log('newVideos', newVideos);
         getData();
       }, 500);
       return () => clearInterval(interval);
@@ -107,13 +108,12 @@ const VideoPage = () => {
     if (userdata && isOnline && !isRequesting.current) {
       console.log('#-- User is online --#');
       const downloadVideos = setInterval(() => {
-        NewFileControll(userdata, newVideos, isRequesting);
+        NewFileControll(userdata, setNewVideos, isRequesting);
       }, 5000);
       return () => clearInterval(downloadVideos);
     } else {
     }
   }, [userdata, isOnline]);
-  console.log('newVideos', newVideos);
 
   const displayName = () => {
     return (
@@ -185,9 +185,10 @@ const VideoPage = () => {
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
         memoryObject={memoryObject}
+        videoamount={newVideos.length}
         navbar_left={
           <ScannConnection
-            newVideos={newVideos}
+            videoamount={newVideos.length}
             currentBLEstatus={displayBLEconnection}
             handleDisplayBLEconnection={handleDisplayBLEconnection}
           />

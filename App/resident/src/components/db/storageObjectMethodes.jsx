@@ -46,10 +46,7 @@ async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
   if (storageValue) {
     storageValue.forEach(function (obj, objIndex) {
       File.forEach(function (mp4obj, mp4Index) {
-        if (
-          (storageValue[objIndex].name && storageValue[objIndex].lastmod) ===
-          (File[mp4Index].filename && File[mp4Index].lastmod)
-        ) {
+        if (storageValue[objIndex].name === File[mp4Index].filename) {
           File.splice(mp4Index, 1);
         }
       });
