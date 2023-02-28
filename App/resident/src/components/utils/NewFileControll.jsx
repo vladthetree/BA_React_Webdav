@@ -34,7 +34,7 @@ export const NewFileControll = async (userdata, setNewVideos, isRequesting) => {
 
 const listContent = async userdata => {
   try {
-    const response = await fetch(`http://${LOCALHOST}:8081/proxy/listContent`, {
+    const response = await fetch(`https://${LOCALHOST}:8081/proxy/listContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -51,7 +51,7 @@ const listContent = async userdata => {
 };
 
 const getFileContent = async (userdata, newMp4FilesArray, isRequesting) => {
-  const socket = new WebSocket(`ws://${LOCALHOST}:8050`);
+  const socket = new WebSocket(`wss://${LOCALHOST}:8050`);
   const isServerBusy = await new Promise(resolve => {
     const message = {
       type: 'isServerBusy',

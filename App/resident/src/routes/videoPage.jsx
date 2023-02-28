@@ -26,9 +26,6 @@ const VideoPage = () => {
   const isRequesting = useRef(false);
   const storedFilesRef = useRef([]);
 
-  console.log('DISPLAYED VIDEOS ARE : ');
-  console.log(newVideos);
-
   const handleMemorizeObject = someObject => {
     setMemoryObject(someObject);
   };

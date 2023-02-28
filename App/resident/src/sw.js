@@ -32,6 +32,7 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => {
+          console.log('Some error response : ', response);
           console.log('#-- > Serviceworker  : No respond from server, ill take over! < --#');
           const customResponse = {
             response: 'serverOff',

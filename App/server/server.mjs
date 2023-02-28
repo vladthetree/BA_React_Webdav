@@ -23,8 +23,8 @@ let busy = false;
 
 const filter = (pathname, req, port) => {
   return (
-    pathname.startsWith(`http://${LOCALHOST}:${port}/proxy/listContent`) ||
-    pathname.startsWith(`http://${LOCALHOST}:${port}/proxy/getFileContent`)
+    pathname.startsWith(`https://${LOCALHOST}:${port}/proxy/listContent`) ||
+    pathname.startsWith(`https://${LOCALHOST}:${port}/proxy/getFileContent`)
     // pathname.startsWith(`http://localhost:${port}/proxy/listContent`) ||
     // pathname.startsWith(`http://localhost:${port}/proxy/getFileContent`)
   );
@@ -256,7 +256,6 @@ socket.on('connection', socket => {
     }
   });
 
-  // Handle disconnections
   socket.on('close', () => {
     console.log('Client disconnected');
   });
@@ -305,10 +304,3 @@ residentAppA.listen(PORT_RESIDENT_A, () => {
 // residentAppC.listen(PORT_RESIDENT_C, () => {
 //   console.log(`RESIDENT_C is listening on port ${PORT_RESIDENT_C}`);
 // });
-
-const administration = express();
-
-administration.use(express.static(path.join(__dirname, '..', 'dist', 'administration')));
-administration.listen(PORT_ADMINISTRATION, () => {
-  console.log(`ADMINISTRATION is listening on port ${PORT_ADMINISTRATION}`);
-});
