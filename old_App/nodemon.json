@@ -1,6 +1,0 @@
-{
-  "watch": ["server", "dist", "resident/components"],
-  "exec": "node server/server.mjs",
-  "ignore": ["node_modules/"],
-  "verbose": true
-}
