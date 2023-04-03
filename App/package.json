@@ -1,4 +1,15 @@
 {
+  "name": "pwa_message_receiver",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A progressive web app for receiving mp4 messages",
+  "keywords": [
+    "pwa",
+    "webdav",
+    "react",
+    "webpack"
+  ],
   "scripts": {
     "start:all": "npm-run-all --parallel build:pwa serve:prox serve:pwa",
     "start:pwa": "npm-run-all --parallel build:pwa serve:pwa",
@@ -10,10 +21,6 @@
     "watch:build:pwa": "webpack --config pwa/webpack.config.cjs --watch",
     "format": "prettier --write 'pwa/src/**/*.{js,jsx,css}' 'server/*.mjs'"
   },
-  "name": "pwa_message_receiver",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
   "dependencies": {
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
