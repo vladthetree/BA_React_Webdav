@@ -1,6 +1,7 @@
 App/dist
 App/node_modules
 App/.eslintrc
+App/.prettierrc
 App/nodemon.json
 App/.env
 package-lock.json

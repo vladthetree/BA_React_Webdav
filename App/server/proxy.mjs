@@ -97,12 +97,3 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
 server.listen(PROXY_SERVER, () => {
   console.log(`PROXY_SERVER is listening on port ${PROXY_SERVER}`);
 });
-
-// const residentAppA = express();
-// residentAppA.use(
-//   express.static(path.join(__dirname, '..', 'dist', 'resident')),
-// );
-
-// residentAppA.listen(PROGRESSIV_WEB_APP, () => {
-//   console.log(`RESIDENT is listening on port ${PROGRESSIV_WEB_APP}`);
-// });

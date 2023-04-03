@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { addToIndexDbStore } from '../../../../db/storageObjectMethodes.jsx';
-import '../../../../style/modalCss.css';
+import "../../../style/modalCss.css";
+import  {addToIndexDbStore}  from "../../../db/storageObjectMethodes.jsx";
+
 const OBJECT_STORE_USERDATA = 'userData';
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = 'customer';
 
@@ -14,7 +14,6 @@ const Login = () => {
   const [isNotificationVisible, setNotificationVisibility] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
-  const resident = 'resident_';
   let adress = null;
 
   async function handleSubmit(event) {

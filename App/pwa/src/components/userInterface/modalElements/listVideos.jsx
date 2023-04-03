@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { getConvertedBlobVideos } from '../../db/storageObjectMethodes.jsx';
 import { useWindowSize } from 'react-use';
-import React from 'react';
 import '../../style/videostyle.css';
 import Swipe from '../../svgs/Swipe.jsx';
+
 
 const INTERVAL_VIDEOCHECK = 1000;
 const COWNDOWN_ACTIVITYCHECK = 10000;
@@ -27,12 +27,11 @@ export const ListVideos = memo(function ListVideos({
   if (matchingVideo) {
     handleMemorizeObject(matchingVideo);
   }
-  console.log('# ---------------------------- # ListVideos');
   useEffect(() => {
     intervalVideoRef.current = setInterval(async () => {
-      let storedFiles = await getConvertedBlobVideos();
+      const storedFiles = await getConvertedBlobVideos();
 
-      let newVideos = await newVideoCheck(storedFiles, videos);
+      const newVideos = await newVideoCheck(storedFiles, videos);
       for (const video of newVideos) {
         if (!addedVideosRef.current.has(video.name)) {
           addedVideosRef.current.add(video.name);

@@ -8,7 +8,7 @@ async function addToIndexDbStore(
   lastmod,
 ) {
   const db = await openIndexDB(database, ObjectStorage);
-  let transaction = db.transaction(ObjectStorage, mode);
+  const transaction = db.transaction(ObjectStorage, mode);
   let objStore;
   if (!db.objectStoreNames.contains(ObjectStorage)) {
     objStore = db.createObjectStore(ObjectStorage, { keyPath: 'name' });
@@ -48,7 +48,7 @@ async function getAllFromObjectStorage(database, ObjectStore) {
 }
 
 async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
-  let storageValue = await getAllFromObjectStorage(database, ObjectStorage);
+  const storageValue = await getAllFromObjectStorage(database, ObjectStorage);
   if (storageValue) {
     storageValue.forEach(function (obj, objIndex) {
       File.forEach(function (mp4obj, mp4Index) {
@@ -63,14 +63,14 @@ async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
 }
 
 async function getConvertedBlobVideos() {
-  let result = [];
-  let storageValue = await getAllFromObjectStorage('db', 'videos').then(
+  const result = [];
+  const storageValue = await getAllFromObjectStorage('db', 'videos').then(
     (indexedDBResult) =>
       indexedDBResult.filter((file) => file.name.includes('mp4')),
   );
   if (storageValue) {
     storageValue.forEach((video) => {
-      let url = URL.createObjectURL(
+      const url = URL.createObjectURL(
         new Blob([video.fileContext], {
           type: 'video/mp4',
         }),

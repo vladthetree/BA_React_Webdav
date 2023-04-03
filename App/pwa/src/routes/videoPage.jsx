@@ -1,11 +1,11 @@
-import { ListVideos } from '../components/utils/pageUtils/listVideos.jsx';
+import { ListVideos } from '../components/userInterface/modalElements/listVideos.jsx';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Layout from '../components/layout/layout.jsx';
+import Layout from '../components/userInterface/layout.jsx';
 import { hasObjectStorageDatabase } from '../components/db/storageObjectMethodes.jsx';
 import { getObjectStorageIndex } from '../components/db/storageObjectMethodes.jsx';
 import { NewFileControll } from '../components/utils/NewFileControll.jsx';
-import ModalSettings from '../components/utils/pageUtils/modal/settings/ModalSettings.jsx';
-import { ScanConnection } from '../components/utils/pageUtils/modal/BLE/ScanConnection.jsx';
+import { ScanConnection } from '../components/userInterface/modalElements/BLE/ScanConnection.jsx';
+import ModalSettings from '../components/userInterface/modalElements/settings/ModalSettings.jsx';
 
 const OBJECT_STORE_USERDATA = 'userData';
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = 'customer';
@@ -100,7 +100,7 @@ const VideoPage = () => {
   useEffect(() => {
     if (dbExist === false) {
       const hasVideos = async () => {
-        let exist = await hasObjectStorageDatabase('db', 'videos');
+        const exist = await hasObjectStorageDatabase('db', 'videos');
 
         setDbExist(exist);
       };

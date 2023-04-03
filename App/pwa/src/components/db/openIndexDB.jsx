@@ -1,7 +1,7 @@
 export async function openIndexDB(database, ObjectStorage) {
   return new Promise((resolve, reject) => {
     try {
-      let request = indexedDB.open(database);
+      const request = indexedDB.open(database);
       request.onupgradeneeded = function (event) {
         const db = event.target.result;
         if (!db.objectStoreNames.contains(ObjectStorage)) {

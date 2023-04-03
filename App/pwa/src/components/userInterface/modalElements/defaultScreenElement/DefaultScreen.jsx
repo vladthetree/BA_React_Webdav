@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import '../../../../style/defaultScreen.css';
+import '../../../style/defaultScreen.css';
 import { useWindowSize } from 'react-use';
-import Swipe from '../../../../svgs/Swipe.jsx';
+import Swipe from '../../../svgs/Swipe.jsx';
 
 const DefaultScreen = ({ handleCloseModal, videoamount }) => {
   const { width, height } = useWindowSize();
   const [startX, setStartX] = useState(null);
-
-  console.log('SAMPLE');
-  console.log(videoamount);
 
   function handleTouchStart(e) {
     setStartX(e.touches[0].clientX);

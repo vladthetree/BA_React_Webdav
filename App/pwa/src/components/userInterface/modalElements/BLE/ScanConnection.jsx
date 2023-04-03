@@ -18,8 +18,6 @@ export function ScanConnection({
     { services: [NORDIC_SERVICE] },
   ]);
 
-  console.log('-- Inside ScanConnection');
-  console.log('newVideos ', newVideos);
 
   const server = useRef(null);
   const service = useRef(null);

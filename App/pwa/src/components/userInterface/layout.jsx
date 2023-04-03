@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import '../style/layout.css';
 import { useWindowSize } from 'react-use';
-import DefaultScreen from '../utils/pageUtils/modal/defaultScreenElement/DefaultScreen.jsx';
-import ModalLogin from '../utils/pageUtils/modal/login/ModalLogin.jsx';
+import DefaultScreen from './modalElements/defaultScreenElement/DefaultScreen.jsx';
+import ModalLogin from './modalElements/login/ModalLogin.jsx';
 
 const Layout = ({
   navbar_left,
