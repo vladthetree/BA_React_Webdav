@@ -6,9 +6,9 @@ export function ScanConnection({
   currentBLEstatus,
   handleDisplayBLEconnection,
 }) {
-  const NORDIC_SERVICE = `${process.env.NORDIC_SERVICE}`;
-  const NORDIC_TX = `${process.env.TX}`;
-  const NORDIC_RX = `${process.env.RX}`;
+  const NORDIC_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+  const NORDIC_TX = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+  const NORDIC_RX = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
   const MAX_TRYS = 2;
   const MAX_DELAY = 3;
   const [isWebBluetoothSupported, setIsWebBluetoothSupported] = useState(true);
@@ -88,7 +88,7 @@ export function ScanConnection({
   }
 
   const handleNewVideo = async () => {
-    const message = `newVideos();\n`;
+    const message = 'newVideos();\n';
     while (!isConnected) {
       await new Promise((resolve) => setTimeout(resolve, 20000));
     }
@@ -107,7 +107,7 @@ export function ScanConnection({
       if (max === 0) {
         return fail();
       }
-      time('Retrying in ' + delay + 's... (' + max + ' tries left)');
+      time(`Retrying in ${delay}s... (${max} tries left)`);
       setTimeout(function () {
         exponentialBackoff(--max, delay * 2, toTry, success, fail);
       }, delay * 1000);
@@ -115,7 +115,7 @@ export function ScanConnection({
   }
 
   function time(text) {
-    console.log('[' + new Date().toJSON().substr(11, 8) + '] ' + text);
+    console.log(`[${new Date().toJSON().substr(11, 8)}] ${text}`);
   }
 
   function onDisconnected() {

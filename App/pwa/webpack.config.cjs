@@ -2,6 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+require('dotenv').config({ path: './.env' }); 
+
 module.exports = {
   mode: 'development',
   entry: './pwa/src/index.js',
@@ -38,11 +40,9 @@ module.exports = {
     ],
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     NODE_TLS_REJECT_UNAUTHORIZED: JSON.stringify('0'),
-    //   },
-    // }),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(process.env),
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',

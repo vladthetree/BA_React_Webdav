@@ -11,11 +11,11 @@
     "webpack"
   ],
   "scripts": {
-    "start:all": "npm-run-all --parallel build:pwa serve:proxyServer serve:pwa",
+    "start:all": "npm-run-all --parallel build:pwa serve:prox serve:pwa",
     "start:pwa": "npm-run-all --parallel build:pwa serve:pwa",
     "start:proxyServer": "npm-run-all --parallel serve:proxyServer",
     "watch:pwa": "npm-run-all --parallel watch:build:pwa serve:pwa",
-    "watch:all": "npm-run-all --parallel watch:build:pwa serve:pwa serve:proxyServer ",
+    "watch:all": "npm-run-all --parallel watch:build:pwa serve:pwa ",
     "serve:proxyServer": "node ./server/proxy.mjs",
     "serve:pwa": "node ./server/pwa.mjs",
     "build:pwa": "webpack --config pwa/webpack.config.cjs",

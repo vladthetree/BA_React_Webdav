@@ -16,7 +16,7 @@ const Layout = ({
   videoamount,
 }) => {
   const { height } = useWindowSize();
-  const navbarhight = height / 25;
+  const navbarheight = height / 25;
   const fontSize = height / 23;
 
   const handleCloseModal = () => {
@@ -35,7 +35,7 @@ const Layout = ({
         <nav
           className="navbar"
           style={{
-            height: navbarhight,
+            height: navbarheight,
           }}
         >
           <div className="navbar_left_wrapper">
@@ -49,7 +49,7 @@ const Layout = ({
           </div>
         </nav>
       </header>
-      <div style={{ height: height - navbarhight }}>
+      <div style={{ height: height - navbarheight }}>
         {!isActive ? (
           <DefaultScreen
             handleCloseModal={handleCloseModal}

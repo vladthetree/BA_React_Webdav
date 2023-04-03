@@ -1,16 +1,17 @@
-import { ListVideos } from '../components/userInterface/modalElements/listVideos.jsx';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Layout from '../components/userInterface/layout.jsx';
-import { hasObjectStorageDatabase } from '../components/db/storageObjectMethodes.jsx';
-import { getObjectStorageIndex } from '../components/db/storageObjectMethodes.jsx';
-import { NewFileControll } from '../components/utils/NewFileControll.jsx';
-import { ScanConnection } from '../components/userInterface/modalElements/BLE/ScanConnection.jsx';
-import ModalSettings from '../components/userInterface/modalElements/settings/ModalSettings.jsx';
+import { ListVideos } from '../components/userInterface/modalElements/listVideos.jsx';
+import Layout from './../components/userInterface/layout.jsx';
+import { NewFileControll } from './../components/utils/NewFileControll.jsx';
+import { ScanConnection } from './../components/userInterface/modalElements/BLE/ScanConnection.jsx';
+import ModalSettings from './../components/userInterface/modalElements/settings/ModalSettings.jsx';
+import {
+  hasObjectStorageDatabase,
+  getObjectStorageIndex,
+} from '../components/db/storageObjectMethods.jsx';
 
-const OBJECT_STORE_USERDATA = 'userData';
-const OBJECT_STORE_USERDATA_OBJECTSTORAGE = 'customer';
-const OBJECT_STORE_VIDEOS = 'db';
-const OBJECT_STORE_VIDEOS_OBJECTSTORAGE = 'videos';
+const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
+const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
+const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
 const VideoPage = () => {
   const [dbExist, setDbExist] = useState(false);
@@ -21,13 +22,8 @@ const VideoPage = () => {
   const [isActive, setIsActive] = useState(false);
   const [displayedVideos, setDisplayedVideos] = useState([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [memoryObject, setMemoryObject] = useState([]);
   const [isRequesting, setIsRequesting] = useState(false);
   const intervalRef = useRef(null);
-
-  console.log('dislayed Videos');
-  console.log(displayedVideos);
-
   const storedFilesRef = useRef([]);
 
   const handleMemorizeObject = (someObject) => {
@@ -101,7 +97,6 @@ const VideoPage = () => {
     if (dbExist === false) {
       const hasVideos = async () => {
         const exist = await hasObjectStorageDatabase('db', 'videos');
-
         setDbExist(exist);
       };
       hasVideos();
@@ -112,7 +107,7 @@ const VideoPage = () => {
     if (userdata && isOnline && !isRequesting) {
       intervalRef.current = setInterval(() => {
         NewFileControll(userdata, setNewVideos, setIsRequesting);
-      }, 20000);
+      }, INTERVAL_NEWVIDEO_CHECK);
     }
   };
 
@@ -192,7 +187,6 @@ const VideoPage = () => {
         isActive={isActive}
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
-        memoryObject={memoryObject}
         videoamount={newVideos.length}
         navbar_left={
           <ScanConnection

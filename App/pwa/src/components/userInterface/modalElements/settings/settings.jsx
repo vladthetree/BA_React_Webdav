@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import "../../../style/settings.css";
-import { deleteDBFromIndexDB } from '../../../db/storageObjectMethodes.jsx';
-const DATABASE_VIDEOS = 'db';
-const DATABASE_USERDATA = 'userData';
+import '../../../style/settings.css';
+import { deleteDBFromIndexDB } from '../../../db/storageObjectMethods.jsx';
+const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
+const DATABASE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 
 const Settings = ({ onClose }) => {
   const [displayedArray, setDisplayedArray] = useState([]);

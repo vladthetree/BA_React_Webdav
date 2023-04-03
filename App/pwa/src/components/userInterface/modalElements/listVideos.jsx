@@ -1,32 +1,23 @@
 import React, { useEffect, useRef, memo } from 'react';
-import { getConvertedBlobVideos } from '../../db/storageObjectMethodes.jsx';
+import { getConvertedBlobVideos } from '../../db/storageObjectMethods.jsx';
 import { useWindowSize } from 'react-use';
-import '../../style/videostyle.css';
 import Swipe from '../../svgs/Swipe.jsx';
+import '../../style/videostyle.css';
 
-
-const INTERVAL_VIDEOCHECK = 1000;
-const COWNDOWN_ACTIVITYCHECK = 10000;
+const INTERVAL_VIDEOCHECK_INDEXDB = `${process.env.INTERVAL_VIDEOCHECK_INDEXDB}`;
+const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
 export const ListVideos = memo(function ListVideos({
-  reminder,
   setIsActive,
   handleClickVideo,
   isVideoPlaying,
   videos,
   setVideos,
-  handleMemorizeObject,
 }) {
   const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();
   const intervalVideoRef = useRef();
-  const allVideosRef = useRef([]);
-  const matchingVideo = allVideosRef.current.find((video) =>
-    reminder.includes(reminder[0]),
-  );
-  if (matchingVideo) {
-    handleMemorizeObject(matchingVideo);
-  }
+
   useEffect(() => {
     intervalVideoRef.current = setInterval(async () => {
       const storedFiles = await getConvertedBlobVideos();
@@ -38,13 +29,13 @@ export const ListVideos = memo(function ListVideos({
           setVideos((prevVideos) => [video, ...prevVideos]);
         }
       }
-    }, INTERVAL_VIDEOCHECK);
+    }, INTERVAL_VIDEOCHECK_INDEXDB);
     return () => clearInterval(intervalVideoRef.current);
   }, []);
 
-  async function newVideoCheck(storagaArray, videoArray) {
+  async function newVideoCheck(storage, videoArray) {
     const videoNames = videoArray.map((video) => video.name);
-    return storagaArray.filter((item) => !videoNames.includes(item.name));
+    return storage.filter((item) => !videoNames.includes(item.name));
   }
 
   useEffect(() => {

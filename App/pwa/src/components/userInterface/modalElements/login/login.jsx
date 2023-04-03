@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import "../../../style/modalCss.css";
-import  {addToIndexDbStore}  from "../../../db/storageObjectMethodes.jsx";
+import '../../../style/modalCss.css';
+import { addToIndexDbStore } from './../../../db/storageObjectMethods.jsx';
 
-const OBJECT_STORE_USERDATA = 'userData';
-const OBJECT_STORE_USERDATA_OBJECTSTORAGE = 'customer';
+const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
+const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -13,8 +13,6 @@ const Login = () => {
   const [nextCloudPassword, setnextCloudPassword] = useState('');
   const [isNotificationVisible, setNotificationVisibility] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
-
-  let adress = null;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -32,14 +30,11 @@ const Login = () => {
     }
     window.dispatchEvent(new Event('userDataUpdated'));
   }
-  if (webdavAdress) {
-    adress = `${webdavAdress}resident_${username}`;
-  }
 
   const customer = {
     username: username,
     password: password,
-    webdavAdress: adress,
+    webdavAdress: `${webdavAdress}resident_${username}`,
     nextCloudUserName: nextClouduserName,
     nextCloudPassword: nextCloudPassword,
   };

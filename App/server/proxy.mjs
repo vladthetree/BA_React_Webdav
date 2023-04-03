@@ -1,15 +1,17 @@
 import express from 'express';
 import { createClient } from 'webdav';
 import WebSocket from 'ws';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import cors from 'cors';
+
+const PROXY_SERVER = 8082;
 
 const server = express();
+server.use(cors({ origin: 'http://localhost:8081' }));
 server.use(express.json());
 
-const PROXY_SERVER = process.env.PROXY_SERVER;
-
 server.post('/listContent', async (req, res) => {
+  console.log('GOT TRIGGERED');
+  console.log(req.body);
   try {
     const { username, password, targetUrl } = req.body;
     const client = createClient(targetUrl, {

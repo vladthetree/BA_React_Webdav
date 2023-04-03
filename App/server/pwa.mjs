@@ -5,7 +5,7 @@ import path from 'path';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const PROGRESSIV_WEB_APP = process.env.PROGRESSIV_WEB_APP;
+const PROGRESSIV_WEB_APP = 8081;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 console.log(__dirname);
 
