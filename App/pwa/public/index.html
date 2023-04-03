@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="display" content="fullscreen" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>Plauderkästchen</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="./bundle.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('./sw.js')
+            .then((registration) => {
+              console.log('Service worker registered successfully');
+            })
+            .catch((error) => {
+              console.log('Serviceworker registration failed:\n', error);
+            });
+        });
+      }
+    </script>
+    <script>
+      if (Notification.permission === 'granted') {
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            navigator.serviceWorker.ready.then((registration) => {
+              registration.showNotification('Permission granted', {
+                body: 'Notifications Aktiviert!',
+              });
+            });
+          }
+        });
+      }
+    </script>
+    <script>
+      if ('wakeLock' in navigator) {
+        console.warn('Wake Lock API is available');
+
+        let wakeLockRequested = false;
+        let wakeLockTimeout;
+        const wakeLockTimeoutDelay = 10000;
+
+        async function requestWakeLock() {
+          console.log('RUN requestWakeLock');
+          try {
+            wakeLockRequested = true;
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('Wake Lock is active!');
+          } catch (err) {
+            console.log('something whent wrong with WAKELOCK ', err);
+          }
+        }
+
+        const resetWakeLockTimeout = () => {
+          clearTimeout(wakeLockTimeout);
+          wakeLockTimeout = setTimeout(() => {
+            if (document.visibilityState === 'visible' && !wakeLockRequested) {
+              console.log('Screen is visible, requesting Wake Lock!');
+              requestWakeLock();
+            }
+          }, wakeLockTimeoutDelay);
+        };
+        document.addEventListener('visibilitychange', resetWakeLockTimeout);
+        resetWakeLockTimeout();
+      } else {
+        console.warn('Wake Lock API is not available');
+      }
+    </script>
+    <script>
+      const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+      let inactivityTimer;
+
+      function setInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          document.documentElement.style.filter = 'brightness(10%)';
+        }, INACTIVITY_TIMEOUT);
+      }
+
+      function resetInactivityTimer() {
+        document.documentElement.style.filter = '';
+        setInactivityTimer();
+      }
+
+      document.addEventListener('mousemove', resetInactivityTimer);
+      document.addEventListener('keydown', resetInactivityTimer);
+      document.addEventListener('touchstart', resetInactivityTimer);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          resetInactivityTimer();
+        }
+      });
+
+      setInactivityTimer();
+    </script>
+  </body>
+</html>

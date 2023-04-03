@@ -1,13 +1,17 @@
 {
   "scripts": {
-    "sample": "npm-run-all --parallel build:pwa serve:proxy serve:pwa",
-    "start": "npm-run-all --parallel watch:build:pwa serve:proxy serve:pwa",
-    "watch:pwa": "npm-run-all --parallel watch:build:pwa serve:pwa",
-    "serve:proxy": "node ./server/proxy.mjs",
-    "serve:pwa": "node ./server/pwa.mjs",
-    "build:pwa": "webpack --config pwa/webpack.config.cjs",
-    "watch:build:pwa": "webpack --config pwa/webpack.config.cjs --watch",
-    "format": "prettier --write 'pwa/src/**/*.{js,jsx,css}' 'server/*.mjs'"
+    "sample": "npm-run-all --parallel build:resident serve",
+    "start": "npm-run-all --parallel watch:build:resident serve",
+    "build": "react-scripts build",
+    "serve": "node ./server/server.mjs",
+    "build:resident": "webpack --config resident/webpack.config.cjs",
+    "watch:build:resident": "webpack --config resident/webpack.config.cjs --watch",
+    "watch:build:administration": "webpack --config administration/webpack.config.cjs --watch",
+    "webpack:build:resident": "npx webpack --config resident/webpack.config.cjs",
+    "webpack:build:administration": "npx webpack --config administration/webpack.config.cjs",
+    "watch:server:resident": "nodemon --watch \"./resident\" --exec \"node ./server/server.mjs\"",
+    "watch:server:administration": "nodemon \"./dist/administration/index.js\" --watch \"./dist\"",
+    "start:parallel:residents": "npm-run-all --parallel watch:server:resident webpack:build:resident"
   },
   "name": "react-pwa",
   "version": "0.1.0",
@@ -25,7 +29,6 @@
     "cacheable-response": "^2.8.2",
     "copy-webpack-plugin": "^11.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-http-proxy": "^1.6.3",
     "html-webpack-plugin": "^5.5.0",
@@ -54,11 +57,7 @@
     "workbox-streams": "^6.5.4"
   },
   "devDependencies": {
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
     "file-loader": "^6.2.0",
-    "prettier": "^2.8.7",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
   },
