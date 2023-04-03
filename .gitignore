@@ -1,6 +1,8 @@
-dist
-node_modules
+App/dist
+App/node_modules
+App/.eslintrc
+App/nodemon.json
+App/.env
 package-lock.json
-.prettierrc
 dockerNextcloudHttps
-administration
+old_App
