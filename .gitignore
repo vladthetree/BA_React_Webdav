@@ -4,5 +4,6 @@ App/.eslintrc
 App/nodemon.json
 App/.env
 package-lock.json
-dockerNextcloudHttps/
+dockerNextcloudHttp
+dockerNextcloudHttps
 oldApp
