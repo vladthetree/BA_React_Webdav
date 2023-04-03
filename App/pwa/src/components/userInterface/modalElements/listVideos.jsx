@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, memo } from 'react';
-import { getConvertedBlobVideos } from '../../db/storageObjectMethods.jsx';
+import React, { useEffect, useRef, memo, useCallback } from 'react';
+import { getConvertedBlobVideos } from '../../db/storageObjectMethods.js';
 import { useWindowSize } from 'react-use';
 import Swipe from '../../svgs/Swipe.jsx';
 import '../../style/videostyle.css';
 
-const INTERVAL_VIDEOCHECK_INDEXDB = `${process.env.INTERVAL_VIDEOCHECK_INDEXDB}`;
 const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
 export const ListVideos = memo(function ListVideos({
@@ -14,29 +13,25 @@ export const ListVideos = memo(function ListVideos({
   videos,
   setVideos,
 }) {
-  const addedVideosRef = useRef(new Set());
   const { width, height } = useWindowSize();
-  const intervalVideoRef = useRef();
+
+  const displayVideos = useCallback(async () => {
+    const storedFiles = await getConvertedBlobVideos();
+    const sortedFiles = storedFiles.sort(
+      (a, b) => new Date(b.date) - new Date(a.date),
+    );
+    setVideos(sortedFiles);
+  }, [setVideos]);
 
   useEffect(() => {
-    intervalVideoRef.current = setInterval(async () => {
-      const storedFiles = await getConvertedBlobVideos();
+    window.addEventListener('newVideoInIndexDB', displayVideos);
+    window.addEventListener('appIsActive', displayVideos);
 
-      const newVideos = await newVideoCheck(storedFiles, videos);
-      for (const video of newVideos) {
-        if (!addedVideosRef.current.has(video.name)) {
-          addedVideosRef.current.add(video.name);
-          setVideos((prevVideos) => [video, ...prevVideos]);
-        }
-      }
-    }, INTERVAL_VIDEOCHECK_INDEXDB);
-    return () => clearInterval(intervalVideoRef.current);
-  }, []);
-
-  async function newVideoCheck(storage, videoArray) {
-    const videoNames = videoArray.map((video) => video.name);
-    return storage.filter((item) => !videoNames.includes(item.name));
-  }
+    return () => {
+      window.removeEventListener('newVideoInIndexDB', displayVideos);
+      window.removeEventListener('appIsActive', displayVideos);
+    };
+  }, [displayVideos]);
 
   useEffect(() => {
     let idleTimeout = setTimeout(() => {
@@ -59,7 +54,6 @@ export const ListVideos = memo(function ListVideos({
             '#--Some Video is now playing, no Idle Timer Reset active.--#',
           );
     }
-
     window.addEventListener('mousemove', resetTimeout);
     window.addEventListener('keydown', resetTimeout);
     window.addEventListener('touchstart', resetTimeout);

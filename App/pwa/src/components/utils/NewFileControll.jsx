@@ -1,12 +1,10 @@
+import { Buffer } from 'buffer';
 import {
   addToIndexDbStore,
   removeAlreadyStoredFiles,
-} from '../db/storageObjectMethods.jsx';
-import { Buffer } from 'buffer';
-const DATABASE_VIDEOS = 'db';
-const OBJECT_STORE_VIDEOS = 'videos';
-
-const TEST_ADRESS = 'https://server.banextcl.eu/listContent';
+} from "./../db/storageObjectMethods.js";
+const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
+const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
 export const NewFileControll = async (
   userdata,
@@ -19,24 +17,17 @@ export const NewFileControll = async (
     setIsRequesting(true);
     return contentArray;
   });
-  console.log('T0');
-  console.log(mp4FilesNames);
   if (mp4FilesNames) {
-    console.log('T1');
     await removeAlreadyStoredFiles(
       DATABASE_VIDEOS,
       mp4FilesNames,
       OBJECT_STORE_VIDEOS,
     );
-    console.log('T2');
-    console.log(mp4FilesNames);
     if (mp4FilesNames.length > 0) {
       console.log('#--New Files available--#');
       console.log('#-- New Files : --#');
       await getFileContent(userdata, mp4FilesNames, setIsRequesting).then(
         () => {
-          console.log('TESTING RESULT OF sampleA');
-          console.log(' AFTER GET FILE CONTENT');
           setNewVideos(mp4FilesNames);
         },
       );
@@ -91,8 +82,7 @@ const getFileContent = async (userdata, newMp4FilesArray, setIsRequesting) => {
   }
 
   socket.addEventListener('message', async function (event) {
-    console.log('LISTENER : ');
-    console.log(event.data);
+    const fileDownloadedEvent = new Event('newVideoInIndexDB');
     const newMessageObject = JSON.parse(event.data);
     if (newMessageObject.type === 'incomingNewData') {
       const newContent = newMessageObject.data[0];
@@ -120,7 +110,9 @@ const getFileContent = async (userdata, newMp4FilesArray, setIsRequesting) => {
             newContent.date,
           );
         }
+        window.dispatchEvent(fileDownloadedEvent);
       });
+      
     }
   });
 

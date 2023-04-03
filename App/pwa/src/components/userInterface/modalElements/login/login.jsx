@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import '../../../style/modalCss.css';
-import { addToIndexDbStore } from './../../../db/storageObjectMethods.jsx';
+import { addToIndexDbStore } from './../../../db/storageObjectMethods.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;

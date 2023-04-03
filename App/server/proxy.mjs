@@ -6,12 +6,13 @@ import cors from 'cors';
 const PROXY_SERVER = 8082;
 
 const server = express();
+
+// For Dev
 server.use(cors({ origin: 'http://localhost:8081' }));
+
 server.use(express.json());
 
 server.post('/listContent', async (req, res) => {
-  console.log('GOT TRIGGERED');
-  console.log(req.body);
   try {
     const { username, password, targetUrl } = req.body;
     const client = createClient(targetUrl, {

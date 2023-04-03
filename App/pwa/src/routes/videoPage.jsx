@@ -7,7 +7,7 @@ import ModalSettings from './../components/userInterface/modalElements/settings/
 import {
   hasObjectStorageDatabase,
   getObjectStorageIndex,
-} from '../components/db/storageObjectMethods.jsx';
+} from '../components/db/storageObjectMethods.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
@@ -25,10 +25,23 @@ const VideoPage = () => {
   const [isRequesting, setIsRequesting] = useState(false);
   const intervalRef = useRef(null);
   const storedFilesRef = useRef([]);
-
-  const handleMemorizeObject = (someObject) => {
-    setMemoryObject(someObject);
-  };
+  const appIsActive = new Event('appIsActive');
+  useEffect(() => {
+    if (isActive) {
+      window.dispatchEvent(appIsActive);
+    }
+  }, [isActive]);
+  useEffect(() => {
+    function handleNewVideoInIndexDB() {
+      if (!isActive) {
+        document.documentElement.style.filter = 'brightness(100%)';
+      }
+    }
+    window.addEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
+    return () => {
+      window.removeEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
+    };
+  }, [isActive]);
 
   const handleDisplayBLEconnection = (isDisplayed) => {
     if (isDisplayed) {
@@ -206,7 +219,6 @@ const VideoPage = () => {
             videos={displayedVideos}
             setVideos={setDisplayedVideos}
             storedFilesRef={storedFilesRef}
-            handleMemorizeObject={handleMemorizeObject}
           />
         )}
       </Layout>
