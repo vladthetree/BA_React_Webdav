@@ -4,6 +4,7 @@ App/.eslintrc
 App/.prettierrc
 App/nodemon.json
 App/.env
+App/package-lock.json
 package-lock.json
 olddocker
 dockerHTTPSNextcloud

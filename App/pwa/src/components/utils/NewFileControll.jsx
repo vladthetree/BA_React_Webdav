@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 import {
   addToIndexDbStore,
   removeAlreadyStoredFiles,
-} from "./../db/storageObjectMethods.js";
+} from './../db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
@@ -112,7 +112,6 @@ const getFileContent = async (userdata, newMp4FilesArray, setIsRequesting) => {
         }
         window.dispatchEvent(fileDownloadedEvent);
       });
-      
     }
   });
 

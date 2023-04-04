@@ -35,8 +35,11 @@ const VideoPage = () => {
     function handleNewVideoInIndexDB() {
       if (!isActive) {
         document.documentElement.style.filter = 'brightness(100%)';
+        const audio = new Audio('audio/sampleAudio.mp3');
+        audio.play();
       }
     }
+
     window.addEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
     return () => {
       window.removeEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);

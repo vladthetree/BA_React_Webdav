@@ -55,6 +55,7 @@ module.exports = {
         { from: './pwa/public/pwa-512x512.png', to: 'pwa-512x512.png' },
         { from: './pwa/public/robots.txt', to: 'robots.txt' },
         { from: './pwa/public/favicon.ico', to: 'favicon.ico' },
+        { from: './pwa/public/audio/sampleAudio.mp3', to: 'audio/sampleAudio.mp3' },
         { from: './pwa/src/sw.js', to: 'sw.js' },
       ],
     }),
