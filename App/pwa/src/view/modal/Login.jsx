@@ -1,10 +1,10 @@
 import React, { useState, useReducer } from 'react';
-import '../../../style/modalCss.css';
-import { addToIndexDbStore } from '../../../db/storageObjectMethods.js';
+import './../style/modalCss.css';
+import { addToIndexDbStore } from '../../model/db/storageObjectMethods.js';
 import {
   loginReducer,
   initialState,
-} from '../../../utils/reducer/loginReducer';
+} from '../../utils/reducer/loginReducer';
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 

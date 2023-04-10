@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 import {
   addToIndexDbStore,
   removeAlreadyStoredFiles,
-} from '../db/storageObjectMethods.js';
+} from '../model/db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
@@ -11,8 +11,6 @@ export default async function newFileControll(
   setNewVideos,
   setIsRequesting,
 ) {
-  console.log('TEST');
-  console.log(userdata);
   let mp4FilesNames = null;
   console.log('#-- No ongoing requests --#');
   mp4FilesNames = await listContent(userdata).then((contentArray) => {

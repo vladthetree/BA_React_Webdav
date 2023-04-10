@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import '../../../style/defaultScreen.css';
+import './../style/defaultScreen.css';
 import { useWindowSize } from 'react-use';
-import Swipe from '../../../svgs/Swipe.jsx';
+import Swipe from './../svgs/Swipe.jsx';
 
 export default function DefaultScreen({ handleCloseModal, videoamount }) {
   const { width, height } = useWindowSize();

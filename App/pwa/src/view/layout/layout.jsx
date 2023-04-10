@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useWindowSize } from 'react-use';
-import { DefaultScreen } from './modalElementSet';
-import { TopBar } from './LayoutElements/TopBar.jsx';
+import { DefaultScreen } from '../modalElementSet';
+import { TopBar } from './TopBar.jsx';
 import '../style/layout.css';
 
 const Layout = ({
@@ -37,7 +37,7 @@ const Layout = ({
           fontSize={fontSize}
         />
       </header>
-      <body style={{ height: height - topBarheight }}>
+      <div style={{ height: height - topBarheight }}>
         {isActive ? (
           <main className="layoutbody">{children}</main>
         ) : (
@@ -46,7 +46,7 @@ const Layout = ({
             videoamount={videoamount}
           />
         )}
-      </body>
+      </div>
     </div>
   );
 };

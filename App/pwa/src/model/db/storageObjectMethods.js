@@ -1,4 +1,4 @@
-import { openIndexDB } from './openIndexDB.jsx';
+import { openIndexDB } from './openIndexDB.js';
 async function addToIndexDbStore(
   database,
   ObjectStorage,

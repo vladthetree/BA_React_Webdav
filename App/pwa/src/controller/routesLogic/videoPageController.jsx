@@ -1,26 +1,18 @@
 import React, { useEffect, useRef, useReducer } from 'react';
-import Layout from './../components/userInterface/layout.jsx';
-import newFileControll from '../components/utils/newFileControll.jsx';
-import {
-  ModalSettings,
-  BluetoothConnection,
-  ListVideos,
-  Login,
-} from '../components/userInterface/modalElementSet.js';
-import { TopBarInformations } from '../components/utils/TopBarInformations.jsx';
-import { getObjectStorageIndex } from '../components/db/storageObjectMethods.js';
+import newFileControll from '../newFileControll.jsx';
+import { getObjectStorageIndex } from '../../model/db/storageObjectMethods.js';
 import {
   videoPageReducer,
   initialState,
-} from '../components/utils/reducer/videoPageReducer.js';
+} from '../../utils/reducer/videoPageReducer.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
-const VideoPage = () => {
+const VideoPageController = ({ children }) => {
   const [state, dispatch] = useReducer(videoPageReducer, initialState);
-  
+
   const intervalRef = useRef(null);
   const storedFilesRef = useRef([]);
   const appIsActive = new Event('appIsActive');
@@ -53,6 +45,12 @@ const VideoPage = () => {
     }
   }, [state.isActive]);
 
+  const handleDisplayBLEconnection = (isDisplayed) => {
+    if (isDisplayed) {
+      dispatch({ type: 'setDisplayBLEconnection', payload: true });
+    }
+  };
+
   useEffect(() => {
     function handleNewVideoInIndexDB() {
       if (!state.isActive) {
@@ -67,23 +65,6 @@ const VideoPage = () => {
       window.removeEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
     };
   }, [state.isActive]);
-
-  const handleDisplayBLEconnection = (isDisplayed) => {
-    if (isDisplayed) {
-      dispatch({ type: 'setDisplayBLEconnection', payload: true });
-    }
-  };
-
-  const handleClickVideo = (e) => {
-    const video = e.currentTarget;
-    if (video.paused) {
-      dispatch({ type: 'setIsVideoPlaying', payload: true });
-      video.play();
-    } else {
-      video.pause();
-      dispatch({ type: 'setIsVideoPlaying', payload: false });
-    }
-  };
 
   async function getUserData() {
     const resivedUserData = await getObjectStorageIndex(
@@ -123,44 +104,20 @@ const VideoPage = () => {
     };
   }, [state.userdata, state.isOnline, state.isRequesting]);
 
-  return !state.userdata ? (
-    <Login />
-  ) : (
-    <div>
-      <Layout
-        topBar_left={
-          <BluetoothConnection
-            newVideos={state.newVideos}
-            currentBLEstatus={state.displayBLEconnection}
-            handleDisplayBLEconnection={handleDisplayBLEconnection}
-          />
-        }
-        topBar_middle={
-          state.userdata
-            ? TopBarInformations(
-                state.userdata,
-                state.displayBLEconnection,
-                state.isOnline,
-              )
-            : ''
-        }
-        topBar_right={<ModalSettings />}
-        newVideos={state.newVideos}
-        isActive={state.isActive}
-        setIsActive={setIsActive}
-        setNewVideos={setNewVideos}
-        videoamount={state.newVideos.length}
-      >
-        <ListVideos
-          setIsActive={setIsActive}
-          handleClickVideo={handleClickVideo}
-          isVideoPlaying={state.isVideoPlaying}
-          videos={state.displayedVideos}
-          setVideos={setDisplayedVideos}
-          storedFilesRef={storedFilesRef}
-        />
-      </Layout>
-    </div>
-  );
+  const contextValue = {
+    state: state,
+    dispatch: dispatch,
+    handleDisplayBLEconnection: handleDisplayBLEconnection,
+    setter: {
+      setNewVideos: setNewVideos,
+      setIsActive: setIsActive,
+      setIsRequesting: setIsRequesting,
+      setDisplayedVideos: setDisplayedVideos,
+      setIsOnlineStatus: setIsOnlineStatus,
+    },
+  };
+
+  return <div>{children({ contextValue })}</div>;
 };
-export default VideoPage;
+
+export default VideoPageController;

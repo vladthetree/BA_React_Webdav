@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { writeMessage } from './writeBLEmessage.js';
+import React, { useEffect, useState, useRef } from 'react';
+import { writeMessage } from './../utils/webbluetooth/writeBLEmessage.js';
 
 export default function BluetoothConnection({
   newVideos,
@@ -127,7 +127,7 @@ export default function BluetoothConnection({
   return (
     <div>
       <button id="search-button" onClick={handleClick}>
-        ScanConnection
+        Web Bluetooth
       </button>
     </div>
   );

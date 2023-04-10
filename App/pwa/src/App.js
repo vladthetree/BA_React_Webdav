@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
-import VideoPage from './routes/videoPage.jsx';
+import VideoPage from './controller/routes/videoPage.jsx';
 
 function App() {
   return (

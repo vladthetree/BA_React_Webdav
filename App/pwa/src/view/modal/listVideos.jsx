@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, memo, useCallback } from 'react';
-import { getConvertedBlobVideos } from '../../db/storageObjectMethods.js';
+import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
 import { useWindowSize } from 'react-use';
-import Swipe from '../../svgs/Swipe.jsx';
-import '../../style/videostyle.css';
+import Swipe from '../svgs/Swipe.jsx';
+import './../style/videostyle.css';
 
 const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
