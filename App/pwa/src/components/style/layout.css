@@ -2,21 +2,21 @@ body {
   background: rgb(0, 0, 0);
 }
 
-.navbar {
+.topBar {
   display: grid;
   grid-template-columns: 10% 80% 10%;
 }
 
-.navbar_left {
+.topBar_left {
   display: none;
   grid-column: 1;
 }
 
-.navbar_left_wrapper:hover .navbar_left {
+.topBar_left_wrapper:hover .topBar_left {
   display: block;
 }
 
-.navbar_middle {
+.topBar_middle {
   font-size: 2vw;
   text-align: center;
   color: white;

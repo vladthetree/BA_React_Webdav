@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef, useReducer } from 'react';
 import Layout from './../components/userInterface/layout.jsx';
 import newFileControll from '../components/utils/newFileControll.jsx';
 import {
@@ -20,6 +20,7 @@ const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
 const VideoPage = () => {
   const [state, dispatch] = useReducer(videoPageReducer, initialState);
+  
   const intervalRef = useRef(null);
   const storedFilesRef = useRef([]);
   const appIsActive = new Event('appIsActive');
@@ -127,7 +128,14 @@ const VideoPage = () => {
   ) : (
     <div>
       <Layout
-        navbar_middle={
+        topBar_left={
+          <BluetoothConnection
+            newVideos={state.newVideos}
+            currentBLEstatus={state.displayBLEconnection}
+            handleDisplayBLEconnection={handleDisplayBLEconnection}
+          />
+        }
+        topBar_middle={
           state.userdata
             ? TopBarInformations(
                 state.userdata,
@@ -136,14 +144,7 @@ const VideoPage = () => {
               )
             : ''
         }
-        navbar_right={<ModalSettings />}
-        navbar_left={
-          <BluetoothConnection
-            newVideos={state.newVideos}
-            currentBLEstatus={state.displayBLEconnection}
-            handleDisplayBLEconnection={handleDisplayBLEconnection}
-          />
-        }
+        topBar_right={<ModalSettings />}
         newVideos={state.newVideos}
         isActive={state.isActive}
         setIsActive={setIsActive}

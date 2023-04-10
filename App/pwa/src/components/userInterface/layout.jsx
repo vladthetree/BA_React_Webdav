@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { useWindowSize } from 'react-use';
 import { DefaultScreen } from './modalElementSet';
+import { TopBar } from './LayoutElements/TopBar.jsx';
 import '../style/layout.css';
 
 const Layout = ({
-  navbar_left,
-  navbar_middle,
-  navbar_right,
+  topBar_left,
+  topBar_middle,
+  topBar_right,
   children,
   isActive,
   setIsActive,
@@ -14,7 +15,7 @@ const Layout = ({
   videoamount,
 }) => {
   const { height } = useWindowSize();
-  const navbarheight = height / 25;
+  const topBarheight = height / 25;
   const fontSize = height / 23;
 
   const handleCloseModal = () => {
@@ -28,19 +29,15 @@ const Layout = ({
   return (
     <div className="layout">
       <header className="layoutheader">
-        <nav className="navbar" style={{ height: navbarheight }}>
-          <div className="navbar_left_wrapper">
-            <div className="navbar_left">{navbar_left}</div>
-          </div>
-          <div className="navbar_middle" style={{ fontSize }}>
-            {navbar_middle}
-          </div>
-          <div className="navbar_left_wrapper">
-            <div className="navbar_left">{navbar_right}</div>
-          </div>
-        </nav>
+        <TopBar
+          topBar_left={topBar_left}
+          topBar_middle={topBar_middle}
+          topBar_right={topBar_right}
+          topBarheight={topBarheight}
+          fontSize={fontSize}
+        />
       </header>
-      <div style={{ height: height - navbarheight }}>
+      <body style={{ height: height - topBarheight }}>
         {isActive ? (
           <main className="layoutbody">{children}</main>
         ) : (
@@ -49,7 +46,7 @@ const Layout = ({
             videoamount={videoamount}
           />
         )}
-      </div>
+      </body>
     </div>
   );
 };
