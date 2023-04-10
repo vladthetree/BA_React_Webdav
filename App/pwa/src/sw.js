@@ -6,6 +6,7 @@ const assetsToCache = [
   './pwa-192x192.png',
   './pwa-512x512.png',
   './bundle.js',
+  './audio/sampleAudio.mp3',
 ];
 
 self.addEventListener('install', (event) => {

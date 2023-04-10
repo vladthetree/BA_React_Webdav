@@ -1,75 +1,90 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ListVideos } from '../components/userInterface/modalElements/listVideos.jsx';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import Layout from './../components/userInterface/layout.jsx';
-import { NewFileControll } from './../components/utils/NewFileControll.jsx';
-import { ScanConnection } from './../components/userInterface/modalElements/BLE/ScanConnection.jsx';
-import ModalSettings from './../components/userInterface/modalElements/settings/ModalSettings.jsx';
+import newFileControll from '../components/utils/newFileControll.jsx';
 import {
-  hasObjectStorageDatabase,
-  getObjectStorageIndex,
-} from '../components/db/storageObjectMethods.js';
+  ModalSettings,
+  BluetoothConnection,
+  ListVideos,
+  Login,
+} from '../components/userInterface/modalElementSet.js';
+import { TopBarInformations } from '../components/utils/TopBarInformations.jsx';
+import { getObjectStorageIndex } from '../components/db/storageObjectMethods.js';
+import {
+  videoPageReducer,
+  initialState,
+} from '../components/utils/reducer/videoPageReducer.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
 const VideoPage = () => {
-  const [dbExist, setDbExist] = useState(false);
-  const [newVideos, setNewVideos] = useState([]);
-  const [userdata, setUserData] = useState();
-  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
-  const [displayBLEconnection, setdisplayBLEconnection] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [displayedVideos, setDisplayedVideos] = useState([]);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isRequesting, setIsRequesting] = useState(false);
+  const [state, dispatch] = useReducer(videoPageReducer, initialState);
   const intervalRef = useRef(null);
   const storedFilesRef = useRef([]);
   const appIsActive = new Event('appIsActive');
+  document.addEventListener('DOMContentLoaded', getUserData);
+  window.addEventListener('userDataUpdated', getUserData);
+
+  function setNewVideos(newVideos) {
+    dispatch({ type: 'setNewVideos', payload: newVideos });
+  }
+
+  function setIsActive(status) {
+    dispatch({ type: 'setIsActive', payload: status });
+  }
+
+  function setIsRequesting(status) {
+    dispatch({ type: 'setIsRequesting', payload: status });
+  }
+
+  function setDisplayedVideos(videos) {
+    dispatch({ type: 'setDisplayedVideos', payload: videos });
+  }
+
+  function setIsOnlineStatus() {
+    dispatch({ type: 'setIsOnline', payload: navigator.onLine });
+  }
+
   useEffect(() => {
-    if (isActive) {
+    if (state.isActive) {
       window.dispatchEvent(appIsActive);
     }
-  }, [isActive]);
+  }, [state.isActive]);
+
   useEffect(() => {
     function handleNewVideoInIndexDB() {
-      if (!isActive) {
+      if (!state.isActive) {
         document.documentElement.style.filter = 'brightness(100%)';
-        const audio = new Audio('audio/sampleAudio.mp3');
-        audio.play();
+        const audio = new Audio();
+        audio.src = '/audio/sampleAudio.mp3';
+        audio.autoplay = true;
       }
     }
-
     window.addEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
     return () => {
       window.removeEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
     };
-  }, [isActive]);
+  }, [state.isActive]);
 
   const handleDisplayBLEconnection = (isDisplayed) => {
     if (isDisplayed) {
-      setdisplayBLEconnection(true);
-    }
-  };
-
-  const handleNewVideos = () => {
-    if (isActive) {
-      setNewVideos([]);
+      dispatch({ type: 'setDisplayBLEconnection', payload: true });
     }
   };
 
   const handleClickVideo = (e) => {
     const video = e.currentTarget;
     if (video.paused) {
-      setIsVideoPlaying(true);
+      dispatch({ type: 'setIsVideoPlaying', payload: true });
       video.play();
     } else {
       video.pause();
-      setIsVideoPlaying(false);
+      dispatch({ type: 'setIsVideoPlaying', payload: false });
     }
   };
 
-  window.addEventListener('userDataUpdated', async () => {
+  async function getUserData() {
     const resivedUserData = await getObjectStorageIndex(
       OBJECT_STORE_USERDATA,
       OBJECT_STORE_USERDATA_OBJECTSTORAGE,
@@ -77,52 +92,25 @@ const VideoPage = () => {
     );
     if (resivedUserData) {
       const result = resivedUserData.fileContext;
-      setUserData(result);
+      dispatch({ type: 'setUserData', payload: result });
     }
-  });
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    const resivedUserData = await getObjectStorageIndex(
-      OBJECT_STORE_USERDATA,
-      OBJECT_STORE_USERDATA_OBJECTSTORAGE,
-      'adress01',
-    );
-    if (resivedUserData) {
-      const result = resivedUserData.fileContext;
-      setUserData(result);
-    }
-  });
+  }
 
   useEffect(() => {
-    const handleOnline = () => {
-      setIsOnline(true);
-    };
-
-    const handleOffline = () => {
-      setIsOnline(false);
-    };
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    setIsOnlineStatus();
+    window.addEventListener('online', setIsOnlineStatus);
+    window.addEventListener('offline', setIsOnlineStatus);
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', setIsOnlineStatus);
+      window.removeEventListener('offline', setIsOnlineStatus);
     };
   }, []);
 
-  useEffect(() => {
-    if (dbExist === false) {
-      const hasVideos = async () => {
-        const exist = await hasObjectStorageDatabase('db', 'videos');
-        setDbExist(exist);
-      };
-      hasVideos();
-    }
-  }, [dbExist]);
-
   const checkOnlineStatus = () => {
-    if (userdata && isOnline && !isRequesting) {
+    if (state.userdata && state.isOnline && !state.isRequesting) {
+      console.log('#--Checking for new Files--#');
       intervalRef.current = setInterval(() => {
-        NewFileControll(userdata, setNewVideos, setIsRequesting);
+        newFileControll(state.userdata, setNewVideos, setIsRequesting);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
   };
@@ -132,98 +120,44 @@ const VideoPage = () => {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [userdata, isOnline, isRequesting]);
+  }, [state.userdata, state.isOnline, state.isRequesting]);
 
-  const displayName = () => {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            height: `${1.5}vw`,
-            width: `${1.5}vw`,
-            backgroundColor: displayBLEconnection ? 'green' : 'red',
-            display: 'inline-block',
-            marginRight: '5px',
-          }}
-        />
-        <div
-          style={{
-            height: `${1.5}vw`,
-            width: `${1.5}vw`,
-            backgroundColor: isOnline ? 'green' : 'red',
-            borderRadius: '50%',
-            display: 'inline-block',
-            marginRight: '5px',
-          }}
-        />
-        <div
-          style={{
-            width: 0,
-            height: 0,
-            borderTop: `${1.5}vw solid ${(function () {
-              if ('serviceWorker' in navigator) {
-              } else {
-                console.log(' SERVICEWORER IST NICHT IM NAVIGATOR');
-              }
-
-              try {
-                return navigator.serviceWorker.controller ? 'green' : 'red';
-              } catch (e) {
-                console.error('Error in navigator code:', e);
-                return 'gray';
-              }
-            })()}`,
-            borderLeft: `${0.75}vw solid transparent`,
-            borderRight: `${0.75}vw solid transparent`,
-            display: 'inline-block',
-            marginRight: '5px',
-          }}
-        />
-        &nbsp; &nbsp;
-        <div>
-          Logged: &nbsp; {userdata.username}
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-      </div>
-    );
-  };
-
-  return (
+  return !state.userdata ? (
+    <Login />
+  ) : (
     <div>
       <Layout
-        userdata={userdata}
-        handleNewVideos={handleNewVideos}
-        newVideos={newVideos}
-        isActive={isActive}
-        setIsActive={setIsActive}
-        setNewVideos={setNewVideos}
-        videoamount={newVideos.length}
+        navbar_middle={
+          state.userdata
+            ? TopBarInformations(
+                state.userdata,
+                state.displayBLEconnection,
+                state.isOnline,
+              )
+            : ''
+        }
+        navbar_right={<ModalSettings />}
         navbar_left={
-          <ScanConnection
-            newVideos={newVideos}
-            currentBLEstatus={displayBLEconnection}
+          <BluetoothConnection
+            newVideos={state.newVideos}
+            currentBLEstatus={state.displayBLEconnection}
             handleDisplayBLEconnection={handleDisplayBLEconnection}
           />
         }
-        navbar_middle={userdata ? displayName() : ''}
-        navbar_right={<ModalSettings />}
+        newVideos={state.newVideos}
+        isActive={state.isActive}
+        setIsActive={setIsActive}
+        setNewVideos={setNewVideos}
+        videoamount={state.newVideos.length}
       >
-        {dbExist && (
-          <ListVideos
-            setIsActive={setIsActive}
-            handleClickVideo={handleClickVideo}
-            isVideoPlaying={isVideoPlaying}
-            videos={displayedVideos}
-            setVideos={setDisplayedVideos}
-            storedFilesRef={storedFilesRef}
-          />
-        )}
+        <ListVideos
+          setIsActive={setIsActive}
+          handleClickVideo={handleClickVideo}
+          isVideoPlaying={state.isVideoPlaying}
+          videos={state.displayedVideos}
+          setVideos={setDisplayedVideos}
+          storedFilesRef={storedFilesRef}
+        />
       </Layout>
     </div>
   );

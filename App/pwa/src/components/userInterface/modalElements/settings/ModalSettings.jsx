@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Settings from './settings.jsx';
+import Settings from './Settings.jsx';
 
-const ModalSettings = () => {
+export default function ModalSettings() {
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => {
     setShowModal(false);
@@ -23,6 +23,4 @@ const ModalSettings = () => {
       )}
     </div>
   );
-};
-
-export default ModalSettings;
+}

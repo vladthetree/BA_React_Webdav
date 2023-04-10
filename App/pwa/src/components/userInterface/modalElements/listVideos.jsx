@@ -6,7 +6,7 @@ import '../../style/videostyle.css';
 
 const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
-export const ListVideos = memo(function ListVideos({
+export default memo(function ListVideos({
   setIsActive,
   handleClickVideo,
   isVideoPlaying,

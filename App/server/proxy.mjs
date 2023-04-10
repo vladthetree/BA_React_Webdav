@@ -44,6 +44,9 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
 
       if (messageObject.type === 'newData') {
         const metaData = messageObject.data;
+        console.log('META DATA ARE');
+        console.log(metaData);
+
         const client = createClient(metaData.targetUrl, {
           username: metaData.username,
           password: metaData.password,

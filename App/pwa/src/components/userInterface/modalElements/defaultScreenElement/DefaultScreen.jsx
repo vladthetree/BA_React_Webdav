@@ -3,7 +3,7 @@ import '../../../style/defaultScreen.css';
 import { useWindowSize } from 'react-use';
 import Swipe from '../../../svgs/Swipe.jsx';
 
-const DefaultScreen = ({ handleCloseModal, videoamount }) => {
+export default function DefaultScreen({ handleCloseModal, videoamount }) {
   const { width, height } = useWindowSize();
   const [startX, setStartX] = useState(null);
 
@@ -56,6 +56,4 @@ const DefaultScreen = ({ handleCloseModal, videoamount }) => {
       </div>
     </div>
   );
-};
-
-export default DefaultScreen;
+}

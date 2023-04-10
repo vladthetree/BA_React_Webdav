@@ -2,15 +2,17 @@ import { Buffer } from 'buffer';
 import {
   addToIndexDbStore,
   removeAlreadyStoredFiles,
-} from './../db/storageObjectMethods.js';
+} from '../db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
-export const NewFileControll = async (
+export default async function newFileControll(
   userdata,
   setNewVideos,
   setIsRequesting,
-) => {
+) {
+  console.log('TEST');
+  console.log(userdata);
   let mp4FilesNames = null;
   console.log('#-- No ongoing requests --#');
   mp4FilesNames = await listContent(userdata).then((contentArray) => {
@@ -38,9 +40,11 @@ export const NewFileControll = async (
   } else {
     setIsRequesting(false);
   }
-};
+}
 
 const listContent = async (userdata) => {
+  console.log('TEST2');
+  console.log(userdata.webdavAddress);
   try {
     const response = await fetch(
       `${process.env.DEFAULT_LOCALHOST}/listContent`,
@@ -50,7 +54,7 @@ const listContent = async (userdata) => {
         body: JSON.stringify({
           username: userdata.nextCloudUserName,
           password: userdata.nextCloudPassword,
-          targetUrl: userdata.webdavAdress,
+          targetUrl: userdata.webdavAddress,
         }),
       },
     );
@@ -70,7 +74,7 @@ const getFileContent = async (userdata, newMp4FilesArray, setIsRequesting) => {
       data: {
         username: userdata.nextCloudUserName,
         password: userdata.nextCloudPassword,
-        targetUrl: userdata.webdavAdress,
+        targetUrl: userdata.webdavAddress,
         newFiles: newMp4FilesArray,
       },
     };

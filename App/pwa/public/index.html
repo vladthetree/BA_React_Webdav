@@ -13,7 +13,7 @@
     />
     <meta name="display" content="fullscreen" />
     <link rel="manifest" href="./manifest.json" />
-    <title>Plauderkästchen</title>
+    <title>PWA</title>
   </head>
 
   <body>
@@ -30,20 +30,6 @@
             .catch((error) => {
               console.log('Serviceworker registration failed:\n', error);
             });
-        });
-      }
-    </script>
-    <script>
-      if (Notification.permission === 'granted') {
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            navigator.serviceWorker.ready.then((registration) => {
-              registration.showNotification('Permission granted', {
-                body: 'Notifications Aktiviert!',
-              });
-            });
-          }
         });
       }
     </script>
@@ -82,6 +68,7 @@
       }
     </script>
     <script>
+
       const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
       let inactivityTimer;
 

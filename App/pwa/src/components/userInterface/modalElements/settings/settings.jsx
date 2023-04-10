@@ -4,7 +4,7 @@ import { deleteDBFromIndexDB } from '../../../db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const DATABASE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 
-const Settings = ({ onClose }) => {
+export default function Settings({ onClose }) {
   const [displayedArray, setDisplayedArray] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(document.fullscreenElement);
   const deleteAllVideos = async () => {
@@ -27,21 +27,6 @@ const Settings = ({ onClose }) => {
     }, 100);
   };
 
-  // const presentationMode = async () => {
-  // 	try {
-  // 		const presentationRequest = new PresentationRequest(
-  // 			"http://localhost:8080/",
-  // 		);
-  // 		const presentationConnection = await presentationRequest.start();
-  // 		presentationConnection.addEventListener("connect", (event) => {
-  // 			// Send a message to the presentation display to enter presentation mode
-  // 			presentationConnection.send("enterPresentationMode");
-  // 		});
-  // 	} catch (error) {
-  // 		// Handle the error
-  // 	}
-  // };
-
   const primeMethodes = [
     {
       name: 'Delete all\nvideos.',
@@ -58,11 +43,6 @@ const Settings = ({ onClose }) => {
       value: 'Reloads the page.',
       status: reloadPage,
     },
-    // {
-    // 	name: "Prasentation Mode",
-    // 	value: "This will open the application in Presentation mode",
-    // 	status: presentationMode,
-    // },
   ];
 
   useEffect(() => {
@@ -111,6 +91,4 @@ const Settings = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-export default Settings;
+}

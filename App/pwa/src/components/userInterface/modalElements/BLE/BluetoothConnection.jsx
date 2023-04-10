@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { writeMessage } from './writeBLEmessage.js';
 
-export function ScanConnection({
+export default function BluetoothConnection({
   newVideos,
   currentBLEstatus,
   handleDisplayBLEconnection,
@@ -88,7 +88,7 @@ export function ScanConnection({
   }
 
   const handleNewVideo = async () => {
-    const message = `newVideos();\n`;
+    const message = 'newVideos();\n';
     while (!isConnected) {
       await new Promise((resolve) => setTimeout(resolve, 20000));
     }
@@ -107,7 +107,7 @@ export function ScanConnection({
       if (max === 0) {
         return fail();
       }
-      time('Retrying in ' + delay + 's... (' + max + ' tries left)');
+      time(`Retrying in ${delay}s... (${max} tries left)`);
       setTimeout(function () {
         exponentialBackoff(--max, delay * 2, toTry, success, fail);
       }, delay * 1000);
@@ -115,7 +115,7 @@ export function ScanConnection({
   }
 
   function time(text) {
-    console.log('[' + new Date().toJSON().substr(11, 8) + '] ' + text);
+    console.log(`[${new Date().toJSON().substr(11, 8)}] ${text}`);
   }
 
   function onDisconnected() {
