@@ -1,25 +1,25 @@
 import React, { useEffect, useRef, useReducer } from 'react';
-import Layout from '../../view/layout/layout.jsx';
-import newFileControll from '../newFileControll.jsx';
+import { useSelector, useDispatch } from 'react-redux';
+import Layout from '../layout/layout.jsx';
+import newFileControll from './../../controller/newFileControll.jsx';
 import {
   ModalSettings,
   BluetoothConnection,
   ListVideos,
   Login,
-} from '../../view/modalElementSet.js';
-import { TopBarInformations } from '../../view/layout/TopBarInformations.jsx';
+} from '../modalElementSet.js';
+import { TopBarInformations } from '../layout/TopBarInformations.jsx';
 import { getObjectStorageIndex } from '../../model/db/storageObjectMethods.js';
-import {
-  videoPageReducer,
-  initialState,
-} from '../../utils/reducer/videoPageReducer.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
 const VideoPage = () => {
-  const [state, dispatch] = useReducer(videoPageReducer, initialState);
+  const videoPageState = useSelector(
+    (videoPageState) => videoPageState.videoPageReducer,
+  );
+  const dispatch = useDispatch();
 
   const intervalRef = useRef(null);
   const storedFilesRef = useRef([]);
@@ -48,14 +48,14 @@ const VideoPage = () => {
   }
 
   useEffect(() => {
-    if (state.isActive) {
+    if (videoPageState.isActive) {
       window.dispatchEvent(appIsActive);
     }
-  }, [state.isActive]);
+  }, [videoPageState.isActive]);
 
   useEffect(() => {
     function handleNewVideoInIndexDB() {
-      if (!state.isActive) {
+      if (!videoPageState.isActive) {
         document.documentElement.style.filter = 'brightness(100%)';
         const audio = new Audio();
         audio.src = '/audio/sampleAudio.mp3';
@@ -66,7 +66,7 @@ const VideoPage = () => {
     return () => {
       window.removeEventListener('newVideoInIndexDB', handleNewVideoInIndexDB);
     };
-  }, [state.isActive]);
+  }, [videoPageState.isActive]);
 
   const handleDisplayBLEconnection = (isDisplayed) => {
     if (isDisplayed) {
@@ -86,6 +86,7 @@ const VideoPage = () => {
   };
 
   async function getUserData() {
+    console.log('I GET TRIGGERED');
     const resivedUserData = await getObjectStorageIndex(
       OBJECT_STORE_USERDATA,
       OBJECT_STORE_USERDATA_OBJECTSTORAGE,
@@ -108,10 +109,14 @@ const VideoPage = () => {
   }, []);
 
   const checkOnlineStatus = () => {
-    if (state.userdata && state.isOnline && !state.isRequesting) {
+    if (
+      videoPageState.userdata &&
+      videoPageState.isOnline &&
+      !videoPageState.isRequesting
+    ) {
       console.log('#--Checking for new Files--#');
       intervalRef.current = setInterval(() => {
-        newFileControll(state.userdata, setNewVideos, setIsRequesting);
+        newFileControll(videoPageState.userdata, setNewVideos, setIsRequesting);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
   };
@@ -121,41 +126,44 @@ const VideoPage = () => {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [state.userdata, state.isOnline, state.isRequesting]);
-
-  return !state.userdata ? (
+  }, [
+    videoPageState.userdata,
+    videoPageState.isOnline,
+    videoPageState.isRequesting,
+  ]);
+  return !videoPageState.userdata ? (
     <Login />
   ) : (
     <div>
       <Layout
         topBar_left={
           <BluetoothConnection
-            newVideos={state.newVideos}
-            currentBLEstatus={state.displayBLEconnection}
+            newVideos={videoPageState.newVideos}
+            currentBLEstatus={videoPageState.displayBLEconnection}
             handleDisplayBLEconnection={handleDisplayBLEconnection}
           />
         }
         topBar_middle={
-          state.userdata
+          videoPageState.userdata
             ? TopBarInformations(
-                state.userdata,
-                state.displayBLEconnection,
-                state.isOnline,
+                videoPageState.userdata,
+                videoPageState.displayBLEconnection,
+                videoPageState.isOnline,
               )
             : ''
         }
         topBar_right={<ModalSettings />}
-        newVideos={state.newVideos}
-        isActive={state.isActive}
+        newVideos={videoPageState.newVideos}
+        isActive={videoPageState.isActive}
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
-        videoamount={state.newVideos.length}
+        videoamount={videoPageState.newVideos.length}
       >
         <ListVideos
           setIsActive={setIsActive}
           handleClickVideo={handleClickVideo}
-          isVideoPlaying={state.isVideoPlaying}
-          videos={state.displayedVideos}
+          isVideoPlaying={videoPageState.isVideoPlaying}
+          videos={videoPageState.displayedVideos}
           setVideos={setDisplayedVideos}
           storedFilesRef={storedFilesRef}
         />

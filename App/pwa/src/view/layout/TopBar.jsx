@@ -1,5 +1,11 @@
-import React from "react";
-export function TopBar({ topBar_left, topBar_middle, topBar_right, topBarheight, fontSize}) {
+import React from 'react';
+export function TopBar({
+  topBar_left,
+  topBar_middle,
+  topBar_right,
+  topBarheight,
+  fontSize,
+}) {
   return (
     <nav className="topBar" style={{ height: topBarheight }}>
       <div className="topBar_left_wrapper">
