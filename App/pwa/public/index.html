@@ -42,7 +42,6 @@
         const wakeLockTimeoutDelay = 10000;
 
         async function requestWakeLock() {
-          console.log('RUN requestWakeLock');
           try {
             wakeLockRequested = true;
             wakeLock = await navigator.wakeLock.request('screen');
@@ -68,7 +67,6 @@
       }
     </script>
     <script>
-
       const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
       let inactivityTimer;
 

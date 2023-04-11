@@ -1,31 +1,31 @@
 export const initialState = {
   newVideos: [],
+  displayedVideos: [],
   userdata: null,
   isOnline: window.navigator.onLine,
   displayBLEconnection: false,
   isActive: false,
-  displayedVideos: [],
   isVideoPlaying: false,
   isRequesting: false,
 };
 
 export const videoPageReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'setNewVideos':
+    case 'SET_NEW_VIDEOS':
       return { ...state, newVideos: action.payload };
-    case 'setUserData':
+    case 'SET_USER_DATA':
       return { ...state, userdata: action.payload };
-    case 'setIsOnline':
+    case 'SET_IS_ONLINE_STATUS':
       return { ...state, isOnline: action.payload };
-    case 'setDisplayBLEconnection':
-      return { ...state, displayBLEconnection: action.payload };
-    case 'setIsActive':
+    case 'SET_EXIST_BLE_CONNECTION':
+      return { ...state, existBLEconnection: action.payload };
+    case 'SET_IS_ACTIVE':
       return { ...state, isActive: action.payload };
-    case 'setDisplayedVideos':
+    case 'SET_DISPLAYED_VIDEOS':
       return { ...state, displayedVideos: action.payload };
-    case 'setIsVideoPlaying':
+    case 'SET_IS_VIDEO_PLAYING':
       return { ...state, isVideoPlaying: action.payload };
-    case 'setIsRequesting':
+    case 'SET_IS_REQUESTING':
       return { ...state, isRequesting: action.payload };
     default:
       return state;

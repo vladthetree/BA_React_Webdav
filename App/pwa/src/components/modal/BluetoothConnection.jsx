@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { writeMessage } from '../../utils/webbluetooth/writeBLEmessage.js';
+import mainPageDispatcher from '../../actions/mainPageActions.js';
 
-export default function BluetoothConnection({
-  newVideos,
-  currentBLEstatus,
-  handleDisplayBLEconnection,
-}) {
+export default function BluetoothConnection({ newVideos, currentBLEstatus }) {
   const NORDIC_SERVICE = `${process.env.NORDIC_SERVICE}`;
   const NORDIC_TX = `${process.env.TX}`;
   const NORDIC_RX = `${process.env.RX}`;
@@ -17,6 +14,7 @@ export default function BluetoothConnection({
     { namePrefix: 'Bangle' },
     { services: [NORDIC_SERVICE] },
   ]);
+  const actions = mainPageDispatcher();
 
   const server = useRef(null);
   const service = useRef(null);
@@ -43,7 +41,7 @@ export default function BluetoothConnection({
         'gattserverdisconnected',
         onDisconnected,
       );
-      await connectBLE(handleDisplayBLEconnection);
+      await connectBLE(actions);
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +58,7 @@ export default function BluetoothConnection({
     }
   }, [newVideos]);
 
-  async function connectBLE(handleDisplayBLEconnection) {
+  async function connectBLE(actions) {
     exponentialBackoff(
       MAX_TRYS,
       MAX_DELAY,
@@ -79,7 +77,7 @@ export default function BluetoothConnection({
         await writeMessage('connected();\n', txRef.current);
         console.log('Bluetooth Device is connected.');
         isConnected = true;
-        handleDisplayBLEconnection(true);
+        actions.setExistBLEconnection(true);
       },
       function fail() {
         time('Failed to reconnect.');

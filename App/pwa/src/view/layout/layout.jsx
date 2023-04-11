@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import mainPageDispatcher from '../../actions/mainPageActions';
 import { useWindowSize } from 'react-use';
 import { DefaultScreen } from '../../components/modalElementSet';
 import TopBar from '../../components/layoutComponents/TopBar.jsx';
@@ -11,18 +12,16 @@ const Layout = ({
   displayBLEconnection,
   isOnline,
   isActive,
-  setIsActive,
   newVideos,
-  setNewVideos,
-  handleDisplayBLEconnection,
 }) => {
   const { height } = useWindowSize();
   const topBarheight = height / 25;
   const fontSize = height / 23;
+  const actions = mainPageDispatcher();
 
   const handleCloseModal = () => {
-    setIsActive(true);
-    setNewVideos([]);
+    actions.setIsActive(true);
+    actions.setNewVideos([]);
   };
   useEffect(() => {
     console.log('isActive changed:', isActive);
@@ -37,7 +36,6 @@ const Layout = ({
           userdata={userdata}
           displayBLEconnection={displayBLEconnection}
           isOnline={isOnline}
-          handleDisplayBLEconnection={handleDisplayBLEconnection}
           newVideos={newVideos}
         />
       </header>

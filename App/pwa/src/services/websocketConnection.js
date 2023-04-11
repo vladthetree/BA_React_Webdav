@@ -1,13 +1,10 @@
 import { Buffer } from 'buffer';
 import { addToIndexDbStore } from '../model/db/storageObjectMethods.js';
+
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
-const webSocketConection = async (
-  userdata,
-  newMp4FilesArray,
-  setIsRequesting,
-) => {
+const webSocketConection = async (userdata, newMp4FilesArray, actions) => {
   const socket = new WebSocket(`${process.env.DEFAULT_WEBSOCKET}/ws`);
   try {
     const message = {
@@ -62,12 +59,12 @@ const webSocketConection = async (
 
   socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event);
-    setIsRequesting(false);
+    actions.setIsRequesting(false);
   };
 
   socket.addEventListener('error', (error) => {
     console.error('WebSocket error:', error);
-    setIsRequesting(false);
+    actions.setIsRequesting(false);
   });
 };
 

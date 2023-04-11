@@ -7,7 +7,6 @@ export default function TopBar({
   userdata,
   displayBLEconnection,
   isOnline,
-  handleDisplayBLEconnection,
   newVideos,
 }) {
   return (
@@ -18,7 +17,6 @@ export default function TopBar({
             <BluetoothConnection
               newVideos={newVideos}
               currentBLEstatus={displayBLEconnection}
-              handleDisplayBLEconnection={handleDisplayBLEconnection}
             />
           }
         </div>

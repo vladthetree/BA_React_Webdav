@@ -2,18 +2,16 @@ import React, { useEffect, memo, useCallback } from 'react';
 import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
 import { useWindowSize } from 'react-use';
 import { useSelector } from 'react-redux';
+import mainPageDispatcher from '../../actions/mainPageActions.js';
 import Swipe from '../../assets/svgs/Swipe.jsx';
 import '../../assets/style/videostyle.css';
 
 const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
-export default memo(function ListVideos({
-  setIsActive,
-  handleClickVideo,
-  videos,
-  setVideos,
-}) {
+export default memo(function ListVideos({ videos }) {
   const { width, height } = useWindowSize();
+  const actions = mainPageDispatcher();
+
   const videoPageState = useSelector(
     (videoPageState) => videoPageState.videoPageReducer,
   );
@@ -23,22 +21,22 @@ export default memo(function ListVideos({
     const sortedFiles = storedFiles.sort(
       (a, b) => new Date(b.date) - new Date(a.date),
     );
-    setVideos(sortedFiles);
-  }, [setVideos]);
+    actions.setDisplayedVideos(sortedFiles);
+  }, [videos]);
 
   useEffect(() => {
     window.addEventListener('newVideoInIndexDB', displayVideos);
     window.addEventListener('appIsActive', displayVideos);
 
     return () => {
-      window.removeEventListener('newVideoInIndexDB', displayVideos);
+      window.removeEventListener('newVideoInIxndexDB', displayVideos);
       window.removeEventListener('appIsActive', displayVideos);
     };
   }, [displayVideos]);
 
   useEffect(() => {
     let idleTimeout = setTimeout(() => {
-      setIsActive(false);
+      actions.setIsActive(false);
       window.removeEventListener('mousemove', resetTimeout);
       window.removeEventListener('keydown', resetTimeout);
       window.removeEventListener('touchstart', resetTimeout);
@@ -48,7 +46,7 @@ export default memo(function ListVideos({
       clearTimeout(idleTimeout);
       idleTimeout = !videoPageState.isVideoPlaying
         ? setTimeout(() => {
-            setIsActive(false);
+            actions.setIsActive(false);
             window.removeEventListener('mousemove', resetTimeout);
             window.removeEventListener('keydown', resetTimeout);
             window.removeEventListener('touchstart', resetTimeout);
@@ -61,6 +59,17 @@ export default memo(function ListVideos({
     window.addEventListener('keydown', resetTimeout);
     window.addEventListener('touchstart', resetTimeout);
   }, [videoPageState.isVideoPlaying]);
+
+  const handleClickVideo = (e) => {
+    const video = e.currentTarget;
+    if (video.paused) {
+      actions.setIsVideoPlaying(true);
+      video.play();
+    } else {
+      video.pause();
+      actions.setIsVideoPlaying(false);
+    }
+  };
 
   return (
     <div

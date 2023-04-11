@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import mainPageDispatcher from '../../actions/mainPageActions.js';
 import Layout from '../layout/layout.jsx';
 import newFileControll from '../../controller/newFileControll.jsx';
 import { ListVideos, Login } from '../../components/modalElementSet.js';
@@ -13,32 +14,12 @@ const MainPage = () => {
   const videoPageState = useSelector(
     (videoPageState) => videoPageState.videoPageReducer,
   );
-  const dispatch = useDispatch();
+  const actions = mainPageDispatcher();
 
   const intervalRef = useRef(null);
   const appIsActive = new Event('appIsActive');
   document.addEventListener('DOMContentLoaded', getUserData);
   window.addEventListener('userDataUpdated', getUserData);
-
-  function setNewVideos(newVideos) {
-    dispatch({ type: 'setNewVideos', payload: newVideos });
-  }
-
-  function setIsActive(status) {
-    dispatch({ type: 'setIsActive', payload: status });
-  }
-
-  function setIsRequesting(status) {
-    dispatch({ type: 'setIsRequesting', payload: status });
-  }
-
-  function setDisplayedVideos(videos) {
-    dispatch({ type: 'setDisplayedVideos', payload: videos });
-  }
-
-  function setIsOnlineStatus() {
-    dispatch({ type: 'setIsOnline', payload: navigator.onLine });
-  }
 
   useEffect(() => {
     if (videoPageState.isActive) {
@@ -61,23 +42,6 @@ const MainPage = () => {
     };
   }, [videoPageState.isActive]);
 
-  const handleDisplayBLEconnection = (isDisplayed) => {
-    if (isDisplayed) {
-      dispatch({ type: 'setDisplayBLEconnection', payload: true });
-    }
-  };
-
-  const handleClickVideo = (e) => {
-    const video = e.currentTarget;
-    if (video.paused) {
-      dispatch({ type: 'setIsVideoPlaying', payload: true });
-      video.play();
-    } else {
-      video.pause();
-      dispatch({ type: 'setIsVideoPlaying', payload: false });
-    }
-  };
-
   async function getUserData() {
     const resivedUserData = await getObjectStorageIndex(
       OBJECT_STORE_USERDATA,
@@ -85,21 +49,19 @@ const MainPage = () => {
       'adress01',
     );
     if (resivedUserData) {
-      const result = resivedUserData.fileContext;
-      dispatch({ type: 'setUserData', payload: result });
+      const resultUserData = resivedUserData.fileContext;
+      actions.setUserData(resultUserData);
     }
   }
-
   useEffect(() => {
-    setIsOnlineStatus();
-    window.addEventListener('online', setIsOnlineStatus);
-    window.addEventListener('offline', setIsOnlineStatus);
+    actions.setIsOnlineStatus();
+    window.addEventListener('online', actions.setIsOnlineStatus());
+    window.addEventListener('offline', actions.setIsOnlineStatus());
     return () => {
-      window.removeEventListener('online', setIsOnlineStatus);
-      window.removeEventListener('offline', setIsOnlineStatus);
+      window.removeEventListener('online', actions.setIsOnlineStatus());
+      window.removeEventListener('offline', actions.setIsOnlineStatus());
     };
   }, []);
-
   const checkOnlineStatus = () => {
     if (
       videoPageState.userdata &&
@@ -108,7 +70,7 @@ const MainPage = () => {
     ) {
       console.log('#--Checking for new Files--#');
       intervalRef.current = setInterval(() => {
-        newFileControll(videoPageState.userdata, setNewVideos, setIsRequesting);
+        newFileControll(videoPageState.userdata, actions);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
   };
@@ -130,19 +92,11 @@ const MainPage = () => {
       <Layout
         userdata={videoPageState.userdata}
         newVideos={videoPageState.newVideos}
-        displayBLEconnection={videoPageState.displayBLEconnection}
+        displayBLEconnection={videoPageState.existBLEconnection}
         isOnline={videoPageState.isOnline}
         isActive={videoPageState.isActive}
-        setIsActive={setIsActive}
-        setNewVideos={setNewVideos}
-        handleDisplayBLEconnection={handleDisplayBLEconnection}
       >
-        <ListVideos
-          setIsActive={setIsActive}
-          handleClickVideo={handleClickVideo}
-          videos={videoPageState.displayedVideos}
-          setVideos={setDisplayedVideos}
-        />
+        <ListVideos videos={videoPageState.displayedVideos} />
       </Layout>
     </div>
   );
