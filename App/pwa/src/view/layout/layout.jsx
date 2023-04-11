@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import { useWindowSize } from 'react-use';
-import { DefaultScreen } from '../modalElementSet';
-import { TopBar } from './TopBar.jsx';
-import '../style/layout.css';
+import { DefaultScreen } from '../../components/modalElementSet';
+import TopBar from '../../components/layoutComponents/TopBar.jsx';
+import '../../assets/style/layout.css';
 
 const Layout = ({
   topBar_left,
-  topBar_middle,
-  topBar_right,
   children,
+  userdata,
+  displayBLEconnection,
+  isOnline,
   isActive,
   setIsActive,
+  newVideos,
   setNewVideos,
-  videoamount,
+  handleDisplayBLEconnection,
 }) => {
   const { height } = useWindowSize();
   const topBarheight = height / 25;
@@ -25,16 +27,18 @@ const Layout = ({
   useEffect(() => {
     console.log('isActive changed:', isActive);
   }, [isActive]);
-
   return (
     <div className="layout">
       <header className="layoutheader">
         <TopBar
           topBar_left={topBar_left}
-          topBar_middle={topBar_middle}
-          topBar_right={topBar_right}
           topBarheight={topBarheight}
           fontSize={fontSize}
+          userdata={userdata}
+          displayBLEconnection={displayBLEconnection}
+          isOnline={isOnline}
+          handleDisplayBLEconnection={handleDisplayBLEconnection}
+          newVideos={newVideos}
         />
       </header>
       <div style={{ height: height - topBarheight }}>
@@ -43,7 +47,7 @@ const Layout = ({
         ) : (
           <DefaultScreen
             handleCloseModal={handleCloseModal}
-            videoamount={videoamount}
+            videoamount={newVideos.length}
           />
         )}
       </div>

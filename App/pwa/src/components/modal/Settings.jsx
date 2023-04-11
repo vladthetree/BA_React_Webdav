@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './../style/settings.css';
+import '../../assets/style/settings.css';
 import { deleteDBFromIndexDB } from '../../model/db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const DATABASE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 
 export default function Settings({ onClose }) {
   const [displayedArray, setDisplayedArray] = useState([]);
-  const [isFullScreen, setIsFullScreen] = useState(document.fullscreenElement);
   const deleteAllVideos = async () => {
     await deleteDBFromIndexDB(DATABASE_VIDEOS);
     await deleteDBFromIndexDB(undefined);

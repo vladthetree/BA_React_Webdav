@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './../style/defaultScreen.css';
 import { useWindowSize } from 'react-use';
-import Swipe from './../svgs/Swipe.jsx';
+import Swipe from '../../assets/svgs/Swipe.jsx';
+import '../../assets/style/defaultScreen.css';
+
 
 export default function DefaultScreen({ handleCloseModal, videoamount }) {
   const { width, height } = useWindowSize();
@@ -12,12 +13,9 @@ export default function DefaultScreen({ handleCloseModal, videoamount }) {
   }
   function handleTouchMove(e) {
     const deltaY = e.touches[0].clientX - startX;
-    console.log(`DELTA ${deltaY}`);
     if (deltaY > 0) {
-      console.log('right');
       handleCloseModal();
     } else {
-      console.log('left');
       handleCloseModal();
     }
   }

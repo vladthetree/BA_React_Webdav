@@ -25,7 +25,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
-        console.log(response);
         return response;
       }
       return fetch(event.request)

@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
-import VideoPage from './view/routes/videoPage.jsx';
+import MainPage from './view/routes/mainPage.jsx';
 
 function App() {
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<VideoPage />} exact />
+          <Route path="/" element={<MainPage />} exact />
         </Routes>
       </Router>
     </div>

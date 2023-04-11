@@ -1,19 +1,22 @@
-import React, { useEffect, useRef, memo, useCallback } from 'react';
+import React, { useEffect, memo, useCallback } from 'react';
 import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
 import { useWindowSize } from 'react-use';
-import Swipe from '../svgs/Swipe.jsx';
-import './../style/videostyle.css';
+import { useSelector } from 'react-redux';
+import Swipe from '../../assets/svgs/Swipe.jsx';
+import '../../assets/style/videostyle.css';
 
 const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
 
 export default memo(function ListVideos({
   setIsActive,
   handleClickVideo,
-  isVideoPlaying,
   videos,
   setVideos,
 }) {
   const { width, height } = useWindowSize();
+  const videoPageState = useSelector(
+    (videoPageState) => videoPageState.videoPageReducer,
+  );
 
   const displayVideos = useCallback(async () => {
     const storedFiles = await getConvertedBlobVideos();
@@ -43,7 +46,7 @@ export default memo(function ListVideos({
 
     function resetTimeout() {
       clearTimeout(idleTimeout);
-      idleTimeout = !isVideoPlaying
+      idleTimeout = !videoPageState.isVideoPlaying
         ? setTimeout(() => {
             setIsActive(false);
             window.removeEventListener('mousemove', resetTimeout);
@@ -57,7 +60,7 @@ export default memo(function ListVideos({
     window.addEventListener('mousemove', resetTimeout);
     window.addEventListener('keydown', resetTimeout);
     window.addEventListener('touchstart', resetTimeout);
-  }, [isVideoPlaying]);
+  }, [videoPageState.isVideoPlaying]);
 
   return (
     <div
@@ -68,7 +71,7 @@ export default memo(function ListVideos({
     >
       {videos.map((video, index) => (
         <div
-          key={video.id}
+          key={video.name}
           style={{
             marginTop: '10px',
             marginRight: '10px',

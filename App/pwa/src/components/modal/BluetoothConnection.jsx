@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { writeMessage } from './../utils/webbluetooth/writeBLEmessage.js';
+import { writeMessage } from '../../utils/webbluetooth/writeBLEmessage.js';
 
 export default function BluetoothConnection({
   newVideos,

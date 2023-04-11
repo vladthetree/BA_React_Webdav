@@ -31,4 +31,3 @@ export const videoPageReducer = (state = initialState, action) => {
       return state;
   }
 };
-

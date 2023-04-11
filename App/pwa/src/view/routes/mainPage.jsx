@@ -1,28 +1,21 @@
-import React, { useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../layout/layout.jsx';
-import newFileControll from './../../controller/newFileControll.jsx';
-import {
-  ModalSettings,
-  BluetoothConnection,
-  ListVideos,
-  Login,
-} from '../modalElementSet.js';
-import { TopBarInformations } from '../layout/TopBarInformations.jsx';
+import newFileControll from '../../controller/newFileControll.jsx';
+import { ListVideos, Login } from '../../components/modalElementSet.js';
 import { getObjectStorageIndex } from '../../model/db/storageObjectMethods.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
 
-const VideoPage = () => {
+const MainPage = () => {
   const videoPageState = useSelector(
     (videoPageState) => videoPageState.videoPageReducer,
   );
   const dispatch = useDispatch();
 
   const intervalRef = useRef(null);
-  const storedFilesRef = useRef([]);
   const appIsActive = new Event('appIsActive');
   document.addEventListener('DOMContentLoaded', getUserData);
   window.addEventListener('userDataUpdated', getUserData);
@@ -86,7 +79,6 @@ const VideoPage = () => {
   };
 
   async function getUserData() {
-    console.log('I GET TRIGGERED');
     const resivedUserData = await getObjectStorageIndex(
       OBJECT_STORE_USERDATA,
       OBJECT_STORE_USERDATA_OBJECTSTORAGE,
@@ -136,39 +128,23 @@ const VideoPage = () => {
   ) : (
     <div>
       <Layout
-        topBar_left={
-          <BluetoothConnection
-            newVideos={videoPageState.newVideos}
-            currentBLEstatus={videoPageState.displayBLEconnection}
-            handleDisplayBLEconnection={handleDisplayBLEconnection}
-          />
-        }
-        topBar_middle={
-          videoPageState.userdata
-            ? TopBarInformations(
-                videoPageState.userdata,
-                videoPageState.displayBLEconnection,
-                videoPageState.isOnline,
-              )
-            : ''
-        }
-        topBar_right={<ModalSettings />}
+        userdata={videoPageState.userdata}
         newVideos={videoPageState.newVideos}
+        displayBLEconnection={videoPageState.displayBLEconnection}
+        isOnline={videoPageState.isOnline}
         isActive={videoPageState.isActive}
         setIsActive={setIsActive}
         setNewVideos={setNewVideos}
-        videoamount={videoPageState.newVideos.length}
+        handleDisplayBLEconnection={handleDisplayBLEconnection}
       >
         <ListVideos
           setIsActive={setIsActive}
           handleClickVideo={handleClickVideo}
-          isVideoPlaying={videoPageState.isVideoPlaying}
           videos={videoPageState.displayedVideos}
           setVideos={setDisplayedVideos}
-          storedFilesRef={storedFilesRef}
         />
       </Layout>
     </div>
   );
 };
-export default VideoPage;
+export default MainPage;
