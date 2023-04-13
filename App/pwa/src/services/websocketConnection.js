@@ -4,7 +4,7 @@ import { addToIndexDbStore } from '../model/db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
-const webSocketConection = async (userdata, newMp4FilesArray, actions) => {
+const webSocketConnection = async (userdata, newMp4FilesArray, actions) => {
   const socket = new WebSocket(`${process.env.DEFAULT_WEBSOCKET}/ws`);
   try {
     const message = {
@@ -68,4 +68,4 @@ const webSocketConection = async (userdata, newMp4FilesArray, actions) => {
   });
 };
 
-export default webSocketConection;
+export default webSocketConnection;

@@ -1,7 +1,6 @@
 import { removeAlreadyStoredFiles } from '../model/db/storageObjectMethods.js';
 import webSocketConection from './../services/websocketConnection.js';
 import listContent from './../services/listContent.js';
-import mainPageDispatcher from '../actions/mainPageActions.js';
 
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;

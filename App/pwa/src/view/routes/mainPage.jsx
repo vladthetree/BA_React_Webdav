@@ -55,11 +55,11 @@ const MainPage = () => {
   }
   useEffect(() => {
     actions.setIsOnlineStatus();
-    window.addEventListener('online', actions.setIsOnlineStatus());
-    window.addEventListener('offline', actions.setIsOnlineStatus());
+    window.addEventListener('online', () => actions.setIsOnlineStatus());
+    window.addEventListener('offline', () => actions.setIsOnlineStatus());
     return () => {
-      window.removeEventListener('online', actions.setIsOnlineStatus());
-      window.removeEventListener('offline', actions.setIsOnlineStatus());
+      window.removeEventListener('online', () => actions.setIsOnlineStatus());
+      window.removeEventListener('offline', () => actions.setIsOnlineStatus());
     };
   }, []);
   const checkOnlineStatus = () => {
@@ -73,6 +73,7 @@ const MainPage = () => {
         newFileControll(videoPageState.userdata, actions);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
+
   };
 
   useEffect(() => {
@@ -85,6 +86,8 @@ const MainPage = () => {
     videoPageState.isOnline,
     videoPageState.isRequesting,
   ]);
+
+
   return !videoPageState.userdata ? (
     <Login />
   ) : (

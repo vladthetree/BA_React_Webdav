@@ -6,7 +6,6 @@ import TopBar from '../../components/layoutComponents/TopBar.jsx';
 import '../../assets/style/layout.css';
 
 const Layout = ({
-  topBar_left,
   children,
   userdata,
   displayBLEconnection,
@@ -30,7 +29,6 @@ const Layout = ({
     <div className="layout">
       <header className="layoutheader">
         <TopBar
-          topBar_left={topBar_left}
           topBarheight={topBarheight}
           fontSize={fontSize}
           userdata={userdata}
