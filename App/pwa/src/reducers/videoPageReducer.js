@@ -12,6 +12,15 @@ export const initialState = {
 export const videoPageReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NEW_VIDEOS':
+      const newVideos = action.payload;
+      const existingVideos = state.newVideos;
+      const updatedVideos = [...existingVideos];
+      newVideos.forEach((newVideo) => {
+        const index = existingVideos.findIndex((upVideos) => upVideos.url === newVideo.url);
+        if (index === -1) {
+          updatedVideos.push(newVideo);
+        }
+      });
       return { ...state, newVideos: action.payload };
     case 'SET_USER_DATA':
       return { ...state, userdata: action.payload };

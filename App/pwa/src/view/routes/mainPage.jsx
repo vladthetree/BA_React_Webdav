@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
 import mainPageDispatcher from '../../actions/mainPageActions.js';
 import Layout from '../layout/layout.jsx';
 import newFileControll from '../../controller/newFileControll.jsx';
@@ -24,6 +25,11 @@ const MainPage = () => {
   useEffect(() => {
     if (videoPageState.isActive) {
       window.dispatchEvent(appIsActive);
+    } else if (
+      !videoPageState.isActive &&
+      videoPageState.displayedVideos.length === 0
+    ) {
+      preloadVideos();
     }
   }, [videoPageState.isActive]);
 
@@ -70,6 +76,7 @@ const MainPage = () => {
     ) {
       console.log('#--Checking for new Files--#');
       intervalRef.current = setInterval(() => {
+        console.log('ISVIDEOS PLAYING ? ', videoPageState.isVideoPlaying);
         newFileControll(videoPageState.userdata, actions);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
@@ -86,6 +93,11 @@ const MainPage = () => {
     videoPageState.isRequesting,
   ]);
 
+  async function preloadVideos() {
+    const storedFiles = await getConvertedBlobVideos();
+    actions.setDisplayedVideos(storedFiles);
+  }
+
   return !videoPageState.userdata ? (
     <Login />
   ) : (
@@ -97,7 +109,11 @@ const MainPage = () => {
         isOnline={videoPageState.isOnline}
         isActive={videoPageState.isActive}
       >
-        <ListVideos videos={videoPageState.displayedVideos} />
+        <ListVideos
+          videos={videoPageState.displayedVideos}
+          isActive={videoPageState.isActive}
+          isVideoPlaying={videoPageState.isVideoPlaying}
+        />
       </Layout>
     </div>
   );

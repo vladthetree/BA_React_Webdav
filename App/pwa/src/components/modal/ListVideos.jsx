@@ -6,7 +6,7 @@ import mainPageDispatcher from '../../actions/mainPageActions.js';
 import Swipe from '../../assets/svgs/Swipe.jsx';
 import '../../assets/style/videostyle.css';
 
-const COWNDOWN_ACTIVITYCHECK = `${process.env.COWNDOWN_ACTIVITYCHECK}`;
+const COUNTDOWN_ACTIVITYCHECK = `${process.env.COUNTDOWN_ACTIVITYCHECK}`;
 
 export default memo(function ListVideos({ videos }) {
   const { width, height } = useWindowSize();
@@ -18,10 +18,7 @@ export default memo(function ListVideos({ videos }) {
 
   const displayVideos = useCallback(async () => {
     const storedFiles = await getConvertedBlobVideos();
-    const sortedFiles = storedFiles.sort(
-      (a, b) => new Date(b.date) - new Date(a.date),
-    );
-    actions.setDisplayedVideos(sortedFiles);
+    actions.setDisplayedVideos(storedFiles);
   }, [videos]);
 
   useEffect(() => {
@@ -40,7 +37,7 @@ export default memo(function ListVideos({ videos }) {
       window.removeEventListener('mousemove', resetTimeout);
       window.removeEventListener('keydown', resetTimeout);
       window.removeEventListener('touchstart', resetTimeout);
-    }, COWNDOWN_ACTIVITYCHECK);
+    }, COUNTDOWN_ACTIVITYCHECK);
 
     function resetTimeout() {
       clearTimeout(idleTimeout);
@@ -50,7 +47,7 @@ export default memo(function ListVideos({ videos }) {
             window.removeEventListener('mousemove', resetTimeout);
             window.removeEventListener('keydown', resetTimeout);
             window.removeEventListener('touchstart', resetTimeout);
-          }, COWNDOWN_ACTIVITYCHECK)
+          }, COUNTDOWN_ACTIVITYCHECK)
         : console.log(
             '#--Some Video is now playing, no Idle Timer Reset active.--#',
           );
@@ -65,9 +62,17 @@ export default memo(function ListVideos({ videos }) {
     if (video.paused) {
       actions.setIsVideoPlaying(true);
       video.play();
+      console.log(
+        'IS VIDEO PLAYIN ? SHOULD BE true ',
+        videoPageState.isVideoPlaying,
+      );
     } else {
       video.pause();
       actions.setIsVideoPlaying(false);
+      console.log(
+        'IS VIDEO PLAYIN ? SHOULD BE false',
+        videoPageState.isVideoPlaying,
+      );
     }
   };
 
@@ -101,6 +106,7 @@ export default memo(function ListVideos({ videos }) {
                   type="video/mp4"
                   className="video"
                   onClick={(e) => handleClickVideo(e)}
+                  preload="metadata"
                 />
               </div>
               <div

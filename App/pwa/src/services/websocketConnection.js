@@ -92,6 +92,7 @@ const webSocketConnection = async (userdata, newMp4FilesArray, actions) => {
           if (fileIndex + 1 < newMp4FilesArray.length) {
             await downloadFile(fileIndex + 1);
           }
+          actions.setIsRequesting(false);
           resolve(true);
         }
       });
