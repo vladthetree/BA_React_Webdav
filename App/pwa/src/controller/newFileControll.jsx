@@ -1,5 +1,5 @@
 import { removeAlreadyStoredFiles } from '../model/db/storageObjectMethods.js';
-import webSocketConection from './../services/websocketConnection.js';
+import webSocketConnection from './../services/websocketConnection.js';
 import listContent from './../services/listContent.js';
 
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
@@ -22,7 +22,7 @@ export default async function newFileControll(userdata, actions) {
     if (mp4FilesNames.length > 0) {
       console.log('#--New Files available--#');
       console.log('#-- New Files : --#');
-      await webSocketConection(userdata, mp4FilesNames, actions).then(() => {
+      await webSocketConnection(userdata, mp4FilesNames, actions).then(() => {
         actions.setNewVideos(mp4FilesNames);
       });
     } else {

@@ -21,7 +21,7 @@ export function TopBarInformations(userdata, displayBLEconnection, isOnline) {
         style={{
           height: `${1.5}vw`,
           width: `${1.5}vw`,
-          backgroundColor: isOnline ? 'green' : 'red',
+          backgroundColor: isOnline ? 'none' : 'red',
           borderRadius: '50%',
           display: 'inline-block',
           marginRight: '5px',
@@ -34,7 +34,7 @@ export function TopBarInformations(userdata, displayBLEconnection, isOnline) {
           borderTop: `1.5vw solid ${(() => {
             if ('serviceWorker' in navigator) {
               try {
-                return navigator.serviceWorker.controller ? 'green' : 'red';
+                return navigator.serviceWorker.controller ? 'none' : 'red';
               } catch (e) {
                 console.error('Error in navigator code:', e);
                 return 'gray';

@@ -45,12 +45,9 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
       if (messageObject.type === 'pause') {
         paused = true;
         let chunkIndexClient = messageObject.chunkIndex;
-        console.log(
-          '----------------------PAUSE > CLIENT CHUNKINDEX :',
-          chunkIndexClient,
-        );
+        console.log('----------------------PAUSE > CLIENT');
       } else if (messageObject.type === 'resume') {
-        console.log('RESUME');
+        console.log('--------------RESUME');
         paused = false;
       } else if (messageObject.type === 'newData') {
         const metaData = messageObject.data;
@@ -63,7 +60,17 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
         });
 
         for (const file of metaData.newFiles) {
-          const stream = await client.createReadStream(file.filename);
+          const stream = await client.createReadStream(file.filename, {
+            highWaterMark: 64 * 1024,
+          });
+          const data = await client.stat(file.filename);
+          console.log('data', data);
+          const size = data.size;
+          const chunkSize = 64 * 1024;
+          const totalChunks = Math.ceil(size / chunkSize);
+          console.log('size', size);
+          console.log(totalChunks);
+
           let chunkIndex = 0;
           console.log('Start Stream for ', file.filename);
           if (clientSocket.readyState === WebSocket.OPEN) {
@@ -76,29 +83,40 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
                     date: file.lastmod,
                     buffer: chunk,
                     index: chunkIndex,
+                    totalChunks: totalChunks,
                   },
                 }),
               );
               chunkIndex++;
-              chunkIndex % 1000 === 0 && console.log('----------------------INFO > SERVER CHUNKINDEX :', chunkIndex);
+              const percentComplete = (
+                (chunkIndex / totalChunks) *
+                100
+              ).toFixed(2);
+              process.stdout.clearLine();
+              process.stdout.cursorTo(0);
+              process.stdout.write(
+                `Loading: ${file.filename} - - - ${percentComplete}%`,
+              );
             });
             stream.on('end', (chunk) => {
               console.log('END OF STREAM');
+              console.log('TOTAL WAS ', totalChunks);
+              console.log('FILESIZE WAS ', size);
               clientSocket.send(
                 JSON.stringify({
                   type: 'end',
                   data: {
                     name: file.filename,
-                    total: chunkIndex,
+                    totalChunks: chunkIndex,
+                    byteLength: size,
                   },
                 }),
               );
               console.log(' Closing the Socket!');
-              clientSocket.close();
             });
             stream.on('error', (error) => {
               console.error(
-                `Error occurred while streaming file: ${file.filename}`,
+                `Error occurred while streaming file: ${file.filename} `,
               );
               clientSocket.send(
                 JSON.stringify({
