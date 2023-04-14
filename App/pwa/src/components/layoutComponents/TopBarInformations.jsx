@@ -12,7 +12,7 @@ export function TopBarInformations(userdata, displayBLEconnection, isOnline) {
         style={{
           height: `${1.5}vw`,
           width: `${1.5}vw`,
-          backgroundColor: displayBLEconnection ? 'green' : 'red',
+          backgroundColor: displayBLEconnection ? 'green' : 'none',
           display: 'inline-block',
           marginRight: '5px',
         }}

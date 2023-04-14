@@ -41,8 +41,18 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
   clientSocket.on('message', async function (message) {
     try {
       const messageObject = JSON.parse(message);
-
-      if (messageObject.type === 'newData') {
+      let paused = false;
+      if (messageObject.type === 'pause') {
+        paused = true;
+        let chunkIndexClient = messageObject.chunkIndex;
+        console.log(
+          '----------------------PAUSE > CLIENT CHUNKINDEX :',
+          chunkIndexClient,
+        );
+      } else if (messageObject.type === 'resume') {
+        console.log('RESUME');
+        paused = false;
+      } else if (messageObject.type === 'newData') {
         const metaData = messageObject.data;
         console.log('META DATA ARE');
         console.log(metaData);
@@ -52,51 +62,63 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
           password: metaData.password,
         });
 
-        const fileData = [];
-
         for (const file of metaData.newFiles) {
           const stream = await client.createReadStream(file.filename);
-          const chunks = [];
-          stream.on('data', (chunk) => {
-            chunks.push(chunk);
-          });
-
-          await new Promise((resolve, reject) => {
-            stream.on('end', () => {
-              const buffer = Buffer.concat(chunks);
-              fileData.push({
-                name: file.filename,
-                date: file.lastmod,
-                buffer: buffer,
-              });
-              if (clientSocket.readyState === WebSocket.OPEN) {
-                console.log('WebSocket is open');
-                clientSocket.send(
-                  JSON.stringify({ type: 'incomingNewData', data: fileData }),
-                );
-              } else {
-                console.log('WebSocket is not open');
-              }
-              resolve();
+          let chunkIndex = 0;
+          console.log('Start Stream for ', file.filename);
+          if (clientSocket.readyState === WebSocket.OPEN) {
+            stream.on('data', (chunk) => {
+              paused = !clientSocket.send(
+                JSON.stringify({
+                  type: 'incomingNewData',
+                  data: {
+                    name: file.filename,
+                    date: file.lastmod,
+                    buffer: chunk,
+                    index: chunkIndex,
+                  },
+                }),
+              );
+              chunkIndex++;
+              chunkIndex % 1000 === 0 && console.log('----------------------INFO > SERVER CHUNKINDEX :', chunkIndex);
+            });
+            stream.on('end', (chunk) => {
+              console.log('END OF STREAM');
+              clientSocket.send(
+                JSON.stringify({
+                  type: 'end',
+                  data: {
+                    name: file.filename,
+                    total: chunkIndex,
+                  },
+                }),
+              );
+              console.log(' Closing the Socket!');
+              clientSocket.close();
             });
             stream.on('error', (error) => {
-              console.log(
-                `Error reading stream for file ${file.filename}: ${error}`,
+              console.error(
+                `Error occurred while streaming file: ${file.filename}`,
               );
-              reject(error);
+              clientSocket.send(
+                JSON.stringify({
+                  type: 'error',
+                  data: {
+                    message: `Error occurred while streaming file: ${
+                      file.filename + error
+                    }`,
+                  },
+                }),
+              );
+              clientSocket.close();
             });
-          });
+          }
         }
-        console.log('RESOLVED! -> Closing the Socket!');
-        clientSocket.close();
       }
     } catch (error) {
       console.log('Error processing message:', error);
+      clientSocket.close();
     }
-  });
-
-  clientSocket.on('close', () => {
-    console.log('Client socket closed');
   });
 });
 
