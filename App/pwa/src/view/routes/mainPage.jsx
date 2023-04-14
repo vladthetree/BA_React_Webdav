@@ -73,7 +73,6 @@ const MainPage = () => {
         newFileControll(videoPageState.userdata, actions);
       }, INTERVAL_NEWVIDEO_CHECK);
     }
-
   };
 
   useEffect(() => {
@@ -86,7 +85,6 @@ const MainPage = () => {
     videoPageState.isOnline,
     videoPageState.isRequesting,
   ]);
-
 
   return !videoPageState.userdata ? (
     <Login />

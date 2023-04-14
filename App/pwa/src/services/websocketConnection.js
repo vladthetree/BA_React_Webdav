@@ -59,7 +59,7 @@ const webSocketConnection = async (userdata, newMp4FilesArray, actions) => {
             }, 5000);
           }
         } else if (newMessageObject.type === 'end') {
-          socket.removeEventListener('message', onMessage); 
+          socket.removeEventListener('message', onMessage);
           console.log(newMessageObject.data);
           const name = newMessageObject.data.name;
           const date = newMessageObject.data.date;
