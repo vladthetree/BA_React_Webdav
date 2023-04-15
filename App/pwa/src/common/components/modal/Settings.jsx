@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/style/settings.css';
-import { deleteDBFromIndexDB } from '../../model/db/storageObjectMethods.js';
+import { deleteDBFromIndexDB } from '../../db/storageObjectMethods.js';
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const DATABASE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 

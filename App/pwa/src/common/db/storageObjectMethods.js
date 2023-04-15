@@ -8,7 +8,10 @@ async function addToIndexDbStore(
   lastmod,
 ) {
   const db = await openIndexDB(database, ObjectStorage);
+  console.log('database', database);
+  console.log('Objectstorage', ObjectStorage);
   const transaction = db.transaction(ObjectStorage, mode);
+  console.log(fileContext);
   let objStore;
   if (!db.objectStoreNames.contains(ObjectStorage)) {
     objStore = db.createObjectStore(ObjectStorage, { keyPath: 'name' });
@@ -17,7 +20,7 @@ async function addToIndexDbStore(
   }
   objStore.put({
     name: filename,
-    fileContext,
+    fileContext: fileContext,
     lastmod,
   });
 
@@ -61,6 +64,7 @@ async function removeAlreadyStoredFiles(database, File, ObjectStorage) {
   }
   return [];
 }
+
 
 async function getConvertedBlobVideos() {
   const result = [];

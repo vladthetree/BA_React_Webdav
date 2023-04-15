@@ -1,8 +1,8 @@
-import React, { useEffect, memo, useCallback } from 'react';
-import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
+import React, { useEffect, memo } from 'react';
 import { useWindowSize } from 'react-use';
 import { useSelector } from 'react-redux';
-import mainPageDispatcher from '../../actions/mainPageActions.js';
+import { getConvertedBlobVideos } from '../../db/storageObjectMethods.js';
+import mainPageDispatcher from '../../../actions/mainPageActions.js';
 import Swipe from '../../assets/svgs/Swipe.jsx';
 import '../../assets/style/videostyle.css';
 
@@ -16,20 +16,20 @@ export default memo(function ListVideos({ videos }) {
     (videoPageState) => videoPageState.videoPageReducer,
   );
 
-  const displayVideos = useCallback(async () => {
+  async function addnewVideos() {
     const storedFiles = await getConvertedBlobVideos();
     actions.setDisplayedVideos(storedFiles);
-  }, [videos]);
+  }
 
   useEffect(() => {
-    window.addEventListener('newVideoInIndexDB', displayVideos);
-    window.addEventListener('appIsActive', displayVideos);
+    window.addEventListener('newVideoInIndexDB', addnewVideos);
+    window.addEventListener('appIsActive', addnewVideos);
 
     return () => {
-      window.removeEventListener('newVideoInIxndexDB', displayVideos);
-      window.removeEventListener('appIsActive', displayVideos);
+      window.removeEventListener('newVideoInIxndexDB', addnewVideos);
+      window.removeEventListener('appIsActive', addnewVideos);
     };
-  }, [displayVideos]);
+  }, []);
 
   useEffect(() => {
     let idleTimeout = setTimeout(() => {
@@ -106,7 +106,6 @@ export default memo(function ListVideos({ videos }) {
                   type="video/mp4"
                   className="video"
                   onClick={(e) => handleClickVideo(e)}
-                  preload="metadata"
                 />
               </div>
               <div

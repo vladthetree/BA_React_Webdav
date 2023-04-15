@@ -1,4 +1,4 @@
-import { addToIndexDbStore } from '../model/db/storageObjectMethods.js';
+import { addToIndexDbStore } from "../../db/storageObjectMethods.js";
 
 const webSocketConnection = async (userdata, newMp4FilesArray, actions) => {
   const socket = new WebSocket(`${process.env.DEFAULT_WEBSOCKET}/ws`);

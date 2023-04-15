@@ -21,7 +21,7 @@ server.post('/listContent', async (req, res) => {
     });
     const content = await client.getDirectoryContents('/');
     const filteredContent = content.reduce((result, file) => {
-      if (file.filename.includes('mp4') || file.filename.includes('json')) {
+      if (file.filename.includes('mp4')) {
         result.push({
           filename: file.filename.slice(1),
           lastmod: file.lastmod,
@@ -68,9 +68,6 @@ serverSocketFileContent.on('connection', async function (clientSocket) {
           const size = data.size;
           const chunkSize = 64 * 1024;
           const totalChunks = Math.ceil(size / chunkSize);
-          console.log('size', size);
-          console.log(totalChunks);
-
           let chunkIndex = 0;
           console.log('Start Stream for ', file.filename);
           if (clientSocket.readyState === WebSocket.OPEN) {

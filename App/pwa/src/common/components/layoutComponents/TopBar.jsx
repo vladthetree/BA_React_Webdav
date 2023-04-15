@@ -1,6 +1,9 @@
 import React from 'react';
 import { TopBarInformations } from './TopBarInformations.jsx';
-import { ModalSettings, BluetoothConnection } from '../modalElementSet.js';
+import {
+  ModalSettings,
+  BluetoothConnection,
+} from '../../helper/modalElementSet.js';
 export default function TopBar({
   topBarheight,
   fontSize,

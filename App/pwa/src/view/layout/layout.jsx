@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import mainPageDispatcher from '../../actions/mainPageActions';
 import { useWindowSize } from 'react-use';
-import { DefaultScreen } from '../../components/modalElementSet';
-import TopBar from '../../components/layoutComponents/TopBar.jsx';
-import '../../assets/style/layout.css';
+import { DefaultScreen } from '../../common/helper/modalElementSet';
+import TopBar from '../../common/components/layoutComponents/TopBar.jsx';
+import '../../common/assets/style/layout.css';
 
 const Layout = ({
   children,

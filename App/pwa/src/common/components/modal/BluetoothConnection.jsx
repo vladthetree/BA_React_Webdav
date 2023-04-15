@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { writeMessage } from '../../utils/webbluetooth/writeBLEmessage.js';
-import mainPageDispatcher from '../../actions/mainPageActions.js';
-
+import { writeMessage } from '../../helper/webbluetooth/webbluetooth/writeBLEmessage.js';
+import mainPageDispatcher from '../../../actions/mainPageActions.js';
 export default function BluetoothConnection({ newVideos, currentBLEstatus }) {
   const NORDIC_SERVICE = `${process.env.NORDIC_SERVICE}`;
   const NORDIC_TX = `${process.env.TX}`;

@@ -1,5 +1,6 @@
 const listContent = async (userdata) => {
   try {
+
     const response = await fetch(
       `${process.env.DEFAULT_LOCALHOST}/listContent`,
       {
@@ -12,6 +13,7 @@ const listContent = async (userdata) => {
         }),
       },
     );
+   
     const availableContent = await response.json();
     const availableVideosArray = Array.from(availableContent);
     return availableVideosArray;

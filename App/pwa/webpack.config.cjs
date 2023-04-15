@@ -2,10 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-require('dotenv').config({ path: './.env' }); 
+const TerserPlugin = require('terser-webpack-plugin');
+
+require('dotenv').config({ path: './.env' });
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: './pwa/src/index.js',
 
   output: {
@@ -41,12 +43,22 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env": JSON.stringify(process.env),
+      'process.env': JSON.stringify(process.env),
     }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
     new HtmlWebpackPlugin({
+      optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
+      },
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
       inject: false,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+      },
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -55,7 +67,10 @@ module.exports = {
         { from: './pwa/public/pwa-512x512.png', to: 'pwa-512x512.png' },
         { from: './pwa/public/robots.txt', to: 'robots.txt' },
         { from: './pwa/public/favicon.ico', to: 'favicon.ico' },
-        { from: './pwa/public/audio/sampleAudio.mp3', to: 'audio/sampleAudio.mp3' },
+        {
+          from: './pwa/public/audio/sampleAudio.mp3',
+          to: 'audio/sampleAudio.mp3',
+        },
         { from: './pwa/src/sw.js', to: 'sw.js' },
       ],
     }),

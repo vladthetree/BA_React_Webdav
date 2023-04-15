@@ -1,4 +1,4 @@
-import { sliceArrayBuffer } from './sliceArrayBuffer.js';
+import { sliceArrayBuffer } from '../sliceArrayBuffer.js';
 
 const encoder = new TextEncoder();
 const writeValueBLEmessage = async (StringMessage, BluetoothCharacteristic) => {

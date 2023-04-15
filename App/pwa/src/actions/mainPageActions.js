@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { getAvailableContent } from '../common/helper/thunks.js';
 
 const setIsActive = (status) => ({
   type: 'SET_IS_ACTIVE',
@@ -38,6 +39,44 @@ const setExistBLEconnection = (boolean) => ({
   payload: boolean,
 });
 
+const setUserName = (username) => ({
+  type: 'SET_USER_NAME',
+  payload: username,
+});
+
+const setPassword = (password) => ({
+  type: 'SET_PASSWORD',
+  payload: password,
+});
+const setWebdavAddress = (webdavAddress) => ({
+  type: 'SET_WEBDAV_ADDRESS',
+  payload: webdavAddress,
+});
+const setNextCloudUserName = (nextCloudUserName) => ({
+  type: 'SET_NEXT_CLOUD_USER_NAME',
+  payload: nextCloudUserName,
+});
+
+const setNextCloudPassword = (nextCloudPassword) => ({
+  type: 'SET_NEXT_CLOUD_PASSWORD',
+  payload: nextCloudPassword,
+});
+
+const setNotificationVisible = (boolean) => ({
+  type: 'SET_NOTIFICATION_VISIBLE',
+  payload: boolean,
+});
+
+const setMessage = (message) => ({
+  type: 'SET_NOTIFICATION_MESSAGE',
+  payload: message,
+});
+
+const setIncomingMp4Filenames = (incomingMp4Filenames) => ({
+  type: 'SET_INCOMING_MP4_FILENAMES',
+  payload: incomingMp4Filenames,
+});
+
 const mainPageDispatcher = () => {
   const dispatch = useDispatch();
   return {
@@ -65,7 +104,34 @@ const mainPageDispatcher = () => {
     setExistBLEconnection: (boolean) => {
       dispatch(setExistBLEconnection(boolean));
     },
+    setUserName: (username) => {
+      dispatch(setUserName(username));
+    },
+    setPassword: (password) => {
+      dispatch(setPassword(password));
+    },
+    setWebdavAddress: (webdavAddress) => {
+      dispatch(setWebdavAddress(webdavAddress));
+    },
+    setNextCloudUserName: (nextCloudUserName) => {
+      dispatch(setNextCloudUserName(nextCloudUserName));
+    },
+    setNextCloudPassword: (nextCloudPassword) => {
+      dispatch(setNextCloudPassword(nextCloudPassword));
+    },
+    setNotificationVisible: (boolean) => {
+      dispatch(setNotificationVisible(boolean));
+    },
+    setMessage: (message) => {
+      dispatch(setMessage(message));
+    },
+    getAvailableVideos: async (userdata) => {
+      dispatch(getAvailableContent(userdata));
+
+    },
+    setIncomingMp4Filenames: (incomingMp4Filenames) => {
+      dispatch(setIncomingMp4Filenames(incomingMp4Filenames));
+    },
   };
 };
-
 export default mainPageDispatcher;

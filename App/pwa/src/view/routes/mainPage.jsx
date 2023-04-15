@@ -1,20 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { getConvertedBlobVideos } from '../../model/db/storageObjectMethods.js';
+import checkAndProcessNewFiles from '../../common/helper/checkAndProcessNewFiles.jsx';
+import { ListVideos, Login } from '../../common/helper/modalElementSet.js';
+import {
+  getConvertedBlobVideos,
+  getObjectStorageIndex,
+} from '../../common//db/storageObjectMethods.js';
 import mainPageDispatcher from '../../actions/mainPageActions.js';
 import Layout from '../layout/layout.jsx';
-import newFileControll from '../../controller/newFileControll.jsx';
-import { ListVideos, Login } from '../../components/modalElementSet.js';
-import { getObjectStorageIndex } from '../../model/db/storageObjectMethods.js';
 
 const OBJECT_STORE_USERDATA = `${process.env.OBJECT_STORE_USERDATA}`;
 const OBJECT_STORE_USERDATA_OBJECTSTORAGE = `${process.env.OBJECT_STORE_USERDATA_OBJECTSTORAGE}`;
 const INTERVAL_NEWVIDEO_CHECK = `${process.env.INTERVAL_NEWVIDEO_CHECK}`;
+const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
+const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
 const MainPage = () => {
   const videoPageState = useSelector(
     (videoPageState) => videoPageState.videoPageReducer,
   );
+  const selectAvailableVideos = (state) => state.videoPageReducer.availableVideos;
+
   const actions = mainPageDispatcher();
 
   const intervalRef = useRef(null);
@@ -76,8 +82,14 @@ const MainPage = () => {
     ) {
       console.log('#--Checking for new Files--#');
       intervalRef.current = setInterval(() => {
-        console.log('ISVIDEOS PLAYING ? ', videoPageState.isVideoPlaying);
-        newFileControll(videoPageState.userdata, actions);
+        console.log(videoPageState);
+        checkAndProcessNewFiles(
+          videoPageState.userdata,
+          actions,
+          selectAvailableVideos,
+          DATABASE_VIDEOS,
+          OBJECT_STORE_VIDEOS,
+        );
       }, INTERVAL_NEWVIDEO_CHECK);
     }
   };
@@ -99,7 +111,10 @@ const MainPage = () => {
   }
 
   return !videoPageState.userdata ? (
-    <Login />
+    <Login
+      OBJECT_STORE_USERDATA={OBJECT_STORE_USERDATA}
+      OBJECT_STORE_USERDATA_OBJECTSTORAGE={OBJECT_STORE_USERDATA_OBJECTSTORAGE}
+    />
   ) : (
     <div>
       <Layout

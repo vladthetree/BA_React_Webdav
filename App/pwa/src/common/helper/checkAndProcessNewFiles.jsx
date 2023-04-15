@@ -1,11 +1,11 @@
-import { removeAlreadyStoredFiles } from '../model/db/storageObjectMethods.js';
-import webSocketConnection from './../services/websocketConnection.js';
-import listContent from './../services/listContent.js';
+import { removeAlreadyStoredFiles } from '../db/storageObjectMethods.js';
+import webSocketConnection from '../helper/api/websocketConnection.js';
+import listContent from './api/listContent.js';
 
 const DATABASE_VIDEOS = `${process.env.DATABASE_VIDEOS}`;
 const OBJECT_STORE_VIDEOS = `${process.env.OBJECT_STORE_VIDEOS}`;
 
-export default async function newFileControll(userdata, actions) {
+export default async function checkAndPreocessNewFiles(userdata, actions) {
   let mp4FilesNames = null;
 
   console.log('#-- No ongoing requests --#');
