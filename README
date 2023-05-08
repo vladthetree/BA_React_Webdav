@@ -1,19 +1,10 @@
-Für den Programmstart sind spezielle Befehle hinterlegt, mit denen der
-Node.js-Server und die Progressive Web App (PWA) unabhängig voneinander
-gestartet und auf ihre Bereitschaft gewartet werden können. Vorab ist es
-notwendig, im Terminal des App-Verzeichnisses den Befehl npm install
-einzugeben, um alle erforderlichen Abhängigkeiten herunterzuladen. Anschließend
-können mit den folgenden Befehlen unterschiedliche Modi der Anwendung gestartet
-werden:
+## Getting Started
 
-\begin{itemize}
-    \item \texttt{npm run start:all}: Startet sowohl den Server als auch die PWA.
-    \item \texttt{npm run start:server}: Startet nur den Server.
-    \item \texttt{npm run start:pwa}: Startet nur die PWA.
-    \item \texttt{npm run watch:pwa}: Startet nur die PWA im Watch-Modus, wodurch parallele Änderungen am Code automatisch übernommen werden.
-\end{itemize}
+To start the application, special commands are defined to independently start the Node.js server and the Progressive Web App (PWA) and wait for them to be ready. Prior to this, it is necessary to enter the command `npm install` in the terminal of the app directory to download all necessary dependencies. Afterwards, the following commands can be used to start different modes of the application:
 
-Zusätzlich muss die Datei \texttt{.env.example} zu \texttt{.env} umbenannt
-werden. Darin können erforderlichen Umgebungsvariablen angepasst werden, um
-beispielsweise Intervalle für das Abrufen von Videos oder Zieladressen der PWA
-an den Server anzupassen.
+- `npm run start:all`: Starts both the server and the PWA.
+- `npm run start:server`: Starts only the server.
+- `npm run start:pwa`: Starts only the PWA.
+- `npm run watch:pwa`: Starts only the PWA in watch mode, which automatically applies parallel changes to the code.
+
+In addition, the file `.env.example` must be renamed to `.env`. Here, environment variables can be adjusted, for example, to adjust intervals for retrieving videos or target addresses of the PWA to the server.
