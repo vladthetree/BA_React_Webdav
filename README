@@ -8,3 +8,10 @@ To start the application, special commands are defined to independently start th
 - `npm run watch:pwa`: Starts only the PWA in watch mode, which automatically applies parallel changes to the code.
 
 In addition, the file `.env.example` must be renamed to `.env`. Here, environment variables can be adjusted, for example, to adjust intervals for retrieving videos or target addresses of the PWA to the server.
+
+A valid WebDAV address is required for downloading videos. This can be provided through a Docker NextCloud folder.
+
+Foldernaming in Nextcloud has to be:
+
+resident_{Username}
+
